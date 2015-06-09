@@ -1,0 +1,133 @@
+<?php
+$title = "Agregar nuevo Factor.";
+$this->headTitle($title);
+//var_dump($this->id); exit();
+?>
+<h1> <?= $this->escapeHtml($title); ?> </h1>
+<script>
+    $(function () {
+        $('table').tablesorter({
+            widgets: ['zebra', 'columns'],
+            usNumberFormat: false,
+            sortReset: true,
+            sortRestart: true
+        });
+    });
+</script>
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jQuery-Validation-Engine/2.6.4/jquery.validationEngine.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jQuery-Validation-Engine/2.6.4/languages/jquery.validationEngine-es.js"></script>
+
+
+<div id="container ">
+    
+    <div class="row-fluid top-buffer">
+        <div class="col-lg-6 col-lg-offset-3 text-center">
+            <form style="width: 800px;" action="<?php echo $this->basePath() ?>/factores/items" id="miform" method="post" name="miform" >
+                <table id="tblprod" class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Factor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="form-group col-lg-12">
+                                    <input class="form-control validate[required]"name="nombre" id="nombre_factor[]"/>
+                                    <input type="hidden" value="<?php echo $this->id ?>" id="id_parent" name="id_parent" />
+                                </div>
+                            </td>
+<!--                            <td>
+                                <div class="form-group col-lg-12">
+                                    <textarea class="form-control validate[required]"name="caracteristica" id="caracteristica[]" cols="50"></textarea>
+                                    
+                                </div>
+                            </td>-->
+                        </tr>
+
+                    </tbody>
+                </table>
+                <!--<button id="btnadd" class="btn btn-primary">Agregar Nuevo</button>-->
+                <button id="btnsubmit" type="submit" class="btn btn-success">Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<table class="table tablesorter">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+            <th>ver</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($factores as $factor) : ?>
+            <tr>
+                <td><?php echo $this->escapeHtml($factor->id); ?></td>
+                <td>
+                    <a href="<?php echo $this->url('factores', array('action' => 'edit', 'id' => $factor->id));
+        ?>">Edit</a>
+                </td>
+                <td>
+                    <a href="<?php echo $this->url('factores', array('action' => 'delete', 'id' => $factor->id));
+        ?>">Delete</a>
+                </td>
+                <td>
+                    <a href="<?php echo $this->url('caracteristica', array('action' => 'index', 'id' => $factor->id));
+        ?>">Ver</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnsubmit").submit(function (e) {
+
+            console.info("Hola");
+            var frm = $(this);
+            var data = $(this).serialize();
+            e.preventDefault();
+            var num1 = $("nombre_factor").val();
+//            var num2 = $("caracteristica").val();
+            var id = $("id_parent").val();
+
+            if (num1 !== "") {
+                $.ajax({
+                    url: $("#miform").attr('action'),
+                    type: $("#miform").attr('method'),
+                    data: {m1: num1, id: id},
+                    success: function (data) {
+                        $("#resultado").val(data.resultad)
+                    }
+                });
+            }
+        });
+
+    });
+
+
+
+    
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

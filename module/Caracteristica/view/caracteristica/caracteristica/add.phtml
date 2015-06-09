@@ -1,0 +1,43 @@
+<?php
+    $title = "Agregar caracteristica";
+    $this->headTitle($title);
+    $form = $this->form;
+    
+?>
+
+<h1> <?= $this->escapeHtml($title); ?> </h1>
+
+<div id="container">
+    <div class="row-fluid top-buffer">
+        <div class=" text-center">
+            <form action="<?php echo $this->basePath() ?>/caracteristica/add" id="formadd" method="post" name="formadd">
+                <table id="tblprod" class="table table-hover table-bordered">
+                    <tr>
+                        <td>Nombre</td>
+                        <td> <textarea class="form-control validate[required]" name="caracteristica" id="caracteristica" cols="30"></textarea> </td>
+                    <input type="text" value="<?php echo $this->id ?>" id="id_factor" name="id_factor"/>
+                    </tr>
+                </table>
+                <button id="addCaracteristica" class="btn btn-success" type="submit" >Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function (){
+       $("#addCaracteristica").submit(function (e){
+           e.preventDefault();
+           var caracteristica = $("caracteristica").val();
+           var id_factor = $("id_factor").val();
+           $.ajax({
+              url: $("#formadd").attr('action'),
+              type: $("#formadd").attr('method'),
+              data: {m1: caracteristica, m2: id_factor},
+              success: function (data) {
+                  $("#resultado").val(data.resultad)
+              }
+           });
+       }); 
+    });
+</script>

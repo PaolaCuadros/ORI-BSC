@@ -1,0 +1,54 @@
+<script>
+    $(function () {
+        $('table').tablesorter({
+            widgets: ['zebra', 'columns'],
+            usNumberFormat: false,
+            sortReset: true,
+            sortRestart: true
+        });
+    });
+</script>
+
+<?php
+// module/Album/view/album/album/index.phtml:
+
+$title = 'Factores';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<p><a href="<?php
+    echo $this->url('factores', array(
+        'action' => 'add'));
+    ?>">Agregar nuevo factor</a></p>
+
+<table class="table tablesorter">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+            <th>Agregar Items</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($factores as $factor) : ?>
+            <tr>
+                <td><?php echo $this->escapeHtml($factor->name); ?></td>
+                <td>
+                    <a href="<?php echo $this->url('factores', array('action' => 'edit', 'id' => $factor->id));
+        ?>">Edit</a>
+                </td>
+                <td>
+                    <a href="<?php echo $this->url('factores', array('action' => 'delete', 'id' => $factor->id));
+        ?>">Delete</a>
+                </td>
+                <td>
+                    <a href="<?php echo $this->url('factores', array('action' => 'items', 'id' => $factor->id));
+        ?>">Items</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+

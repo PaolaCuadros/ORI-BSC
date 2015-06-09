@@ -1,0 +1,42 @@
+<form action="<?php echo $this->basePath()?>/factores/sumar" method="post" id="form1">
+    <div>
+        <label for="num1">Campo 1</label>
+        <input type="text" name="num1" id="num1" value="" tabindex="1"/>
+    </div>
+    <div>
+        <label for="num2">Campo 2</label>
+        <input type="text" name="num2" id="num2" value="" tabindex="1"/>
+    </div>
+    <div>
+        
+        <input type="submit"  id="enviar" value="Sumar" class="btn btn-primary"/>
+    </div>
+</form>
+<div>
+    <label for="resultado"> Resultado: </label>
+    <input type="text" name="resultado" id="resultado" value="" tabindex="1" />
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+       $("#form1").submit(function(e){
+           e.preventDefault();
+           var num1 = $("#num1").val();
+           var num2 = $("#num2").val();
+           $.ajax({
+               url: $("#form1").attr('action'),
+               type: $("#form1").attr('method'),
+               data: {m1:num1, m2:num2},
+               success: function (data, textStatus, xhr) {
+                   console.log(data.some_parameter + data.success ),
+                           console.info("aca llega");
+                   $("#resultado").val(data.resultad)
+               },
+               error: function(xhr, textStatus, errorThrown){
+                   
+               }
+           });
+       }); 
+    });
+</script>
+

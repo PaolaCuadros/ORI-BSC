@@ -1,0 +1,32 @@
+<?php
+    $title = "Caracteristicas";
+    $this->headTitle($title);
+?>
+
+<h1> <?= $this->escapeHtml($title); ?> </h1>
+
+
+
+<table class="table tablesorter">
+    <thead>
+        <tr>
+            <td>Nombre</td>
+            <td>Editar</td>
+            <td>Eliminar</td>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($caracteristica as $caracte):  ?>
+        <tr>
+            <td><?php echo $this->escapeHtml($caracte->caracteristica) ?></td>
+            <td>
+                    <a href="<?php echo $this->url('caracteristica', array('action' => 'edit', 'id' => $caracte->id));
+        ?>">Edit</a>
+                </td>
+            <td>Eliminar</td>
+        </tr>
+        <?php endforeach;?>
+    </tbody>
+</table>
+
+<a href="<?php echo $this->url('caracteristica', array('action' => 'add', 'id' => $_GET['subpage']));?>">Agregar nueva caracteristica al factor</a>
