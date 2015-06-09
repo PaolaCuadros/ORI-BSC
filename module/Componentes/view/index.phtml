@@ -1,0 +1,34 @@
+<?php
+//var_dump($_GET); exit();
+    $title = "Componentes";
+    $this->headTitle($title);
+?>
+
+<h1> <?= $this->escapeHtml($title); ?> </h1>
+
+
+
+<table class="table tablesorter">
+    <thead>
+        <tr>
+            <td>Nombre</td>
+            <td>Editar</td>
+            <td>Eliminar</td>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($componentes as $componente): ?>
+        <tr>
+            <td><?php echo $this->escapeHtml($componente->name) ?></td>
+            <td>
+                    <a href="<?php echo $this->url('caracteristica', array('action' => 'edit', 'id' => $componente->id));
+        ?>">Edit</a>
+                </td>
+            <td>
+                    <a href="<?php echo $this->url('caracteristica', array('action' => 'delete', 'id' => $componente->id));
+        ?>">Delete</a>
+                </td>
+        </tr>
+        <?php endforeach;?>
+    </tbody>
+</table>

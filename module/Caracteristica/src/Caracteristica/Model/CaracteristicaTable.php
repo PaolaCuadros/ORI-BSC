@@ -22,6 +22,11 @@ class CaracteristicaTable extends AbstractTableGateway {
         return $resultSet;
     }
     
+    public function getCaracteristicaFactor($id){
+        $resultSet = $this->select(array('ID_FACTOR' => $id));
+        return $resultSet;
+    }
+    
     public function getCaracteristica($id){
         //var_dump($id); exit();
         $id  = (int) $id;
@@ -57,6 +62,10 @@ class CaracteristicaTable extends AbstractTableGateway {
        // var_dump("asas"); var_dump($id); exit();
         $resultSet = $this->select(array('id' => $id));
         return $resultSet;
+    }
+    
+    public function deleteCaracteristica($id){
+        $this->delete(array('id' => $id));
     }
 }
 

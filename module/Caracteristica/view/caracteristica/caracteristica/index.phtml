@@ -1,4 +1,5 @@
 <?php
+//var_dump($_GET); exit();
     $title = "Caracteristicas";
     $this->headTitle($title);
 ?>
@@ -16,17 +17,22 @@
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($caracteristica as $caracte):  ?>
+        <?php foreach ($caracteristica as $caracte): ?>
         <tr>
             <td><?php echo $this->escapeHtml($caracte->caracteristica) ?></td>
             <td>
                     <a href="<?php echo $this->url('caracteristica', array('action' => 'edit', 'id' => $caracte->id));
         ?>">Edit</a>
                 </td>
-            <td>Eliminar</td>
+            <td>
+                    <a href="<?php echo $this->url('caracteristica', array('action' => 'delete', 'id' => $caracte->id));
+        ?>">Delete</a>
+                </td>
         </tr>
         <?php endforeach;?>
     </tbody>
 </table>
+
+
 
 <a href="<?php echo $this->url('caracteristica', array('action' => 'add', 'id' => $_GET['subpage']));?>">Agregar nueva caracteristica al factor</a>

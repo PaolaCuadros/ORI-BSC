@@ -1,6 +1,6 @@
 <?php
 
-namespace Album\Model;
+namespace Componentes\Model;
 
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
@@ -9,26 +9,60 @@ use Zend\InputFilter\InputFilterInterface;
 
 class Componentes implements InputFilterAwareInterface {
     public $id;
-    public $idFactor;
-    public $idCaracteristic;
-    public $dateComponent;
+    public $name;
     public $dateCreation;
     public $dateEdition;
     public $user;
+    protected $inputFilter;
     
-    public function exchangeArray(){
-        
+    public function exchangeArray($data){
+        $this->id = (isset($data['id'])) ? $data['id'] : null;
+        $this->caracteristica = (isset($data['name'])) ? $data['name'] : null;
+        $this->date_creation = date("Y/m/d");
     }
     
-    public function setInputFilter(){
-        
+    public function setInputFilter(InputFilterInterface $inputFilter) {
+        throw new \Exception("Not used");
+    }
+    
+    public function getInputFilter(){
+        if (!$this->inputFilter) {
+            $inputFilter = new InputFilter();
+            $factory = new InputFactory();
+
+            $inputFilter->add($factory->createInput(array(
+                        'name' => 'id',
+                        'required' => true,
+                        'filters' => array(
+                            array('name' => 'Int'),
+                        ),
+            )));
+
+            $inputFilter->add($factory->createInput(array(
+                        'name' => 'name',
+                        'required' => true,
+                        'filters' => array(
+                            array('name' => 'StripTags'),
+                            array('name' => 'StringTrim'),
+                        ),
+                        'validators' => array(
+                            array(
+                                'name' => 'StringLength',
+                                'options' => array(
+                                    'encoding' => 'UTF-8',
+                                    'min' => 1,
+                                    'max' => 500,
+                                ),
+                            ),
+                        ),
+            )));
+            $this->inputFilter = $inputFilter;
+        }
+        return $this->inputFilter;
     }
     
     public function getArrayCopy(){
         
     }
-    
-    public function getInputFilter(){
-        
-    }
+
 }

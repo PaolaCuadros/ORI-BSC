@@ -68,7 +68,7 @@ $this->headTitle($title);
     <tbody>
         <?php foreach ($factores as $factor) : ?>
             <tr>
-                <td><?php echo $this->escapeHtml($factor->id); ?></td>
+                <td><?php echo $this->escapeHtml($factor->name); ?></td>
                 <td>
                     <a href="<?php echo $this->url('factores', array('action' => 'edit', 'id' => $factor->id));
         ?>">Edit</a>

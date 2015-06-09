@@ -7,6 +7,7 @@ return array(
         'Album',
         'Factores',
         'Caracteristica',
+        'Componentes',
 //        'Ajax',
     ),
     // These are various options for the listeners attached to the ModuleManager

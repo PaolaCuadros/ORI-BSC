@@ -14,7 +14,7 @@ return array(
             'componentes' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/album[/:action][/:id]',
+                    'route'    => '/componentes[/:action][/:id]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'     => '[0-9]+',
@@ -30,7 +30,7 @@ return array(
     
     'view_manager' => array(
         'template_path_stack' => array(
-            'album' => __DIR__ . '/../view',
+            'Componentes' => __DIR__ . '/../view',
         ),
     ),
 );
