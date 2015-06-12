@@ -13,10 +13,10 @@
             <form action="<?php echo $this->basePath() ?>/caracteristica/edit" id="formadd" method="post" name="formadd">
                 <table id="tblprod" class="table table-hover table-bordered">
                     <tr>
-                        <td>Nombre</td>
+                        <td><b>Nombre Caracteristica</b></td>
                         <td> <textarea class="form-control validate[required]" name="caracteristica" id="caracteristica" cols="30"><?php echo $this->caracteristica ?></textarea> </td>
-                        <input type="text" value="<?php echo $this->id ?>" id="id_factor" name="id_factor"/>
-                        <input type="text" value="<?php echo $this->id ?>" id="id" name="id" />
+                    <input type="hidden" value="<?php echo $this->id ?>" id="id_factor" name="id_factor"/>
+                    <input type="hidden" value="<?php echo $this->id ?>" id="id" name="id" />
                     </tr>
                 </table>
                 <button id="addCaracteristica" class="btn btn-success" type="submit" >Guardar</button>

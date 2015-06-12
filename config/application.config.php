@@ -8,6 +8,8 @@ return array(
         'Factores',
         'Caracteristica',
         'Componentes',
+        'Presupuestado',
+        //'SanAuth'
 //        'Ajax',
     ),
     // These are various options for the listeners attached to the ModuleManager

@@ -1,0 +1,47 @@
+<script>
+    $(function () {
+        $('table').tablesorter({
+            widgets: ['zebra', 'columns'],
+            usNumberFormat: false,
+            sortReset: true,
+            sortRestart: true
+        });
+    });
+</script>
+
+<?php
+    $title = 'Componentes';
+    $this->headTitle($title);
+    include __DIR__ . '\menu.phtml';
+?>
+
+<div class="container-view">
+<h1 class="title"><?php echo $this->escapeHtml($title); ?></h1>
+<p><a class="btn btn-success" href="<?php echo $this->url('componentes', array(
+    'action' => 'add')); ?>">Agregar Componente</a> </p>
+
+<table class="table tablesorter">
+    <thead style="border: 2px #e0e0e0 solid;">
+        <tr>
+            <th class="th_table">Id</th>
+            <th class="th_table">Nombre</th>
+            <th class="th_table">Editar</th>
+            <th class="th_table">Elimiar</th>
+            <th class="th_table">Ver Factores</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($componentes as $componente): ?>
+        <tr>
+            <td class="th_table"><?php echo $this->escapeHtml($componente->id) ?></td>
+            <td class="th_table"><?php echo $this->escapeHtml($componente->name) ?></td>
+            <td class="th_table"><a href="<?php echo $this->url('componentes', array('action' => 'edit', 'id' => $componente->id)); ?>"><img src='<?php echo $this->basePath('img/editar.png') ?>' ></a></td>
+            <td class="th_table"><a href="<?php echo $this->url('componentes', array('action' => 'delete', 'id' => $componente->id)); ?>"><img src='<?php echo $this->basePath('img/eliminar.png') ?>' ></a></td>
+            <td class="th_table" style="text-align: center; width: 110px;"><a href="<?php echo $this->url('factores', array('action' => 'index', 'id' => $componente->id)); ?>"><img src='<?php echo $this->basePath('img/ver.png') ?>' ></a></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
+
+

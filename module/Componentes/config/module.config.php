@@ -1,6 +1,5 @@
 <?php
 
-// module/Componentes/config/module.config.php:
 return array(
     'controllers' => array(
         'invokables' => array(
@@ -8,7 +7,6 @@ return array(
         ),
     ),
     
-    // La siguiente sección es nueva y debería ser añadida a tu fichero
     'router' => array(
         'routes' => array(
             'componentes' => array(
@@ -30,7 +28,7 @@ return array(
     
     'view_manager' => array(
         'template_path_stack' => array(
-            'Componentes' => __DIR__ . '/../view',
+            'componentes' => __DIR__ . '/../view',
         ),
     ),
 );

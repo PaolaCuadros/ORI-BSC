@@ -1,32 +1,45 @@
+<script>
+    $(function () {
+        $('table').tablesorter({
+            widgets: ['zebra', 'columns'],
+            usNumberFormat: false,
+            sortReset: true,
+            sortRestart: true
+        });
+    });
+</script>
+
 <?php
 //var_dump($_GET); exit();
     $title = "Caracteristicas";
     $this->headTitle($title);
 ?>
 
-<h1> <?= $this->escapeHtml($title); ?> </h1>
+<h1 class="title"> <?= $this->escapeHtml($title); ?> </h1>
 
+<p><a class="btn btn-success" style="margin-left: 5%;" href="<?php echo $this->url('caracteristica', array('action' => 'add', 'id' => $_GET['subpage']));?>">Agregar nueva caracteristica al factor</a></p>
 
-
-<table class="table tablesorter">
-    <thead>
+<table class="table tablesorter" style="text-align: center;">
+    <thead style="border: 2px #e0e0e0 solid;">
         <tr>
-            <td>Nombre</td>
-            <td>Editar</td>
-            <td>Eliminar</td>
+            <th class="th_table">Id</th>
+            <th class="th_table">Nombre</th>
+            <th class="th_table">Editar</th>
+            <th class="th_table">Eliminar</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($caracteristica as $caracte): ?>
         <tr>
-            <td><?php echo $this->escapeHtml($caracte->caracteristica) ?></td>
-            <td>
-                    <a href="<?php echo $this->url('caracteristica', array('action' => 'edit', 'id' => $caracte->id));
-        ?>">Edit</a>
+            <td class="th_table"><?php echo $this->escapeHtml($caracte->ID) ?></td>
+            <td class="th_table"><?php echo $this->escapeHtml($caracte->CARACTERISTICA) ?></td>
+            <td class="th_table">
+                    <a href="<?php echo $this->url('caracteristica', array('action' => 'edit', 'id' => $caracte->ID));
+        ?>"><img src='<?php echo $this->basePath('img/editar.png') ?>' ></a>
                 </td>
-            <td>
-                    <a href="<?php echo $this->url('caracteristica', array('action' => 'delete', 'id' => $caracte->id));
-        ?>">Delete</a>
+            <td class="th_table">
+                    <a href="<?php echo $this->url('caracteristica', array('action' => 'delete', 'id' => $caracte->ID));
+        ?>"><img src='<?php echo $this->basePath('img/eliminar.png') ?>' ></a>
                 </td>
         </tr>
         <?php endforeach;?>
@@ -35,4 +48,4 @@
 
 
 
-<a href="<?php echo $this->url('caracteristica', array('action' => 'add', 'id' => $_GET['subpage']));?>">Agregar nueva caracteristica al factor</a>
+

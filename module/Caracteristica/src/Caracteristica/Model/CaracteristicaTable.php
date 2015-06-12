@@ -23,8 +23,16 @@ class CaracteristicaTable extends AbstractTableGateway {
     }
     
     public function getCaracteristicaFactor($id){
-        $resultSet = $this->select(array('ID_FACTOR' => $id));
-        return $resultSet;
+            $sql = 'SELECT * FROM caracteristica ';
+        $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $results;
+        //VAR_DUMP($results); exit();
+        
+        
+        
+//        $sql = 'SELECT * FROM caracteristica';
+//        $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+//        return $results;
     }
     
     public function getCaracteristica($id){
@@ -39,7 +47,7 @@ class CaracteristicaTable extends AbstractTableGateway {
     }
     
     public function saveCaracteristica(Caracteristica $caracteristica){
-        
+        //var_dump($caracteristica); exit();
         $data = array(
             'caracteristica' => $caracteristica->caracteristica,
             'date_creation' => $caracteristica->date_creation,
@@ -67,5 +75,7 @@ class CaracteristicaTable extends AbstractTableGateway {
     public function deleteCaracteristica($id){
         $this->delete(array('id' => $id));
     }
+    
+    
 }
 

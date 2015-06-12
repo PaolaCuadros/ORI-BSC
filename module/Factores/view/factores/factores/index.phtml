@@ -15,37 +15,47 @@
 $title = 'Factores';
 $this->headTitle($title);
 ?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
+<h1 class="title"><?php echo $this->escapeHtml($title); ?></h1>
 
-<p><a href="<?php
-    echo $this->url('factores', array(
+<p ><a class="btn btn-success" style="margin-left: 5%;" href="<?php
+
+    if(isset($_GET['subpage'])){
+        echo $this->url('factores', array(
+        'action' => 'add',
+        'id' => $_GET['subpage']));
+    }else{
+        echo $this->url('factores', array(
         'action' => 'add'));
-    ?>">Agregar nuevo factor</a></p>
+    }
+    
+    ?>">Agregar nuevo factor...</a></p>
 
 <table class="table tablesorter">
-    <thead>
+    <thead style="border: 2px #e0e0e0 solid;">
         <tr>
-            <th>Nombre</th>
-            <th>Editar</th>
-            <th>Eliminar</th>
-            <th>Agregar Items</th>
+            <th class="th_table">Id</th>
+            <th class="th_table">Nombre</th>
+            <th class="th_table">Editar</th>
+            <th class="th_table">Eliminar</th>
+            <th class="th_table">Ver Caracteristicas</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($factores as $factor) : ?>
             <tr>
-                <td><?php echo $this->escapeHtml($factor->name); ?></td>
-                <td>
+                <td class="th_table"><?php echo $this->escapeHtml($factor->id); ?></td>
+                <td class="th_table"><?php echo $this->escapeHtml($factor->name); ?></td>
+                <td class="th_table">
                     <a href="<?php echo $this->url('factores', array('action' => 'edit', 'id' => $factor->id));
-        ?>">Edit</a>
+        ?>"><img src='<?php echo $this->basePath('img/editar.png') ?>' ></a>
                 </td>
-                <td>
+                <td class="th_table">
                     <a href="<?php echo $this->url('factores', array('action' => 'delete', 'id' => $factor->id));
-        ?>">Delete</a>
+        ?>"><img src='<?php echo $this->basePath('img/eliminar.png') ?>' ></a>
                 </td>
-                <td>
-                    <a href="<?php echo $this->url('factores', array('action' => 'items', 'id' => $factor->id));
-        ?>">Items</a>
+                <td class="th_table" style="text-align: center; width: 110px;">
+                    <a href="<?php echo $this->url('caracteristica', array('action' => 'index', 'id' => $factor->id));
+        ?>"><img src='<?php echo $this->basePath('img/ver.png') ?>' ></a>
                 </td>
             </tr>
         <?php endforeach; ?>

@@ -14,13 +14,17 @@ class FactoresController extends AbstractActionController {
     
     
     public function indexAction(){
+        if(isset($_GET['subpage'])){
+            $query = $this->getFactorTable()->getAllFactorComponente($_GET['subpage']);
+        }else{
+             $query = $this->getFactorTable()->fetchAll();
+        }
         return new ViewModel(array(
-            'factores' => $this->getFactorTable()->fetchAll(),
+            'factores' => $query,
         ));
     }
     
     public function addAction(){
-   
         $form = new FactoresForm();
             $form->get('submit')->setValue('Add');
 
@@ -38,25 +42,29 @@ class FactoresController extends AbstractActionController {
                     //var_dump($_POST['nombre']); exit();
                     $data = array(
                         'name' => $_POST['name'],
+                        'idParent' => $_POST['idParent']
 
                     );
                     $factor->exchangeArray($data);
+                    var_dump($factor); exit();
                     $this->getFactorTable()->saveFactores($factor);
                     //$this->insert($data);
                     
-                    return $this->redirect()->toRoute('factores');
+                    return $this->redirect()->toRoute('factores', array(
+                        'action' => 'index',
+                        'id' => $_POST['idParent']
+                    ));
                 }
             }
         return array('form' => $form);
     }
     
     public function editAction(){
+        //var_dump($_POST); exit();
         $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) {
-            return $this->redirect()->toRoute('factores', array(
-                'action' => 'add'
-            ));
-        }
+        if(isset($_POST['id'])){
+            $id = $_POST['id'];
+        } 
         $factores = $this->getFactorTable()->getFactores($id);
 
         $form  = new FactoresForm();
@@ -65,21 +73,42 @@ class FactoresController extends AbstractActionController {
 
         $request = $this->getRequest();
         if ($request->isPost()) {
+            //var_dump($_POST); exit();
+            $factores = new Factores();
             $form->setInputFilter($factores->getInputFilter());
             $form->setData($request->getPost());
-
-            if ($form->isValid()) {
-                $this->getFactorTable()->saveFactores($factores);
-                
-                // Redirect to list of albums
-                return $this->redirect()->toRoute('factores');
+            $data = array(
+                'id' => $_POST['id'],
+                'name' => $_POST['factor'],
+                'idParent' => $_POST['idParent'],
+            );
+            
+            $factores->exchangeArray($data);
+            $this->getFactorTable()->saveFactores($factores);
+            return $this->redirect()->toRoute('factores', array(
+                'action' => 'index',
+                'id' => $_POST['idParent']
+            ));
+            
+            
+        }else{
+            
+            $factores = $this->getFactorTable($id)->getFactor($id);
+            
+            foreach ($factores as $factor){
+                $id = $factor->id;
+                $name = $factor->name;
+                $idParent = $factor->idParent;
             }
+            
+            return array(
+                'id' => $id,
+                'name' => $name,
+                'idParent' => $idParent,
+            );
         }
 
-        return array(
-            'id' => $id,
-            'form' => $form,
-        );
+        
     }
     
     public function deleteAction(){

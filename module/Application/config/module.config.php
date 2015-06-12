@@ -1,4 +1,6 @@
 <?php
+
+
 /**
  * Zend Framework (http://framework.zend.com/)
  *
@@ -6,8 +8,29 @@
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
-
+use Zend\Authentication\AuthenticationService;
 return array(
+    'service_manager' => array(
+        'factories' => array(
+            'AuthService' => function ($sm) {
+                $authServiceManager = new AuthenticationService();
+ 
+                // Obtenemos el adaptador de Base de datos
+                $dbAdapter = $sm->get('ZendDbAdapterAdapter');
+ 
+                // Configuramos el adaptador auth
+                $authAdapter = new DbTableBcrypt($dbAdapter);
+                $authAdapter->setTableName('users')
+                    ->setIdentityColumn('username')
+                    ->setCredentialColumn('hash');
+ 
+                // Y se lo pasamos a nuestro servicio
+                $authServiceManager->setAdapter($authAdapter);
+                return $authServiceManager;
+            }
+        )
+    ),
+    
     'router' => array(
         'routes' => array(
             'home' => array(
@@ -93,14 +116,14 @@ return array(
         ),
     ),
     
-    'strategies' => array(
-        'ViewJsonStrategy',
-    ),
+//    'strategies' => array(
+//        'ViewJsonStrategy',
+//    ),
     // Placeholder for console routes
-    'console' => array(
-        'router' => array(
-            'routes' => array(
-            ),
-        ),
-    ),
+//    'console' => array(
+//        'router' => array(
+//            'routes' => array(
+//            ),
+//        ),
+//    ),
 );

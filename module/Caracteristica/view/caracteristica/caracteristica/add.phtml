@@ -1,43 +1,399 @@
+
+
+
+
+
+
+
+
+
+
+
 <?php
-    $title = "Agregar caracteristica";
-    $this->headTitle($title);
-    $form = $this->form;
-    
+$title = "Agregar caracteristica";
+$this->headTitle($title);
+$form = $this->form;
 ?>
 
 <h1> <?= $this->escapeHtml($title); ?> </h1>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jQuery-Validation-Engine/2.6.4/jquery.validationEngine.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jQuery-Validation-Engine/2.6.4/languages/jquery.validationEngine-es.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+
+<script type="text/javascript">
+
+    $(function () {
+
+
+
+
+
+        //
+
+
+//
+//                function enviarPorAjax() {
+//
+//                    function cargar() {
+//                        var baseUrl = '/caracteristica';
+//                        $.ajax({
+//                            async: true,
+//                            type: "POST",
+//                            url: baseUrl + '/Caracteristica/add/',
+//                            success: function (datos) {
+//
+//                                $("#respuesta").html(datos);
+//
+//                            }
+//
+//                        });
+//
+//                        return false;
+//
+//                    }
+
+
+
+
+
+
+
+
+
+//            var baseUrl = '/caracteristica';
+//            $.ajax({
+//                url: baseUrl + '/Caracteristica/add/',
+//                type: 'POST', // Tipo de envio 
+//                dataType: 'html', //Tipo de Respuesta
+//                data: $(formulario).serialize(), //Serializamos el formulario
+//            })
+//                    .done(function (data) {//Cuando nuestra función finalice, recuperamos la respuesta
+//                        $("#respuesta").html(data); //Colocamos la respuesta en nuestro espacio maquetado.
+//                    });
+        //}
+    });
+</script>
 
 <div id="container">
     <div class="row-fluid top-buffer">
         <div class=" text-center">
-            <form action="<?php echo $this->basePath() ?>/caracteristica/add" id="formadd" method="post" name="formadd">
+            <!--            <div id="formulario">-->
+            <form action="<?php echo $this->basePath() ?>/caracteristica/add" id="formulario" method="post" name="formulario">
                 <table id="tblprod" class="table table-hover table-bordered">
                     <tr>
-                        <td>Nombre</td>
-                        <td> <textarea class="form-control validate[required]" name="caracteristica" id="caracteristica" cols="30"></textarea> </td>
-                    <input type="text" value="<?php echo $this->id ?>" id="id_factor" name="id_factor"/>
+                        <td>Nombre Caracteristica</td>
+                        <td colspan="2"> <textarea class="form-control validate[required]" name="caracteristica" id="caracteristica" cols="30"></textarea> </td>
+                    <input type="hidden" value="<?php echo $this->id ?>" id="id_factor" name="id_factor"/>
                     </tr>
                 </table>
+                <!--<input type='submit' id="addCaracteristica" value='Guardar' onclick="return(enviarPorAjax(); );"/>-->
                 <button id="addCaracteristica" class="btn btn-success" type="submit" >Guardar</button>
             </form>
+            <!--</div>-->
+            <br/><br/>
+
+
+
+            <form action="<?php echo $this->basePath() ?>/presupuestado/add" id="formaddval" method="post" name="formaddval" style="display:none;">
+                <table id="tblprod2" class="table table-hover table-bordered">
+                    <tr>
+                        <td rowspan="4">Valores Presupuestado por año</td>
+                        <td class="eliminar">Eliminar</td>
+                    </tr>
+                    <tr>
+                        <td>Año</td>
+                        <td><input class="form-control validate[required]" type="date"  id="date" name="date" class="fecha" /> 
+                            <input type="text" value="<?php echo $this->id ?>" id="id_factor" name="id_factor"/>
+                        </td>
+                        <td class="eliminar">Eliminar</td>
+                    </tr>
+                    <tr>       
+                        <td>Semestre A</td>
+                        <td><input class="form-control validate[required]" type="text"  id="semestreA" name="semestreA" class="fecha" /> </td>
+                        <td class="eliminar">Eliminar</td>
+                    </tr>
+                    <tr>
+                        <td>Semestre B</td>    
+                        <td><input class="form-control validate[required]" type="text"  id="semestreB" name="semestreB" class="fecha" /></td>
+                        <td class="eliminar">Eliminar</td>
+                    </tr>
+                </table>
+                <button id="agregar" class="btn btn-success" type="submit" >Guardar</button>
+<!--                <input type="button" id="agregar" value="Agregar fila" />-->
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Titulo</th>
+                        <th>Descripcion</th>
+                        <th>Tipo</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-elementos" class="table table-hover table-bordered">
+
+                </tbody>
+            </table>
+
+
+
+
+
+
+
+
+<!--            <form action="<?php echo $this->basePath() ?>/presupuestado/add" id="formaddval" method="post" name="formaddval" style="display:none;">
+    <table id="tblprod2" class="table table-hover table-bordered">
+        <tr>
+            <td>Valores Presupuestado por año</td>
+            <td>Año</td>
+            <td><input class="form-control validate[required]" type="date"  id="date" name="date" class="fecha" /> 
+                <input type="text" value="<?php echo $this->id ?>" id="id_factor" name="id_factor"/>
+            </td>
+            <td>Semestre A</td>
+            <td><input class="form-control validate[required]" type="text"  id="semestreA" name="semestreA" class="fecha" /> </td>
+            <td>Semestre B</td>    
+            <td><input class="form-control validate[required]" type="text"  id="semestreB" name="semestreB" class="fecha" /></td>
+            <td><button id="agregar" class="btn btn-success" type="submit" >Guardar</button></td>
+        </tr>
+    </table>
+    
+    <input type="button" id="agregar" value="Agregar fila" />
+</form>-->
+
+
+            <div id=”contenido”> Aquí mi contenido</div>
+            <input type='submit' value='Guardar' id="pueba"/>
+
+
+
         </div>
     </div>
 </div>
 
+
+
 <script type="text/javascript">
-    $(function (){
-       $("#addCaracteristica").submit(function (e){
-           e.preventDefault();
-           var caracteristica = $("caracteristica").val();
-           var id_factor = $("id_factor").val();
-           $.ajax({
-              url: $("#formadd").attr('action'),
-              type: $("#formadd").attr('method'),
-              data: {m1: caracteristica, m2: id_factor},
-              success: function (data) {
-                  $("#resultado").val(data.resultad)
-              }
-           });
-       }); 
+
+
+    $(function () {
+        var tablaElementos = document.getElementById('tabla-elementos');
+
+        var txtTitulo = document.getElementById('date');
+        var txtDescripcion = document.getElementById('semestreA');
+        var ddlTipo = document.getElementById('semestreB');
+
+        var btnAgregar = document.getElementById('agregar');
+
+        var datos = [];
+
+        function btnEditar_Click(event) {
+
+            txtTitulo.value = this.elemento.titulo;
+            txtDescripcion.value = this.elemento.descripcion;
+            ddlTipo.value = this.elemento.tipo;
+
+        }
+
+        function btnAgregar_Click(event) {
+            var titulo = txtTitulo.value || '';
+            var descripcion = txtDescripcion.value || '';
+            var tipo = ddlTipo.value || '';
+
+            if (!titulo || !titulo.trim().length) {
+                alert('debe ingresar un titulo');
+                return;
+            }
+////
+            if (!descripcion || !descripcion.trim().length) {
+                alert('debe ingresar una descripcion');
+                return;
+            }
+//
+
+
+            txtTitulo.focus();
+
+            // JSON
+
+            var item = {
+                titulo: titulo.trim(),
+                descripcion: descripcion.trim(),
+                tipo: tipo,
+                fecha: new Date()
+            };
+////
+          datos.push(item);
+//
+//            //tablaElementos.innerHTML = '';
+//
+            while (tablaElementos.childElementCount > 0) {
+                tablaElementos.removeChild(tablaElementos.firstElementChild);
+            }
+//
+            for (var i = 0; i < datos.length; i++) {
+//
+                var elemento = datos[i];
+//
+                /*
+                 var fila = '<tr><td>' + elemento.titulo +
+                 '</td><td>' + elemento.descripcion +
+                 '</td><td>' + elemento.tipo + '</td></tr>';
+                 
+                 tablaElementos.innerHTML += fila;
+                 */
+//
+                var tr = document.createElement('tr');
+                var td1 = document.createElement('td');
+                var td2 = document.createElement('td');
+                var td3 = document.createElement('td');
+                var td4 = document.createElement('td');
+//
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tr.appendChild(td3);
+                tr.appendChild(td4);
+//
+                td1.textContent = elemento.titulo;
+                td2.textContent = elemento.descripcion;
+                td3.textContent = elemento.tipo;
+//
+                tablaElementos.appendChild(tr);
+//
+                var nuevoBoton = document.createElement('button');
+                nuevoBoton.type = 'button';
+                nuevoBoton.textContent = 'Editar';
+//
+                nuevoBoton.addEventListener('click', btnEditar_Click);
+                nuevoBoton.elemento = elemento;
+                td4.appendChild(nuevoBoton);
+
+            }
+//
+//
+//
+        };
+    btnAgregar.addEventListener('click', btnAgregar_Click);
+        
+
+
+        
+        
+        
+        jQuery("form#formaddval").submit(function (event) {
+           
+            event.preventDefault();
+            var baseUrl = '/ORI-BSC/public/presupuestado';
+            jQuery.ajax({
+                url: baseUrl + '/add',
+                data: jQuery("form#formaddval").serialize(),
+                type: "POST"
+            }).done(function (result) {
+
+            });
+            
+            
+        });
+
+
+
+        jQuery("form#formulario").submit(function (event) {
+            event.preventDefault();
+            var baseUrl = '/ORI-BSC/public/caracteristica';
+            jQuery.ajax({
+                url: baseUrl + '/add',
+                data: jQuery("form#formulario").serialize(),
+                type: "POST"
+            }).done(function (result) {
+                //jQuery("body").append(result);
+            });
+//
+        });
+        
+        $("#addCaracteristica").on("click", function () {
+            $('#formaddval').show(); //muestro mediante id
+            $('.formaddval').show(); //muestro mediante clase
+        });
+
+
+//            $("#agregar").submit(function (e) {
+//            e.preventDefault();
+//            var date = $("date").val();
+//            var semestreA = $("semestreA").val();
+//            var semestreB = $("semestreB").val();
+//            $.ajax({
+//                url: $("#formaddval").attr('action'),
+//                type: $("#formaddval").attr('method'),
+//                data: {m1: date, m2: semestreA, m2: semestreB},
+//                success: function (data) {
+//                    $("#resultado").val(data.resultad)
+//                }
+//            });
+//        });
+
+
+
+        
+
+
+        //Clona la fila oculta que tiene los campos base, y la agrega al final de la tabla
+//        $("#agregar").on('click', function () {
+//            $("#tblprod2 tbody tr:eq(0)").clone().removeClass('fila-base').appendTo("#tblprod2 tbody");
+//            $("#tblprod2 tbody tr:eq(1)").clone().removeClass('fila-base').appendTo("#tblprod2 tbody");
+//            $("#tblprod2 tbody tr:eq(2)").clone().removeClass('fila-base').appendTo("#tblprod2 tbody");
+//            $("#tblprod2 tbody tr:eq(3)").clone().removeClass('fila-base').appendTo("#tblprod2 tbody");
+//            $("#tblprod2 tbody tr:eq(4)").clone().removeClass('fila-base').appendTo("#tblprod2 tbody");
+//        });
+
+//        jQuery("form#formaddval").submit(function (event) {
+//                event.preventDefault();
+//                var baseUrl = '/ORI-BSC/public/presupuestado';
+//                jQuery.ajax({
+//                    url: baseUrl + '/add',
+//                    data: jQuery("form#formaddval").serialize(),
+//                    type: "POST"
+//                }).done(function (result) {
+//                   console.info("y aca");
+//                });
+//
+//            });
+
+
+//
+//        // Evento que selecciona la fila y la elimina 
+        //$(document).on("click", ".eliminar", function () {
+//        jQuery("form#formaddval").submit(function (event) {
+//
+//            event.preventDefault();
+//            var baseUrl = '/ORI-BSC/public/presupuestado';
+//            jQuery.ajax({
+//                url: baseUrl + '/add',
+//                data: jQuery("form#formaddval").serialize(),
+//                type: "POST"
+//            }).done(function (result) {
+//
+//            });
+//
+//            //$("#tblprod2 tbody tr:eq(0)").clone().removeClass('fila-base').appendTo("#tblprod2 tbody");
+////            $("#tblprod2 tbody tr:eq(0)").clone().appendTo("#tblprod2 tbody");
+////            console.info(algo);
+////            $('#agregar').hide();
+//
+//
+//        });
+
+
+
+
+//            var parent = $(this).parents().get(0);
+//            console.info(parent);
+//            $(parent).remove();
+        // });
     });
+
 </script>
+
+

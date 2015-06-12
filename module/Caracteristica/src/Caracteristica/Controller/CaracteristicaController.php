@@ -8,9 +8,25 @@ use Zend\View\Model\JsonModel;
 use Caracteristica\Model\Caracteristica;
 use Caracteristica\Form\CaracteristicaForm;
 
+
+use PHPUnit_Framework_TestCase;
+use PHPUnit_Framework_ExpectationFailedException;
+use Zend\Console\Console;
+use Zend\EventManager\StaticEventManager;
+use Zend\Http\Request as HttpRequest;
+use Zend\Mvc\Application;
+use Zend\Mvc\MvcEvent;
+use Zend\Stdlib\Exception\LogicException;
+use Zend\Stdlib\Parameters;
+use Zend\Stdlib\ResponseInterface;
+use Zend\Uri\Http as HttpUri;
+
 class CaracteristicaController extends AbstractActionController {
 
     protected $caracteristicaTable;
+    
+    
+    
 
     public function indexAction() {
         $id = (int) $this->params()->fromRoute('id', 0);
@@ -28,6 +44,7 @@ class CaracteristicaController extends AbstractActionController {
         $request = $this->getRequest();
 
         if ($request->isPost()) {
+
             $caracteristica = new Caracteristica();
             $form->setInputFilter($caracteristica->getInputFilter());
             $form->setData($request->getPost());
@@ -36,13 +53,17 @@ class CaracteristicaController extends AbstractActionController {
                 'ID_FACTOR' => $_POST['id_factor'],
                 'CARACTERISTICA' => $_POST['caracteristica'],
                 'DATE_CREATION' => date("Y/m/d"),
+//                'DATE_BUDGETED' => $_POST['fecha'],
+//                'SEMESTER_A' => $_POST['semestreA'],
+//                'SEMESTER_B' => $_POST['semestreB']
             );
             $caracteristica->exchangeArray($data);
             $this->getCaracteristicaTable()->saveCaracteristica($caracteristica);
-            return $this->redirect()->toRoute('caracteristica', array(
-                'action' => 'index',
-                'id' => $_POST['id_factor']
-            ));
+            //return $res;
+//            return $this->redirect()->toRoute('caracteristica', array(
+//                'action' => 'index',
+//                'id' => $_POST['id_factor']
+//            ));
         }else{
             return array('id' => $id_factor, 'form' => $form);
         }
@@ -171,6 +192,10 @@ class CaracteristicaController extends AbstractActionController {
             $this->caracteristicaTable = $sm->get('Caracteristica\Model\CaracteristicaTable');
         }
         return $this->caracteristicaTable;
+    }
+    
+    public function presupuestadoOriAction(){
+
     }
 
 }

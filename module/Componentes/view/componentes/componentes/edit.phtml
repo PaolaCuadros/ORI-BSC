@@ -1,0 +1,46 @@
+<?php
+$title = "Modificar Componentes";
+$this->headTitle($title);
+?>
+
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<div id="container">
+    <div class="row-fluid top-buffer">
+        <div class=" text-center">
+            <form action="<?php echo $this->basePath() ?>/componentes/edit" id="formadd" method="post" name="formadd">
+                <table id="tblprod" class="table table-hover table-bordered" >
+                    <tr>
+                        <td><b>Nombre Componente</b></td>
+                        <td><input class="form-control validate[required]" name="componente" id="componente" value="<?php echo $this->name ?>" /></td>
+                    <input type="hidden" id="id" name="id" value="<?php echo $this->id; ?>" />
+                    </tr>
+                </table>
+                <button id="addComponente" class="btn btn-success" type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function (){
+       jQuery("#formadd").validationEngine({promptPosition: "centerRight:0,-5"});
+       
+       $("#addComponente").submit(function (e){
+           e.preventDefault();
+           var caracteristica = $("componente").val();
+           var id = $("id").val();
+           $.ajax({
+              url: $("#formadd").attr('action'),
+              type: $("#formadd").attr('method'),
+              data: {m1: caracteristica, m3: id},
+              success: function (data) {
+                  $("#resultado").val(data.resultad)
+              }
+           });
+       }); 
+    });
+</script>
+
+
+

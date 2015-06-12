@@ -1,24 +1,49 @@
 <?php
-
-$title = 'Edit Factor';
+$title = "Modificar Factor";
 $this->headTitle($title);
 ?>
+
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 
-<?php
-$form = $this->form;
-$form->setAttribute('action', $this->url(
-    'factores',
-    array(
-        'action' => 'edit',
-        'id'     => $this->id,
-    )
-));
-$form->prepare();
+<div id="container">
+    <div class="row-fluid top-buffer">
+        <div class=" text-center">
+            <form action="<?php echo $this->basePath() ?>/factores/edit" id="formadd" method="post" name="formadd">
+                <table id="tblprod" class="table table-hover table-bordered" >
+                    <tr>
+                        <td><b>Nombre Factor</b></td>
+                        <td><input class="form-control validate[required]" name="factor" id="factor" value="<?php echo $this->name ?>" /></td>
+                    <input type="hidden" id="id" name="id" value="<?php echo $this->id; ?>" />
+                    <input type="hidden" id="idParent" name="idParent" value="<?php echo $this->idParent; ?>" />
+                    </tr>
+                </table>
+                <button id="addFactor" class="btn btn-success" type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>
 
-echo $this->form()->openTag($form);
-echo $this->formHidden($form->get('id'));
-echo $this->formRow($form->get('name'));
-echo $this->formSubmit($form->get('submit'));
-echo $this->form()->closeTag();
+<script type="text/javascript">
+    $(function (){
+       jQuery("#formadd").validationEngine({promptPosition: "centerRight:0,-5"});
+       
+       $("#addFactor").submit(function (e){
+           e.preventDefault();
+           var caracteristica = $("factor").val();
+           var id = $("id").val();
+           var idParent = $("idParent").val();
+           $.ajax({
+              url: $("#formadd").attr('action'),
+              type: $("#formadd").attr('method'),
+              data: {m1: caracteristica, m3: id, m3: idParent},
+              success: function (data) {
+                  $("#resultado").val(data.resultad)
+              }
+           });
+       }); 
+    });
+</script>
+
+
+
 

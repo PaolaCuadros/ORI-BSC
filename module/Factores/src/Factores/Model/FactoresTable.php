@@ -16,7 +16,12 @@ class FactoresTable extends AbstractTableGateway {
     }
     
     public function fetchAll(){
-        $resultSet = $this->select(array('idParent' => 0));
+        $resultSet = $this->select();
+        return $resultSet;
+    }
+    
+    public function getAllFactorComponente($id){
+        $resultSet = $this->select(array('idParent' => $id));
         return $resultSet;
     }
 
@@ -70,6 +75,11 @@ class FactoresTable extends AbstractTableGateway {
     
     public function itemsFactores($id){
         $resultSet = $this->select(array('idParent' => $id));
+        return $resultSet;
+    }
+    
+    public function getFactor($id){
+        $resultSet = $this->select(array('id' => $id));
         return $resultSet;
     }
 }
