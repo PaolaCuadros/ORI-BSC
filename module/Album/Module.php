@@ -2,7 +2,7 @@
 
 // module/Album/Module.php:
 namespace Album;
-
+  //paola cuadros
 // Add this import statement:
 use Album\Model\AlbumTable;
 
