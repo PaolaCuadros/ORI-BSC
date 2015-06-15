@@ -53,5 +53,11 @@ class ComponentesTable extends AbstractTableGateway{
     public function deleteComponente($id){
         $this->delete(array('id' => $id));
     }
+    
+    public function getPdiPresupuestado(){
+        $sql = 'SELECT * FROM caracteristica WHERE id_factor = "'.$id.'"';
+        $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $results;
+    }
 }
 

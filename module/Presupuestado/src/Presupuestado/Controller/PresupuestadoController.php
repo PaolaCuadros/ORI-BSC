@@ -11,6 +11,9 @@ use Presupuestado\Model\Presupuestado;
 class PresupuestadoController extends AbstractActionController {
 
     protected $presupuestadoTable;
+    protected $preComponentesTable;
+    protected $preFactoresTable;
+    protected $preCaracteristicasTable;
 
     public function indexAction() {
         parent::indexAction();
@@ -45,12 +48,99 @@ class PresupuestadoController extends AbstractActionController {
         return $this->presupuestadoTable;
     }
 
+    public function getPreComponentesTable() {
+        if (!$this->preComponentesTable) {
+            $sm = $this->getServiceLocator();
+            $this->preComponentesTable = $sm->get('Componentes\Model\ComponentesTable');
+        }
+        return $this->preComponentesTable;
+    }
+
+    public function getPreFactoresTable() {
+        if (!$this->preFactoresTable) {
+            $sm = $this->getServiceLocator();
+            $this->preFactoresTable = $sm->get('Factores\Model\FactoresTable');
+        }
+        return $this->preFactoresTable;
+    }
+
+    public function getPreCaracteristicasTable() {
+        if (!$this->preCaracteristicasTable) {
+            $sm = $this->getServiceLocator();
+            $this->preCaracteristicasTable = $sm->get('Caracteristica\Model\CaracteristicaTable');
+        }
+        return $this->preCaracteristicasTable;
+    }
+
     public function caracteristicaPresupuestado() {
         return $this->getPresupuestadoTable()->addPresupuesto();
 //        $idCaracteristica;
 //        $caracteristica = new Caracteristica();
 //        $form->setInputFilter($caracteristica1->getInputFilter());
 //        $form->setData($request->getPost());
+    }
+
+    public function presupuestadoAction() {
+        $componentes = $this->getPreComponentesTable()->fetchAll();
+        $factores = $this->getPreFactoresTable();
+        $caracteristicas = $this->getPreCaracteristicasTable();
+        $presupuestado = $this->getPresupuestadoTable();
+//        foreach($componentes as $componente) {
+//            die(print_r($componente->id));
+//            //$factores = $this->getPreFactoresTable()->getAllFactorComponente($componente->id);
+//        }
+//        $componentes = $this->getPresupuestadoTable()->getPdiPresupuestado();
+        //var_dump($componentes); exit();
+        
+//        foreach ($componentes['componente'] as $componente){
+//            $nameComponente[] = $componente;
+//        }
+//        
+//        foreach ($componentes['factores'] as $factores){
+//            $nameFactores[] = $factores;
+//        }
+//        
+//        foreach ($componentes['caracteristica'] as $caracteristica){
+//            $nameCaracteristica[] = $caracteristica;
+//        }
+//        
+//        foreach ($componentes['contador'] as $contador){
+//            $numContador[] = $contador;
+//        }
+        
+        
+        
+        //var_dump($nameCaracteristica); exit();
+        return array (
+            'componentes' => $componentes,
+            'factores' => $factores,
+            'caracteristicas' => $caracteristicas,
+            'presupuestado' => $presupuestado
+        );
+        // = $this->getPresupuestadoTable()->getPdiPresupuestado();
+        
+//        //var_dump($componentes['compara']['idCaracteristica']); exit();
+//        
+//        $consolidado = array(
+//            'componentes' => $componentes['sendData']['componente'],
+//            'factores' => $componentes['sendData']['factor'],
+//            'caracteristicas' => $componentes['sendData']['caracteristica'],
+//            'idFactor' => $componentes['compara']['idFactor'],
+//            'caracId' => $componentes['compara']['idCaracteristica'],
+//        );
+//
+//
+//
+//         //var_dump($componentes['sendData']['caracteristica']); echo "<br/>"; exit();
+//
+//        return array(
+//            'componentes' => $componentes['sendData']['componente'],
+//            'factores' => $componentes['sendData']['factor'],
+//            'caracteristicas' => $componentes['sendData']['caracteristica'],
+//            'compara' => array('idFactor' => $componentes['compara']['idFactor'],
+//                                'caracId' => $componentes['compara']['idCaracteristica'],),
+//            
+//        );
     }
 
 }

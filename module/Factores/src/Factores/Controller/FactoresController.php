@@ -46,7 +46,7 @@ class FactoresController extends AbstractActionController {
 
                     );
                     $factor->exchangeArray($data);
-                    var_dump($factor); exit();
+                    //var_dump($factor); exit();
                     $this->getFactorTable()->saveFactores($factor);
                     //$this->insert($data);
                     
@@ -114,6 +114,12 @@ class FactoresController extends AbstractActionController {
     public function deleteAction(){
         
         $id = (int) $this->params()->fromRoute('id', 0);
+        $dateFactor = $this->getFactorTable()->getFactores($id);
+        
+        foreach ($dateFactor as $fator){
+            $idComponente = $fator;
+        }
+
         if (!$id) {
             return $this->redirect()->toRoute('factores');
         }
@@ -127,9 +133,14 @@ class FactoresController extends AbstractActionController {
                 $id = (int) $request->getPost('id');
                 $this->getFactorTable()->deleteFactores($id);
             }
+            
+            return $this->redirect()->toRoute('factores', array(
+                'action' => 'index',
+                'id' => $idComponente
+            ));
 
             // Redirect to list of albums
-            return $this->redirect()->toRoute('factores');
+            //return $this->redirect()->toRoute('factores');
         }
         
         return array(
