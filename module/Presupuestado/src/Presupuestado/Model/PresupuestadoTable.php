@@ -42,5 +42,19 @@ class PresupuestadoTable extends AbstractTableGateway {
         }
         return $id;
     }
+    
+    public function getPresupuestadoCaracteristica($id) {
+        $sql = 'SELECT * FROM presupuestado WHERE idCaracteristica = "' . $id . '"';
+        $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $results;
+    }
+    
+    public function getDatePresupuestado(){
+        $sql = "SELECT DISTINCT date as fecha FROM presupuestado";
+        $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $results;
+    }
+    
+
 }
 

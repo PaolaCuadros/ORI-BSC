@@ -1,0 +1,67 @@
+<script>
+    $(function () {
+        $('table').tablesorter({
+            widgets: ['zebra', 'columns'],
+            usNumberFormat: false,
+            sortReset: true,
+            sortRestart: true
+        });
+    });
+</script>
+
+<?php 
+    $title = "Estudiantes";
+    $this->headTitle($title);
+//    foreach ($usuarios as $usuario){
+//        var_dump($usuario); echo "<br/>";
+//    }
+//    exit();
+    
+?>
+
+<h1 class="title"><?= $this->escapeHtml($title); ?></h1>
+
+<p>
+    <a class="btn btn-success" href="<?php echo $this->url('usuarios', array('action' => 'add')); ?>">Agregar Estudiante</a>
+</p>
+
+<table class="table tablesorter">
+    <thead style="border: 2px #e0e0e0 solid;">
+        <tr>
+            <th class="th_table">Id</th>
+            <th class="th_table">Nombre</th>
+            <th class="th_table">Apellidos</th>
+            <th class="th_table">Correo Electronico</th>
+            <th class="th_table">Telefono</th>
+            <th class="th_table">Código</th>
+            <th class="th_table">Programa Académico / <br/> Universidad</th>
+            <th class="th_table">Semestre</th>
+            <th class="th_table">Programa Interes</th>
+            <th class="th_table">Compromisos</th>
+            <th class="th_table">Observaciones</th>
+            <th class="th_table">Editar</th>
+            <th class="th_table">Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($usuarios as $usuario):   ?>
+        <tr>
+        <td class="th_table"><?php echo $this->escapeHtml($usuario->id) ?></td>
+        <td class="th_table"><?php echo $this->escapeHtml($usuario->name) ?></td>
+        <td class="th_table"><?php echo $this->escapeHtml($usuario->last_name) ?></td>
+        <td class="th_table"><?php echo $this->escapeHtml($usuario->email) ?></td>
+        <td class="th_table"><?php echo $this->escapeHtml($usuario->telefono) ?></td>
+        <td class="th_table"><?php echo $this->escapeHtml($usuario->cod_estud) ?></td>
+        <td class="th_table"><?php echo $this->escapeHtml($usuario->carrera) ?></td>
+        <td class="th_table"><?php echo $this->escapeHtml($usuario->semestre) ?></td>
+        <td class="th_table"><?php echo $this->escapeHtml($usuario->prog_interes) ?></td>
+        <td class="th_table" style="word-wrap: break-word; width: 250px; height: 5px; "><?php echo $this->escapeHtml($usuario->compromisos) ?></td>
+        <td class="th_table" style="word-wrap: break-word; width: 100px;"><?php echo $this->escapeHtml($usuario->observaciones) ?></td>
+        <td class="th_table"><a href="<?php echo $this->url('usuarios', array('action' => 'edit', 'id' => $usuario->id)); ?>"><img src='<?php echo $this->basePath('img/editar.png') ?>' ></a></td>
+        <td class="th_table"><a href="<?php echo $this->url('usuarios', array('action' => 'delete', 'id' => $usuario->id)); ?>"><img src='<?php echo $this->basePath('img/eliminar.png') ?>' ></a></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+

@@ -149,6 +149,14 @@ class CaracteristicaController extends AbstractActionController {
     public function deleteAction() {
        $id_factor = 0;
         $id = (int) $this->params()->fromRoute('id', 0);
+        
+        $caracteristica = $this->getCaracteristicaTable($id)->getCaracteristicaId($id);
+           
+            foreach ($caracteristica as $caract) {
+                $id_factor = $caract->id_factor;
+            }
+       
+        
         if (!$id) {
             return $this->redirect()->toRoute('caracteristica');
         }
@@ -162,16 +170,6 @@ class CaracteristicaController extends AbstractActionController {
                 $id = (int) $request->getPost('id');
                 $this->getCaracteristicaTable()->deleteCaracteristica($id);
             }
-        
-            
-            $caracteristica = $this->getCaracteristicaTable($id)->fetchAll($id);
-           
-            foreach ($caracteristica as $caract) {
-                $id = $caract->id;
-                $carac = $caract->caracteristica;
-                $id_factor = $caract->id_factor;
-            }
-           
             
             return $this->redirect()->toRoute('caracteristica', array(
                 'id' => $id_factor

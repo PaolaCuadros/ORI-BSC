@@ -1,0 +1,83 @@
+<?php
+$title = "Modificar Estudiante";
+$this->headTitle($title);
+?>
+
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<div id="container">
+    <div class="row-fluid top-buffer">
+        <div class=" text-center">
+            <form action="<?php echo $this->basePath() ?>/usuarios/edit" id="formadd" method="post" name="formadd">
+                <table id="tblprod" class="table table-hover table-bordered">
+                    <tr>
+                        <td class="td_table">Nombres</td>
+                        <td><input class="form-control validate[required]" type="text" name="name" id="name" value="<?php echo $this->nombre ?>" />
+                        <input class="form-control validate[required]" type="text" name="id" id="id" value="<?php echo $this->id ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Apellidos</td>
+                        <td><input type="text" class="form-control validate[required]" name="last_name" id="last_name" value="<?php echo $this->last_name ?>"  /></td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Correo Electronico</td>
+                        <td><input type="email" class="form-control validate[required]" name="email" id="email" value="<?php echo $this->email ?>" /> </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Telefono</td>
+                        <td><input type="text" class="form-control validate[required]" name="telefono" id="telefono" value="<?php echo $this->telefono ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Código</td>
+                        <td><input type="text" class="form-control validate[required]" name="cod_estud" id="cod_estud" value="<?php echo $this->cod_estud ?>" /> </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Programa académico / Universidad</td>
+                        <td>
+                            <select name="prog_academic" class="form-control validate[required]">
+                                <?php
+                                $ProgramaAcademico = $progAcademico->getAllProgramasAcademicos();
+                                foreach ($ProgramaAcademico as $progAcademico) {
+                                    ?>
+                                    <option value="<?php echo $progAcademico->ID_CARRERA ?>"><?php echo $progAcademico->NOMBRE ?> </option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Semestre</td>
+                        <td><input type="number" class="form-control validate[required]" name="semestre" id="semestre" value="<?php echo $this->semestre ?>" /> </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Programa de Intenres</td>
+                        <td>
+                            <select name="prog_interes" class="form-control validate[required]">
+                                <?php
+                                $ProgramaInteres = $progInteres->getAllProgramasInteres();
+                                foreach ($ProgramaInteres as $progInteres) {
+                                    ?>
+                                    <option value="<?php echo $progInteres->id ?>"><?php echo $progInteres->name ?> </option>
+                                    <?php
+                                }
+                                ?>
+
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Compromisos</td>
+                        <td><textarea class="form-control validate[required]" name="compromisos" id="compromisos" rows="3"><?php echo $this->compromisos ?></textarea> </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Observaciones</td>
+                        <td><textarea class="form-control validate[required]" name="observaciones" id="observaciones" rows="3"><?php echo $this->observaciones ?></textarea> </td>
+                    </tr>
+                </table>
+                <button id="addUsuario" class="btn btn-success" type="submit" >Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>

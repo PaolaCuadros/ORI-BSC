@@ -1,0 +1,128 @@
+<?php
+$title = "Registro de Estudiantes";
+$this->headTitle($title);
+$form = $this->form;
+?>
+
+<h1><?= $this->escapeHtml($title); ?></h1>
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jQuery-Validation-Engine/2.6.4/jquery.validationEngine.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jQuery-Validation-Engine/2.6.4/languages/jquery.validationEngine-es.js"></script>
+
+
+<div id="container" style="  width: 80%; margin-left: 10%;">
+    <div class="row-fluid top-buffer">
+        <div class=" text-center">
+            <form action="<?php echo $this->basePath() ?>/usuarios/add" id="formadd" method="post" name="formadd">
+                <table id="tblprod" class="table table-hover table-bordered">
+                    <tr>
+                        <td class="td_table">Nombres</td>
+                        <td><input class="form-control validate[required]" type="text" name="name" id="name" /></td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Apellidos</td>
+                        <td><input type="text" class="form-control validate[required]" name="last_name" id="last_name" /></td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Correo Electrónico</td>
+                        <td><input type="email" class="form-control validate[required]" name="email" id="email" /> </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Teléfono</td>
+                        <td><input type="text" class="form-control validate[required]" name="telefono" id="telefono" /></td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Código</td>
+                        <td><input type="text" class="form-control validate[required]" name="cod_estud" id="cod_estud"/> </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Programa académico / Universidad</td>
+                        <td>
+                            <select name="prog_academic" class="form-control validate[required]">
+                                <?php
+                                $ProgramaAcademico = $progAcademico->getAllProgramasAcademicos();
+                                foreach ($ProgramaAcademico as $progAcademico) {
+                                ?>
+                                    <option value="<?php echo $progAcademico->ID_CARRERA ?>"><?php echo $progAcademico->NOMBRE ?> </option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Semestre</td>
+                        <td><input type="number" name="semestre" id="semestre" /> </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Programa de Interés</td>
+                        <td>
+                            <select name="prog_interes" id="prog_interes" class="form-control validate[required]">
+                                <?php
+                                $ProgramaInteres = $progInteres->getAllProgramasInteres();
+                                foreach ($ProgramaInteres as $progInteres) {
+                                       ?>
+                                    <option value="<?php echo $progInteres->id ?>"><?php echo $progInteres->name ?> </option>
+                                <?php
+                                }
+                                ?>
+                                
+                            </select>
+                            <input type="hidden" id="prog_interes" name="prog_interes" value="<?php echo $progInteres->id ?>"/>
+                            <input type="text" class="form-control validate[required]" id="otro_prog_interes" name="otro_prog_interes" value="" style="display:none;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Compromisos</td>
+                        <td><textarea class="form-control validate[required]" name="compromisos" id="compromisos" rows="3"></textarea> </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Observaciones</td>
+                        <td><textarea class="form-control validate[required]" name="observaciones" id="observaciones" rows="3"></textarea> </td>
+                    </tr>
+                </table>
+                <button id="addUsuario" class="btn btn-success" type="submit" >Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        $("#prog_interes").click(function (){
+            $('#otro_prog_interes').show(); //muestro mediante id
+            $('.otro_prog_interes').show();
+        });
+        
+        jQuery("#formadd").validationEngine({promptPosition: "centerRight:0,-5"});
+        $("#addUsuario").submit(function (e) {
+            var frm = $(this);
+            var data = $(this).serialize();
+            e.preventDefault();
+            var name = $("name").val();
+            var last_name = $("last_name").val();
+            var email = $("email").val();
+            var telefono = $("telefono").val();
+            var cod_estud = $("cod_estud").val();
+            var semestre = $("semestre").val();
+            var compromisos = $("compromisos").val();
+            var observaciones = $("observaciones").val();
+            var prog_academic = $("prog_academic").val();
+            var prog_interes = $("prog_interes").val();
+
+
+            if (num1 !== "") {
+                $.ajax({
+                    url: $("#formadd").attr('action'),
+                    type: $("#formadd").attr('method'),
+                    data: {m1: name, m2: last_name, m3: email, m4: telefono, m5: cod_estud, m6: semestre, m7: compromisos, m8: observaciones, m9: prog_academic, m10: prog_interes},
+                    success: function (data) {
+                        $("#resultado").val(data.resultad)
+                    }
+                });
+            }
+        });
+
+    });
+</script>

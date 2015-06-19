@@ -11,6 +11,9 @@ use Presupuestado\Model\Presupuestado;
 class PresupuestadoController extends AbstractActionController {
 
     protected $presupuestadoTable;
+    protected $preComponentesTable;
+    protected $preFactoresTable;
+    protected $preCaracteristicasTable;
 
     public function indexAction() {
         parent::indexAction();
@@ -45,6 +48,30 @@ class PresupuestadoController extends AbstractActionController {
         return $this->presupuestadoTable;
     }
 
+    public function getPreComponentesTable() {
+        if (!$this->preComponentesTable) {
+            $sm = $this->getServiceLocator();
+            $this->preComponentesTable = $sm->get('Componentes\Model\ComponentesTable');
+        }
+        return $this->preComponentesTable;
+    }
+
+    public function getPreFactoresTable() {
+        if (!$this->preFactoresTable) {
+            $sm = $this->getServiceLocator();
+            $this->preFactoresTable = $sm->get('Factores\Model\FactoresTable');
+        }
+        return $this->preFactoresTable;
+    }
+
+    public function getPreCaracteristicasTable() {
+        if (!$this->preCaracteristicasTable) {
+            $sm = $this->getServiceLocator();
+            $this->preCaracteristicasTable = $sm->get('Caracteristica\Model\CaracteristicaTable');
+        }
+        return $this->preCaracteristicasTable;
+    }
+
     public function caracteristicaPresupuestado() {
         return $this->getPresupuestadoTable()->addPresupuesto();
 //        $idCaracteristica;
@@ -53,4 +80,16 @@ class PresupuestadoController extends AbstractActionController {
 //        $form->setData($request->getPost());
     }
 
+    public function presupuestadoAction() {
+        $componentes = $this->getPreComponentesTable()->fetchAll();
+        $factores = $this->getPreFactoresTable();
+        $caracteristicas = $this->getPreCaracteristicasTable();
+        $presupuestado = $this->getPresupuestadoTable();
+        return array (
+            'componentes' => $componentes,
+            'factores' => $factores,
+            'caracteristicas' => $caracteristicas,
+            'presupuestado' => $presupuestado
+        );
+    }
 }

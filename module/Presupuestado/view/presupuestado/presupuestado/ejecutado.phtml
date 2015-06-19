@@ -1,0 +1,42 @@
+<?php
+$title = 'PDI Ejecutado';
+$this->headTitle($title);
+include __DIR__ . '\menu.phtml';
+?>
+
+<div class="container-view">
+    <h1 class="title"><?php echo $this->escapeHtml($title); ?></h1>
+    <table id="example" class="table table-striped table-bordered">
+        <thead style="border: 2px #e0e0e0 solid;">
+            <tr>
+                <th rowspan="2" class="th_table">Componentes</th>
+                <th rowspan="2" class="th_table">Factor</th>
+                <th rowspan="2" class="th_table">Caracteristica</th>
+                <?php
+                $datePresupuestado = $presupuestado->getDatePresupuestado();
+                foreach ($datePresupuestado as $date) {
+                    $fehca = substr($date->fecha, 0, -15);
+                    ?>
+                    <th colspan="2" class="th_table"><?php echo $fehca ?></th>
+
+                    <?php
+                }
+                ?>
+            </tr>
+            <tr> 
+                <?php
+                $datePresupuestado2 = $presupuestado->getDatePresupuestado();
+                foreach ($datePresupuestado2 as $date2) {
+                    ?>
+
+                    <th>Sem A</th>
+                    <th>Sem B</th>
+
+                    <?php
+                }
+                ?>
+            </tr>
+
+        </thead>
+    </table>
+</div>

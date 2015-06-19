@@ -80,3 +80,19 @@ div.container a.brand {
     color: white;
     text-decoration: none;
 }
+
+.img-map{
+    width: 100%;
+}
+
+.container_index{
+    background-color: #99B3FF;
+}
+
+.td_table{
+    width: 20%;
+    text-align: left;
+    font-weight: bolder;
+}
+
+

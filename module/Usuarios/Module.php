@@ -1,16 +1,10 @@
 <?php
 
-// module/Album/Module.php:
-namespace Album;
-  //paola cuadros
-// Add this import statement:
-use Album\Model\AlbumTable;
+namespace Usuarios;
 
-class Module
-{
-    
-    public function getAutoloaderConfig()
-    {
+class Module {
+
+    public function getAutoloaderConfig() {
         return array(
             'Zend\Loader\ClassMapAutoloader' => array(
                 __DIR__ . '/autoload_classmap.php',
@@ -23,24 +17,23 @@ class Module
         );
     }
 
-    public function getConfig()
-    {
+    public function getConfig() {
         return include __DIR__ . '\config\module.config.php';
     }
-    // getAutoloaderConfig() and getConfig() methods here
 
+    // getAutoloaderConfig() and getConfig() methods here
     // Add this method:
-    public function getServiceConfig()
-    {
+    public function getServiceConfig() {
         return array(
             'factories' => array(
-                'Album\Model\AlbumTable' =>  function($sm) {
+                'Usuarios\Model\UsuariosTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $table     = new AlbumTable($dbAdapter);
+                    $table = new Model\UsuariosTable($dbAdapter);
                     return $table;
                 },
             ),
         );
     }
+
 }
 
