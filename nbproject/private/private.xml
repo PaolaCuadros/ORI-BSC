@@ -5,9 +5,13 @@
         <group>
             <file>file:/C:/wamp/www/ORI-BSC/module/Usuarios/view/usuarios/usuarios/add.phtml</file>
             <file>file:/C:/wamp/www/ORI-BSC/module/Usuarios/src/Usuarios/Controller/UsuariosController.php</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Componentes/view/componentes/componentes/menu.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Presupuestado/view/presupuestado/presupuestado/menu.phtml</file>
             <file>file:/C:/wamp/www/ORI-BSC/module/Caracteristica/view/caracteristica/caracteristica/add.phtml</file>
             <file>file:/C:/wamp/www/ORI-BSC/module/Componentes/view/componentes/componentes/add.phtml</file>
             <file>file:/C:/wamp/www/ORI-BSC/module/Usuarios/src/Usuarios/Model/UsuariosTable.php</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Album/view/album/album/index.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Presupuestado/view/presupuestado/presupuestado/ejecutado.phtml</file>
         </group>
     </open-files>
 </project-private>
