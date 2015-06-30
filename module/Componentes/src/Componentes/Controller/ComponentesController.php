@@ -11,7 +11,12 @@ use Componentes\Form\ComponentesForm;
 
 class ComponentesController extends AbstractActionController{
     protected $componentesTable;
-    
+    protected $preFactoresTable;
+    protected $preCaracteristicasTable;
+    protected $usuariosTable;
+    protected $presupuestadoTable;
+
+
     public function indexAction(){
         return new ViewModel(array(
             'componentes' => $this->getComponentesTable()->fetchAll(),
@@ -116,6 +121,84 @@ class ComponentesController extends AbstractActionController{
             $this->componentesTable = $sm->get('Componentes\Model\ComponentesTable');
         }
         return $this->componentesTable;
+    }
+    
+    public function getPreFactoresTable() {
+        if (!$this->preFactoresTable) {
+            $sm = $this->getServiceLocator();
+            $this->preFactoresTable = $sm->get('Factores\Model\FactoresTable');
+        }
+        return $this->preFactoresTable;
+    }
+    
+    public function getPreCaracteristicasTable() {
+        if (!$this->preCaracteristicasTable) {
+            $sm = $this->getServiceLocator();
+            $this->preCaracteristicasTable = $sm->get('Caracteristica\Model\CaracteristicaTable');
+        }
+        return $this->preCaracteristicasTable;
+    }
+    
+    public function getUsuariosTable() {
+        if (!$this->usuariosTable) {
+            $sm = $this->getServiceLocator();
+            $this->usuariosTable = $sm->get('Usuarios\Model\UsuariosTable');
+        }
+        return $this->usuariosTable;
+    }
+    
+    public function getPresupuestadoTable() {
+        if (!$this->presupuestadoTable) {
+            $sm = $this->getServiceLocator();
+            $this->presupuestadoTable = $sm->get('Presupuestado\Model\PresupuestadoTable');
+        }
+        return $this->presupuestadoTable;
+    }
+    
+    public function bscOriAction(){
+//        $limit = 1;
+//        $componente = $this->getComponentesTable()->getOneComponente($limit);
+//        foreach ($componente as $getComponente){
+//            $idComponente = $getComponente->id;
+//            $nameComponente = $getComponente->name;
+//            
+//        }
+//        $factor = $this->getPreFactoresTable()->getAllFactorComponente($idComponente);
+//        $caracteristicas = $this->getPreCaracteristicasTable();
+//        $ejecutado = $this->getUsuariosTable();
+//        $presupuestado = $this->getPresupuestadoTable();
+//        $getIndicadores = $this->getComponentesTable();
+//        return array(
+//            'getIndicadores' => $getIndicadores,
+//            'componente' => $nameComponente,
+//            'factor' => $factor,
+//            'caracteristicas' => $caracteristicas,
+//            'ejecutado' => $ejecutado,
+//            'presupuestado' => $presupuestado 
+//        );
+        
+        
+        $limit = 1;
+        $getIndicadores = $this->getComponentesTable();
+        $ejecutado = $this->getUsuariosTable();
+        
+        
+        
+        $componente = $this->getComponentesTable()->getOneComponente($limit);
+        foreach ($componente as $getComponente){
+            $idComponente = $getComponente->id;
+            $nameComponente = $getComponente->name;
+            
+        }
+        $factor = $this->getPreFactoresTable();
+        $presupuestado = $this->getPresupuestadoTable();
+        //var_dump($factor); exit();
+        return array(
+            'getIndicadores' => $getIndicadores,
+            'factor' => $factor,
+            'ejecutado' => $ejecutado,
+            'presupuestado' => $presupuestado
+        );         
     }
 }
 

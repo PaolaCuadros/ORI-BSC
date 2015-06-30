@@ -52,7 +52,7 @@ $form = $this->form;
                     </tr>
                     <tr>
                         <td class="td_table">Semestre</td>
-                        <td><input type="number" name="semestre" id="semestre" /> </td>
+                        <td><input type="number" class="form-control validate[required]" name="semestre" id="semestre" /> </td>
                     </tr>
                     <tr>
                         <td class="td_table">Programa de Interés</td>
@@ -69,7 +69,7 @@ $form = $this->form;
                                 
                             </select>
                             <input type="hidden" id="prog_interes" name="prog_interes" value="<?php echo $progInteres->id ?>"/>
-                            <input type="text" class="form-control validate[required]" id="otro_prog_interes" name="otro_prog_interes" value="" style="display:none;" />
+<!--                            <input type="text" class="form-control validate[required]" id="otro_prog_interes" name="otro_prog_interes" value="" style="display:none;" />-->
                         </td>
                     </tr>
                     <tr>
@@ -91,8 +91,8 @@ $form = $this->form;
 <script type="text/javascript">
     $(function () {
         $("#prog_interes").click(function (){
-            $('#otro_prog_interes').show(); //muestro mediante id
-            $('.otro_prog_interes').show();
+//            $('#otro_prog_interes').show(); //muestro mediante id
+//            $('.otro_prog_interes').show();
         });
         
         jQuery("#formadd").validationEngine({promptPosition: "centerRight:0,-5"});

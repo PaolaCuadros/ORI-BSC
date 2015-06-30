@@ -1,0 +1,98 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#example').dataTable();
+    });
+</script>
+
+<?php
+$title = 'PDI Ejecutado';
+$this->headTitle($title);
+include __DIR__ . '\menu.phtml';
+?>
+
+<div class="container-view">
+    <h1 class="title"><?php echo $this->escapeHtml($title); ?></h1>
+    <table id="example" class="table table-striped table-bordered">
+        <thead style="border: 2px #e0e0e0 solid;">
+            <tr>
+                <th rowspan="2" class="th_table">Componentes</th>
+                <th rowspan="2" class="th_table">Factor</th>
+                <th rowspan="2" class="th_table">Caracteristica</th>
+                <?php 
+                $datePresupuestado = $ejecutado->getDateEjecutado();
+                foreach ($datePresupuestado as $date){
+                    $fehca = $date->fecha;
+                ?>
+                <th colspan="2" class="th_table"><?php echo $fehca ?></th>
+                
+                <?php
+                }
+               
+                ?>
+            </tr>
+            <tr> 
+            <?php 
+            $datePresupuestado2 = $ejecutado->getDateEjecutado();
+            foreach ($datePresupuestado2 as $date2){
+            ?>
+            
+                <th>Sem A</th>
+                <th>Sem B</th>
+              
+            <?php
+            }
+            ?>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+                foreach ($componentes as $componente) {
+                    $currentFactores = $factores->getAllFactorComponente($componente->id);
+                $nCarRows = 0;
+                $f = 0;
+                $row = "<tr>"
+                        . "<td rowspan='%d'>" . $componente->name . "</td>";
+                foreach ($currentFactores as $factor) {
+                    $currentCaracteristicas = $caracteristicas->getCaracteristicaFactor($factor->id);
+                    $nCarRows += $currentCaracteristicas->count();
+                    if ($f === 0) {
+                        $row .= "<td rowspan='" . $currentCaracteristicas->count() . "'>" . $factor->name . "</td>";
+                    } else {
+                        $row .= "<tr><td rowspan='" . $currentCaracteristicas->count() . "'>" . $factor->name . "</td>";
+                    }
+                    $f++;
+                    $c = 0;
+                    $date = 2014;
+                    foreach ($currentCaracteristicas as $caracteristica) {
+                        if ($c === 0) {
+                            $row .= "<td>" . $caracteristica->CARACTERISTICA . "</td>";
+                        } else {
+                            $row .= "<tr><td>" . $caracteristica->CARACTERISTICA . "</td>";
+                        }
+                        $c++; 
+                        
+                        for($i = $date; $i <= date("Y"); $i++) {
+                        $currentEjecutado = $ejecutado->getEjecutadoCaracteristica($caracteristica->ID, $i);
+                        foreach ($currentEjecutado as $dateEjecutado) {
+                           $row .= "<td>" . $dateEjecutado->semestreaa . "</td>"
+                                  . "<td>" . $dateEjecutado->semestrebb . "</td>";
+                        }
+                        if(isset($dateEjecutado->semestreaa)){
+                            
+                        }else{
+                            $row .= "<td>0</td>"
+                                  . "<td>0</td>";
+                        }
+                        }
+                        //$date++;
+                        $row .= "</tr>";
+                    }
+                    
+                }
+                echo sprintf($row, $nCarRows);
+                }
+            ?>
+        </tbody>
+    </table>
+</div>
+

@@ -11,6 +11,10 @@ use Usuarios\Form\UsuariosForm;
 class UsuariosController extends AbstractActionController {
 
     protected $usuariosTable;
+    
+    protected $preComponentesTable;
+    protected $preFactoresTable;
+    protected $preCaracteristicasTable;
 
     public function indexAction() {
         return new ViewModel(array(
@@ -130,18 +134,41 @@ class UsuariosController extends AbstractActionController {
         return $this->usuariosTable;
     }
     
+    public function getPreComponentesTable() {
+        if (!$this->preComponentesTable) {
+            $sm = $this->getServiceLocator();
+            $this->preComponentesTable = $sm->get('Componentes\Model\ComponentesTable');
+        }
+        return $this->preComponentesTable;
+    }
+    
+    public function getPreFactoresTable() {
+        if (!$this->preFactoresTable) {
+            $sm = $this->getServiceLocator();
+            $this->preFactoresTable = $sm->get('Factores\Model\FactoresTable');
+        }
+        return $this->preFactoresTable;
+    }
+    
+    public function getPreCaracteristicasTable() {
+        if (!$this->preCaracteristicasTable) {
+            $sm = $this->getServiceLocator();
+            $this->preCaracteristicasTable = $sm->get('Caracteristica\Model\CaracteristicaTable');
+        }
+        return $this->preCaracteristicasTable;
+    }
+    
     public function ejecutadoAction() {
-//        var_dump("ca"); exit();
-//        $componentes = $this->getPreComponentesTable()->fetchAll();
-//        $factores = $this->getPreFactoresTable();
-//        $caracteristicas = $this->getPreCaracteristicasTable();
-//        $presupuestado = $this->getUsuariosTable();
-//        return array (
-//            'componentes' => $componentes,
-//            'factores' => $factores,
-//            'caracteristicas' => $caracteristicas,
-//            'presupuestado' => $presupuestado
-//        );
+        $componentes = $this->getPreComponentesTable()->fetchAll();
+        $factores = $this->getPreFactoresTable();
+        $caracteristicas = $this->getPreCaracteristicasTable();
+        $ejecutado = $this->getUsuariosTable();
+        return array (
+            'componentes' => $componentes,
+            'factores' => $factores,
+            'caracteristicas' => $caracteristicas,
+            'ejecutado' => $ejecutado
+        );
     }
 
 }
