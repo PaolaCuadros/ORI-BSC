@@ -33,48 +33,52 @@ class EjecutadoController extends AbstractActionController {
 
     public function addAction() {
         $id = (int) $this->params()->fromRoute('id', 0);
-
-        $form = new EjecutadoForm();
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $ejecutado = new Ejecutado();
-            $form->setInputFilter($ejecutado->getInputFilter());
-            $form->setData($request->getPost());
-
-            $data = array();
-            if (isset($_FILES['archivo'])) {
-                if (is_uploaded_file($_FILES['archivo']['tmp_name'])) {
-
-                    $dir = __DIR__ . "/../img";
-                    $tmp = $_FILES['archivo']['tmp_name'];
-                    
-                    $file = $_FILES['archivo']['name'];
-                    $new_path = $dir . "/" . $file;
-                    //var_dump($new_path); exit();
-                    if (move_uploaded_file($tmp, $new_path)) {
-                        echo "El Arhivo " . $file . " fue subido con exito";
-                    }
-                } else
-                    print ("No se ha podido subir el fichero");
-            }
-
-            $ejecutado->exchangeArray($data);
-            $this->getEjecutadoTable()->saveEjecutado($ejecutado, $new_path);
-            return $this->redirect()->toRoute('usuarios', array(
-                        'action' => 'index'
-            ));
+        $getEjecutado = $this->getEjecutadoTable()->getEjecutadoCaracteristica($id);
+        foreach ($getEjecutado as $ejecutado) {
+            $idEjecutado = $ejecutado->id;
         }
+        if (isset($idEjecutado)) {
+            return $this->redirect()->toRoute('ejecutado', array(
+                        'action' => 'edit'
+            ));
+        } else {
+            $form = new EjecutadoForm();
+            $request = $this->getRequest();
+            if ($request->isPost()) {
+                $ejecutado = new Ejecutado();
+                $form->setInputFilter($ejecutado->getInputFilter());
+                $form->setData($request->getPost());
 
+                $data = array();
+                if (isset($_FILES['archivo'])) {
+                    if (is_uploaded_file($_FILES['archivo']['tmp_name'])) {
 
+                        $dir = __DIR__ . "/../img";
+                        $tmp = $_FILES['archivo']['tmp_name'];
 
+                        $file = $_FILES['archivo']['name'];
+                        $new_path = $dir . "/" . $file;
+                        //var_dump($new_path); exit();
+                        if (move_uploaded_file($tmp, $new_path)) {
+                            echo "El Arhivo " . $file . " fue subido con exito";
+                        }
+                    } else
+                        print ("No se ha podido subir el fichero");
+                }
 
-        //$request = $this->getRequest();
-
-        return array('form' => $form, 'idFactor' => $id);
+                $ejecutado->exchangeArray($data);
+                $this->getEjecutadoTable()->saveEjecutado($ejecutado, $new_path);
+                return $this->redirect()->toRoute('ejecutado', array(
+                            'action' => 'index'
+                ));
+            }
+            return array('form' => $form, 'idCaracteristica' => $id);
+        }
     }
 
     public function editAction() {
-        
+        var_dump("hola care bola");
+        exit();
     }
 
     public function deleteAction() {
@@ -112,11 +116,11 @@ class EjecutadoController extends AbstractActionController {
         }
         return $this->usuariosTable;
     }
-    
+
     public function getEjecutadoTable() {
-        
+
         if (!$this->ejecutadoTable) {
-            
+
             $sm = $this->getServiceLocator();
             $this->ejecutadoTable = $sm->get('Ejecutado\Model\EjecutadoTable');
         }

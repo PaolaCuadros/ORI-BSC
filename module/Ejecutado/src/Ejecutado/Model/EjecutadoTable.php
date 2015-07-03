@@ -27,13 +27,20 @@ class EjecutadoTable extends AbstractTableGateway {
             'ANIO' => $_POST['anio'],
             'SEMESTRE' => $_POST['semestre'],
             'CALIFICACION' => $_POST['calificacion'],
-            'URL' => $url
+            'URL' => $url,
+            'IDCARACTERISTICA' => $_POST['idCaracteristica']
         );
         if (isset($_POST['id']))
             $id = (int) $_POST['id'];
         if ($id == 0) {
             $this->insert($data);
         } 
+    }
+    
+    public function getEjecutadoCaracteristica($id){
+        $resultSet = $this->select(array('IDCARACTERISTICA' => $id));
+        //var_dump($resultSet); exit();
+        return $resultSet;
     }
 }
 

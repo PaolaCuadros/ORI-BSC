@@ -16,25 +16,26 @@ $form = $this->form;
                 <table id="tblprod" class="table table-hover table-bordered">
                     <tr>
                         <td class="td_table">Año</td>
+                    <input type="hidden" value="<?= $idCaracteristica ?>" name="idCaracteristica" id="idCaracteristica" />
                         <td>
                             <select name="anio" id="anio" class="form-control validate[required]">
-            <?php
-            $date = date("Y");
-            if (date("Y") == 2016) {
-                $anio = $date - 12;
-            } else {
-                $anio = $date - 1;
-            }
+                                <?php
+                                $date = date("Y");
+                                if (date("Y") == 2016) {
+                                    $anio = $date - 12;
+                                } else {
+                                    $anio = $date - 1;
+                                }
 
-            $dto = $date + 3;
+                                $dto = $date + 3;
 
-            for ($i = $anio; $i <= $dto; $i++) {
-                ?>
-                                                <option value="<?= $anio ?>"><?= $anio ?></option>
-                <?php
-                $anio++;
-            }
-            ?>
+                                for ($i = $anio; $i <= $dto; $i++) {
+                                    ?>
+                                    <option value="<?= $anio ?>"><?= $anio ?></option>
+                                    <?php
+                                    $anio++;
+                                }
+                                ?>
 
                             </select>
                         </td>
@@ -68,7 +69,7 @@ $form = $this->form;
                 </table>
                 <button id="addEjecutado" class="btn btn-success" type="submit">Guardar</button>
             </form>
-            
+
 
         </div>
     </div>

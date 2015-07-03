@@ -10,9 +10,20 @@ use Zend\InputFilter\InputFilterAwareInterface;
 class Ejecutado implements InputFilterAwareInterface {
 
     protected $inputFilter;
+    public $id;
+    public $idCaracteristica;
+    public $anio;
+    public $semestre;
+    public $calificacion;
+    public $url;
 
     public function exchangeArray($data) {
-        
+        $this->id = (isset($data['ID'])) ? $data['ID'] : null;
+        $this->idCaracteristica = (isset($data['IDCARACTERISTICA'])) ? $data['IDCARACTERISTICA'] : null;
+        $this->anio = (isset($data['ANIO'])) ? $data['ANIO'] : null;
+        $this->semestre = (isset($data['SEMESTRE'])) ? $data['SEMESTRE'] : null;
+        $this->calificacion = (isset($data['CALIFICACION'])) ? $data['CALIFICACION'] : null;
+        $this->url = (isset($data['URL'])) ? $data['URL'] : null;
     }
 
     public function setInputFilter(InputFilterInterface $inputFilter) {
