@@ -1,0 +1,164 @@
+<script>
+    $(function () {
+        $('table').tablesorter({
+            widgets: ['zebra', 'columns'],
+            usNumberFormat: false,
+            sortReset: true,
+            sortRestart: true
+        });
+    });
+</script>
+
+<?php
+$title = 'Tabla de Indicadores';
+$this->headTitle($title);
+include __DIR__ . '\menu.phtml';
+?>
+<div class="container-view">
+    <h1 class="title"><?php echo $this->escapeHtml($title); ?></h1>
+    <?php
+    $getNameIndicadores = $getIndicadores->getIndicadores();
+    foreach ($getNameIndicadores as $indicadores) {
+        ?>
+        <table class="table tablesorter">
+            <thead style="border: 2px #e0e0e0 solid; ">
+                <tr>
+                    <th rowspan="3" style="padding-bottom: 43px;" class="th_table componente-nombre"><?= $indicadores->NAME ?></th>
+                    <th colspan="6" class="th_table color-table">Cumplimiento <?php echo date("Y"); ?></th>
+                </tr>
+                <tr>
+                    <th colspan="2" class="th_table color-table">Ejecutado</th>
+                    <th colspan="2" class="th_table color-table">Presupuestado</th>
+                    <th colspan="2" class="th_table color-table">% Cumplimiento</th>
+                </tr>  
+                <tr>
+                    <th class="th_table color-table">Sem A</th>
+                    <th class="th_table color-table">Sem B</th>
+                    <th class="th_table color-table">Sem A</th>
+                    <th class="th_table color-table">Sem B</th>
+                    <th class="th_table color-table">Sem A</th>
+                    <th class="th_table color-table">Sem B</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $componente = $getIndicadores->getOneComponente(1);
+                foreach ($componente as $getComponente) {
+                    $idComponente = $getComponente->id;
+                }
+                $getFactores = $factor->getAllFactorComponente($idComponente);
+                $i = 0;
+                //foreach ($getFactores as $getFactor) {
+
+                $porcenta1= 0;
+                $porcenta2= 0;
+                $getSubIndicadores = $getIndicadores->getSubIndicadores($indicadores->ID);
+                
+                foreach ($getSubIndicadores as $subIndicadores) {
+                    
+                    //if ($i != $getFactor->id) {
+                    ?>
+                    <tr>
+                        <td class="th_table"> <?= $subIndicadores->NAME ?></td>
+
+                        <?php
+                        $date = 2015;
+                        //echo $subIndicadores->ID_FACTOR . " este <br/>";
+                        $getSumEjecutado = $ejecutado->sumEjecutadoCaracteristica($subIndicadores->ID_FACTOR, $date);
+                        foreach ($getSumEjecutado as $sumEjecutado) {
+                            //echo "Hola <br/>" ;
+                            ?>
+
+                            <td class="th_table"><?= $sumEjecutado->semestreaa ?></td>
+                            <td class="th_table"><?= $sumEjecutado->semestrebb ?></td>
+
+                            <?php
+                            $getSumPresupuestado = $presupuestado->getSumPresupuestado($subIndicadores->ID_FACTOR, $date);
+                            foreach ($getSumPresupuestado as $sumPresupuestado) {
+                                //var_dump($sumPresupuestado); exit();
+                                ?>
+                                <td class="th_table"><?= $sumPresupuestado->semestreaa ?></td>
+                                <td class="th_table"><?= $sumPresupuestado->semestrebb ?></td>
+                                <?php
+                            }
+                            
+                        }
+                        
+                        if (!isset($sumPresupuestado->semestreaa)) {
+                            echo "<td class='th_table'>0</td>";
+                        }
+
+                        if (!isset($sumPresupuestado->semestrebb)) {
+                            echo "<td class='th_table'>0</td>";
+                        }
+                        if (!isset($sumEjecutado->semestreaa)) {
+                            echo "<td class='th_table'>0</td>";
+                        }
+                        if (!isset($sumEjecutado->semestrebb)) {
+                            echo "<td class='th_table'>0</td>";
+                        }
+                        //echo "este" . $sumEjecutado->semestrebb . "<br/>" ;
+//                        if($sumEjecutado->semestreaa == 0){
+//                            echo "<td class='th_table'>4...0</td>";
+//                        }
+//                        
+//                        if($sumEjecutado->semestrebb == 0){
+//                            echo "<td class='th_table'>4...0</td>";
+//                        }
+//                        if($sumPresupuestado->semestrebb == 0){
+//                            echo "<td class='th_table'>4...0</td>";
+//                        }
+//                        if($sumPresupuestado->semestreaa == 0){
+//                            echo "<td class='th_table'>4...0</td>";
+//                        }
+                        if (isset($sumEjecutado->semestreaa)) { 
+                            
+                            $porcenta1 = ceil(($sumEjecutado->semestreaa / $sumPresupuestado->semestreaa) * 100);
+                            $porcenta2 = ceil(($sumEjecutado->semestrebb / $sumPresupuestado->semestrebb) * 100);
+                            $sumEjecutado->semestreaa = 0;
+                            $sumEjecutado->semestrebb = 0;
+                            if($porcenta1 >= 100){
+                                $color = "#3ADF00";
+                            }else if( $porcenta1 >= 80){
+                                $color = "#FFFF00";
+                            }else if($porcenta1 < 80){
+                                $color = "#FF0000";
+                            }
+                            
+                            if($porcenta1 == 0){
+                                echo "<td class='th_table'>0</td>";
+                                echo "<td class='th_table'>0</td>";
+                                echo "<td class='th_table'>0</td>";
+                                echo "<td class='th_table'>0</td>"; 
+                            }
+                            //$sumEjecutado->semestreaa = 0;
+                            
+                            ?>
+                                <td class="th_table" style="background-color: <?= $color ?>"><?= $porcenta1 ?> %</td>
+                            <td class="th_table"><?= $porcenta2 ?> %</td>
+                        </tr>
+                        <?php } else { 
+                        ?>
+                    <td class="th_table">0 %</td>
+                    <td class="th_table">0 %</td>
+                    </tr>
+                <?php
+                }
+                
+                //$sumEjecutado->semestrebb = 0;
+                //echo $porcenta2 ."  ---- " .$porcenta1 . "<br/>" ;
+                $porcenta1 = 0;
+                $porcenta2 = 0;
+                //$i = $getFactor->id;
+                //}
+            }
+            //}
+            //}
+            
+            //}
+            ?>
+        <?php ?>
+            </tbody>
+        </table>
+<?php } ?>
+</div>

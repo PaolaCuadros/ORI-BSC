@@ -11,6 +11,10 @@ use Usuarios\Form\UsuariosForm;
 class UsuariosController extends AbstractActionController {
 
     protected $usuariosTable;
+    
+    protected $preComponentesTable;
+    protected $preFactoresTable;
+    protected $preCaracteristicasTable;
 
     public function indexAction() {
         return new ViewModel(array(
@@ -28,7 +32,6 @@ class UsuariosController extends AbstractActionController {
         $request = $this->getRequest();
 
         if ($request->isPost()) {
-
             $usuarios = new Usuarios();
             $form->setInputFilter($usuarios->getInputFilter());
             $form->setData($request->getPost());
@@ -58,14 +61,20 @@ class UsuariosController extends AbstractActionController {
         
         $form->bind($usuarios);
         
-//        $form->get('submit')->setAttribute('value', 'Edit');
-//        var_dump("aca"); exit();
         $request = $this->getRequest();
         if ($request->isPost()) {
             
             $usuarios = new Usuarios();
             $form->setInputFilter($usuarios->getInputFilter());
             $form->setData($request->getPost());
+            
+            if(isset($_POST['idobservaM'])){
+                $this->getUsuariosTable()->updateObservaciones($_POST['observaM'], $_POST['idobservaM']);
+            }
+
+            if(isset($_POST['observa'])){
+                $this->getUsuariosTable()->saveObservaciones($_POST['observa'], $_POST['id']);
+            }
 
             $data = array(
                 'NOMBRE' => $_POST['name'],
@@ -78,6 +87,7 @@ class UsuariosController extends AbstractActionController {
                 'PROINTERES' => $_POST['prog_interes'],
                 'COMPROMISOS' => $_POST['compromisos'],
                 'OBSERVACIONES' => $_POST['observaciones'],
+                'ESTADO' => $_POST['estado'],
             );
 
             $usuarios->exchangeArray($data);
@@ -88,6 +98,7 @@ class UsuariosController extends AbstractActionController {
             $progAcademico = $this->getUsuariosTable();
             $progInteres = $this->getUsuariosTable();
             $usuarios = $this->getUsuariosTable($id)->getAllUsuarios($id);
+            $observacionesUsuario = $this->getUsuariosTable();
 
             foreach ($usuarios as $usuario) {
                 $id = $usuario->id;
@@ -101,7 +112,10 @@ class UsuariosController extends AbstractActionController {
                 $prog_interes = $usuario->prog_interes;
                 $semestre = $usuario->semestre;
                 $email = $usuario->email;
+                $estado = $usuario->estado;
+                $otro_prog_interes = $usuario->otro_prog_interes;
             }
+            
             return array(
                 'id' => $id,
                 'cod_estud' => $cod_estud,
@@ -113,7 +127,7 @@ class UsuariosController extends AbstractActionController {
                 'observaciones' => $observaciones,
                 'prog_interes' => $prog_interes,
                 'semestre' => $semestre,
-                'email' => $email, 'progAcademico' => $progAcademico, 'progInteres' => $progInteres
+                'email' => $email, 'progAcademico' => $progAcademico, 'progInteres' => $progInteres, 'estado' => $estado,  'observacionesUsuario' => $observacionesUsuario, 'otro_prog_interes' => $otro_prog_interes
             );
         }
     }
@@ -130,18 +144,41 @@ class UsuariosController extends AbstractActionController {
         return $this->usuariosTable;
     }
     
-    public function ejecutadoAction() {
-//        var_dump("ca"); exit();
+//    public function getPreComponentesTable() {
+//        if (!$this->preComponentesTable) {
+//            $sm = $this->getServiceLocator();
+//            $this->preComponentesTable = $sm->get('Componentes\Model\ComponentesTable');
+//        }
+//        return $this->preComponentesTable;
+//    }
+//    
+//    public function getPreFactoresTable() {
+//        if (!$this->preFactoresTable) {
+//            $sm = $this->getServiceLocator();
+//            $this->preFactoresTable = $sm->get('Factores\Model\FactoresTable');
+//        }
+//        return $this->preFactoresTable;
+//    }
+//    
+//    public function getPreCaracteristicasTable() {
+//        if (!$this->preCaracteristicasTable) {
+//            $sm = $this->getServiceLocator();
+//            $this->preCaracteristicasTable = $sm->get('Caracteristica\Model\CaracteristicaTable');
+//        }
+//        return $this->preCaracteristicasTable;
+//    }
+//    
+//    public function ejecutadoAction() {
 //        $componentes = $this->getPreComponentesTable()->fetchAll();
 //        $factores = $this->getPreFactoresTable();
 //        $caracteristicas = $this->getPreCaracteristicasTable();
-//        $presupuestado = $this->getUsuariosTable();
+//        $ejecutado = $this->getUsuariosTable();
 //        return array (
 //            'componentes' => $componentes,
 //            'factores' => $factores,
 //            'caracteristicas' => $caracteristicas,
-//            'presupuestado' => $presupuestado
+//            'ejecutado' => $ejecutado
 //        );
-    }
+//    }
 
 }

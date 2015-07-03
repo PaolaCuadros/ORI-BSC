@@ -13,7 +13,7 @@ $this->headTitle($title);
                     <tr>
                         <td class="td_table">Nombres</td>
                         <td><input class="form-control validate[required]" type="text" name="name" id="name" value="<?php echo $this->nombre ?>" />
-                        <input class="form-control validate[required]" type="text" name="id" id="id" value="<?php echo $this->id ?>" />
+                            <input class="form-control validate[required]" type="text" name="id" id="id" value="<?php echo $this->id ?>" />
                         </td>
                     </tr>
                     <tr>
@@ -38,13 +38,15 @@ $this->headTitle($title);
                             <select name="prog_academic" class="form-control validate[required]">
                                 <?php
                                 $ProgramaAcademico = $progAcademico->getAllProgramasAcademicos();
-                                foreach ($ProgramaAcademico as $progAcademico) {
+                                foreach ($ProgramaAcademico as $progAcademico) {//
                                     ?>
                                     <option value="<?php echo $progAcademico->ID_CARRERA ?>"><?php echo $progAcademico->NOMBRE ?> </option>
                                     <?php
                                 }
                                 ?>
                             </select>
+
+
                         </td>
                     </tr>
                     <tr>
@@ -54,17 +56,26 @@ $this->headTitle($title);
                     <tr>
                         <td class="td_table">Programa de Intenres</td>
                         <td>
-                            <select name="prog_interes" class="form-control validate[required]">
+                            <select name="prog_interes" id="prog_interes" class="form-control validate[required]">
                                 <?php
                                 $ProgramaInteres = $progInteres->getAllProgramasInteres();
                                 foreach ($ProgramaInteres as $progInteres) {
                                     ?>
-                                    <option value="<?php echo $progInteres->id ?>"><?php echo $progInteres->name ?> </option>
+                                    <option value="<?= $progInteres->id ?>"><?php echo $progInteres->name ?> </option>
                                     <?php
                                 }
                                 ?>
 
                             </select>
+                            <?php
+                            if ($otro_prog_interes != '') {
+                                ?>
+                                <input type="text" class="form-control validate[required]" id="otro_prog_interes" name="otro_prog_interes" value="<?php echo $otro_prog_interes ?>" />
+
+                                <?php
+                            }
+                            ?>
+
                         </td>
                     </tr>
                     <tr>
@@ -74,6 +85,56 @@ $this->headTitle($title);
                     <tr>
                         <td class="td_table">Observaciones</td>
                         <td><textarea class="form-control validate[required]" name="observaciones" id="observaciones" rows="3"><?php echo $this->observaciones ?></textarea> </td>
+                        <td style="width: 1px;"><a id="agregarCampo" class="btn btn-info" href="#">Agregar <br/> Observación</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div id="contenedor">
+                                <div class="added">
+                                    <div class="observaciones">
+                                        <?php
+                                        $getObservaciones = $observacionesUsuario->getObservacionesUsers($this->id);
+                                        foreach ($getObservaciones as $observacionesss) {
+                                            ?>
+                                        <style type="text/css"> .observaciones { overflow: scroll; height:200px; } </style>
+                                            <textarea class="form-control validate[required]" name="observaM[]" rows="3"><?= $observacionesss->observacion ?></textarea>
+                                            <input type="hidden" name="idobservaM[]" value="<?= $observacionesss->id ?>"/>
+                                            <?php }
+                                        ?>
+                                    </div>
+<!--                                    <input type="text" name="mitexto[]" id="campo_1" placeholder="Texto 1"/><a href="#" class="eliminar">&times;</a>-->
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                    $estado = "";
+                    if ($this->estado == 1) {
+                        $estado = "Consulta";
+                    } else if ($this->estado == 2) {
+                        $estado = "Tramite";
+                    } else if ($this->estado == 3) {
+                        $estado = "Paso a Movilidad";
+                    } else if ($this->estado == 4) {
+                        $estado = "Se respondio";
+                    } else if ($this->estado == 5) {
+                        $estado = "No paso nada";
+                    }
+                    ?>
+                    <tr>
+                        <td class="td_table">Estado</td>
+                        <td>
+                            <select name="estado" id="estado" class="form-control validate[required]">
+                                <option value="<?php echo $this->estado ?>"><?php echo $estado ?></option>
+                                <option value="1">Consulta</option>
+                                <option value="2">Tramite</option>
+                                <option value="3">Paso a Movilidad</option>
+                                <option value="4">Se respondio</option>
+                                <option value="5">No paso nada</option>
+                            </select>
+                        </td>
                     </tr>
                 </table>
                 <button id="addUsuario" class="btn btn-success" type="submit" >Guardar</button>
@@ -81,3 +142,59 @@ $this->headTitle($title);
         </div>
     </div>
 </div>
+
+
+<script type="text/javascript">
+
+    $(function () {
+        var prog_interes = document.getElementById('prog_interes');
+
+        prog_interes.addEventListener('click', ocultarInput);
+
+
+        function ocultarInput()
+        {
+            console.info("aca");
+            var seleccion = document.getElementById('prog_interes');
+            var idPrograma = seleccion.options[seleccion.selectedIndex].value;
+
+            if (idPrograma == 9) {
+                $('#otro_prog_interes').show();
+            }
+
+            if (idPrograma != 9) {
+                $('#otro_prog_interes').hide();
+            }
+        }
+    });
+
+
+    $(document).ready(function () {
+        var MaxInputs = 8; //Número Maximo de Campos
+        var contenedor = $("#contenedor"); //ID del contenedor
+        var AddButton = $("#agregarCampo"); //ID del Botón Agregar
+
+        //var x = número de campos existentes en el contenedor
+        var x = $("#contenedor div").length + 1;
+        var FieldCount = x - 1; //para el seguimiento de los campos
+
+        $(AddButton).click(function (e) {
+            if (x <= MaxInputs) //max input box allowed
+            {
+                FieldCount++;
+                //agregar campo
+                $(contenedor).append('<div><textarea class="form-control validate[required]" name="observa[]" id="campo_' + FieldCount + '" placeholder="Texto ' + FieldCount + '" rows="3"></textarea><a href="#" class="eliminar">&times;</a></div>');
+                x++; //text box increment
+            }
+            return false;
+        });
+
+        $("body").on("click", ".eliminar", function (e) { //click en eliminar campo
+            if (x > 1) {
+                $(this).parent('div').remove(); //eliminar el campo
+                x--;
+            }
+            return false;
+        });
+    });
+</script>

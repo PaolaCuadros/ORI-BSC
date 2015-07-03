@@ -10,6 +10,7 @@ return array(
         'Componentes',
         'Presupuestado',
         'Usuarios',
+        'Ejecutado',
         //'SanAuth'
 //        'Ajax',
     ),

@@ -55,6 +55,12 @@ class PresupuestadoTable extends AbstractTableGateway {
         return $results;
     }
     
+    public function getSumPresupuestado($id, $date){
+        $sumPresupuestado = 'SELECT (SELECT sum(presa.semestreA) as summaa FROM presupuestado AS presa INNER JOIN caracteristica as caracte on presa.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id='.$id.' WHERE LEFT(presa.date, 4) = "'.$date.'") as semestreaa, (SELECT sum(presb.semestreB) as summbb FROM presupuestado AS presb INNER JOIN caracteristica as caracte on presb.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id='.$id.' WHERE LEFT(presb.date, 4) = "'.$date.'") as semestrebb FROM presupuestado as tipm INNER JOIN caracteristica as caracte on tipm.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id='.$id.' LIMIT 1';
+        $results = $this->adapter->query($sumPresupuestado, Adapter::QUERY_MODE_EXECUTE);
+        return $results;
+    }
+    
 
 }
 

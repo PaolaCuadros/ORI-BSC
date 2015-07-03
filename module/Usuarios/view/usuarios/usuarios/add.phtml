@@ -42,9 +42,9 @@ $form = $this->form;
                                 <?php
                                 $ProgramaAcademico = $progAcademico->getAllProgramasAcademicos();
                                 foreach ($ProgramaAcademico as $progAcademico) {
-                                ?>
+                                    ?>
                                     <option value="<?php echo $progAcademico->ID_CARRERA ?>"><?php echo $progAcademico->NOMBRE ?> </option>
-                                <?php
+                                    <?php
                                 }
                                 ?>
                             </select>
@@ -52,7 +52,7 @@ $form = $this->form;
                     </tr>
                     <tr>
                         <td class="td_table">Semestre</td>
-                        <td><input type="number" name="semestre" id="semestre" /> </td>
+                        <td><input type="number" class="form-control validate[required]" name="semestre" id="semestre" /> </td>
                     </tr>
                     <tr>
                         <td class="td_table">Programa de Interés</td>
@@ -61,12 +61,12 @@ $form = $this->form;
                                 <?php
                                 $ProgramaInteres = $progInteres->getAllProgramasInteres();
                                 foreach ($ProgramaInteres as $progInteres) {
-                                       ?>
+                                    ?>
                                     <option value="<?php echo $progInteres->id ?>"><?php echo $progInteres->name ?> </option>
-                                <?php
+                                    <?php
                                 }
                                 ?>
-                                
+
                             </select>
                             <input type="hidden" id="prog_interes" name="prog_interes" value="<?php echo $progInteres->id ?>"/>
                             <input type="text" class="form-control validate[required]" id="otro_prog_interes" name="otro_prog_interes" value="" style="display:none;" />
@@ -80,6 +80,18 @@ $form = $this->form;
                         <td class="td_table">Observaciones</td>
                         <td><textarea class="form-control validate[required]" name="observaciones" id="observaciones" rows="3"></textarea> </td>
                     </tr>
+                    <tr>
+                        <td class="td_table">Estado</td>
+                        <td>
+                            <select name="estado" id="estado" class="form-control validate[required]">
+                                <option value="1">Consulta</option>
+                                <option value="2">Tramite</option>
+                                <option value="3">Paso a Movilidad</option>
+                                <option value="4">Se respondio</option>
+                                <option value="5">No paso nada</option>
+                            </select>
+                        </td>
+                    </tr>
                 </table>
                 <button id="addUsuario" class="btn btn-success" type="submit" >Guardar</button>
             </form>
@@ -90,16 +102,33 @@ $form = $this->form;
 
 <script type="text/javascript">
     $(function () {
-        $("#prog_interes").click(function (){
-            $('#otro_prog_interes').show(); //muestro mediante id
-            $('.otro_prog_interes').show();
-        });
         
+        var prog_interes = document.getElementById('prog_interes');
+        
+        prog_interes.addEventListener('click', ocultarInput);
+
+
+        function ocultarInput()
+        {
+            var seleccion=document.getElementById('prog_interes');
+            var idPrograma = seleccion.options[seleccion.selectedIndex].value;
+            
+            if(idPrograma == 9){
+                $('#otro_prog_interes').show(); 
+            }
+            
+            if(idPrograma != 9){
+                $('#otro_prog_interes').hide();
+            }
+        }
+
         jQuery("#formadd").validationEngine({promptPosition: "centerRight:0,-5"});
         $("#addUsuario").submit(function (e) {
             var frm = $(this);
             var data = $(this).serialize();
             e.preventDefault();
+            var otro_prog_interes = $("otro_prog_interes").val();
+            console.info("aca-->"); console.info(otro_prog_interes);
             var name = $("name").val();
             var last_name = $("last_name").val();
             var email = $("email").val();
@@ -110,13 +139,14 @@ $form = $this->form;
             var observaciones = $("observaciones").val();
             var prog_academic = $("prog_academic").val();
             var prog_interes = $("prog_interes").val();
+            var estado = $("estado").val();
 
 
             if (num1 !== "") {
                 $.ajax({
                     url: $("#formadd").attr('action'),
                     type: $("#formadd").attr('method'),
-                    data: {m1: name, m2: last_name, m3: email, m4: telefono, m5: cod_estud, m6: semestre, m7: compromisos, m8: observaciones, m9: prog_academic, m10: prog_interes},
+                    data: {m1: name, m2: last_name, m3: email, m4: telefono, m5: cod_estud, m6: semestre, m7: compromisos, m8: observaciones, m9: prog_academic, m10: prog_interes, m11: estado},
                     success: function (data) {
                         $("#resultado").val(data.resultad)
                     }

@@ -1,18 +1,12 @@
 <?php
 
-$title = 'Add new album';
-$this->headTitle($title);
-?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
-<?php
-$form = $this->form;
-$form->setAttribute('action', $this->url('album', array('action' => 'add')));
-$form->prepare();
+"
+  INSERT INTO `baseori`.`tipomovilidad` (`ID_USUARIO`, `ANIO`, `SEMESTRE`, `ID_COD_INTERCAMBIO`, `ESTADO`) 
+VALUES ('E30160475', '2015', 'A', 22, 'F'),
+  ('AAB878187', 2015, 'A', 22, 'F');
+    
+    
+    ";
 
-echo $this->form()->openTag($form);
-echo $this->formHidden($form->get('id'));
-echo $this->formRow($form->get('title'));
-echo $this->formRow($form->get('artist'));
-echo $this->formSubmit($form->get('submit'));
-echo $this->form()->closeTag();
+
 

@@ -24,7 +24,10 @@ class Usuarios implements InputFilterAwareInterface{
     public $prog_interes;
     public $semestre;
     public $email;
-    
+    public $estado;
+    public $otro_prog_interes;
+
+
     protected $inputFilter;
     
     public function exchangeArray($data) {
@@ -45,6 +48,8 @@ class Usuarios implements InputFilterAwareInterface{
         $this->compromisos = (isset($data['COMPROMISOS'])) ? $data['COMPROMISOS'] : null;
         $this->observaciones = (isset($data['OBSERVACIONES'])) ? $data['OBSERVACIONES'] : null;
         $this->email = (isset($data['EMAIL'])) ? $data['EMAIL'] : null;
+        $this->estado = (isset($data['ESTADO'])) ? $data['ESTADO'] : null;
+        $this->otro_prog_interes = (isset($data['OTROPROGINTERES'])) ? $data['OTROPROGINTERES'] : null;
 
     }
     
