@@ -111,4 +111,14 @@ div.container a.brand {
     color: white;
 }
 
+.btn-atras{
+    border: 1px solid;
+    width: 70px;
+    height: 29px;
+    background-color: #f8c400;
+    text-align: center;
+    color: black;
+    border-radius: 8px;
+
+}
 

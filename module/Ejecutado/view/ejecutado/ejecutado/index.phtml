@@ -7,7 +7,7 @@
 <?php
 $title = 'PDI Ejecutado';
 $this->headTitle($title);
-include __DIR__ . '\menu.phtml';
+include __DIR__ . '\..\..\..\..\menu.phtml';
 ?>
 
 
@@ -119,19 +119,21 @@ include __DIR__ . '\menu.phtml';
                     foreach ($currentCaracteristicas as $caracteristica) {
                         $url = $this->url('ejecutado', array('action' => 'add', 'id' => $caracteristica->ID));
                         if ($c === 0) {
-                            $row .= "<td><a href='". $url ."'>" . $caracteristica->CARACTERISTICA . "</a></td>";
+                            $row .= "<td><a style='color: black;' href='". $url ."'>" . $caracteristica->CARACTERISTICA . "</a></td>";
                         } else {
-                            $row .= "<td><a href='". $url ."'>" . $caracteristica->CARACTERISTICA . "</a></td>";
+                            $row .= "<td><a style='color: black;' href='". $url ."'>" . $caracteristica->CARACTERISTICA . "</a></td>";
                         }
                         $c++;
                         $algo = "si";
                         for ($i = $date; $i <= date("Y"); $i++) {
-                            $currentEjecutado = $ejecutado->getEjecutadoCaracteristica($caracteristica->ID, $i);
-                            foreach ($currentEjecutado as $dateEjecutado) {
+                            $currentEjecutado = $getejecutado->getEjecutadoM($caracteristica->ID, $i);
+                            foreach ($currentEjecutado as $dateEjecutado) { //id
+                                $urla = $this->url('ejecutado', array('action' => 'edit', 'id' => $dateEjecutado->semestreaaid));
+                                $urlb = $this->url('ejecutado', array('action' => 'edit', 'id' => $dateEjecutado->semestrebbid));
                                 $algo = "no";
-                                $row .= "<td>" . $dateEjecutado->semestreaa . "</td>"
-                                        . "<td>" . $dateEjecutado->semestrebb . "</td>";
-                            }
+                                $row .= "<td> <a style='color: black;' href='". $urla ."'>" . $dateEjecutado->semestreaa . "</a></td>"
+                                     .  "<td><a style='color: black;' href='". $urlb ."'>" . $dateEjecutado->semestrebb . "</a></td>";
+                            } 
                             if ($algo == "si") {
                                 $row .= "<td>0</td>";
                                 $row .= "<td>0</td>";

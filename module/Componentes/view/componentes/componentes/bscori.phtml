@@ -12,7 +12,7 @@
 <?php
 $title = 'Tabla de Indicadores';
 $this->headTitle($title);
-include __DIR__ . '\menu.phtml';
+include __DIR__ . '\..\..\..\..\menu.phtml';
 ?>
 <div class="container-view">
     <h1 class="title"><?php echo $this->escapeHtml($title); ?></h1>
@@ -59,12 +59,12 @@ include __DIR__ . '\menu.phtml';
                     //if ($i != $getFactor->id) {
                     ?>
                     <tr>
-                        <td class="th_table"> <?= $subIndicadores->NAME ?></td>
+                        <td class="th_table"> <?=   $subIndicadores->NAME ?></td>
 
                         <?php
                         $date = 2015;
                         //echo $subIndicadores->ID_FACTOR . " este <br/>";
-                        $getSumEjecutado = $ejecutado->sumEjecutadoCaracteristica($subIndicadores->ID_FACTOR, $date);
+                        $getSumEjecutado = $ejecutado->sumEjecutadoCaracteristica($subIndicadores->ID_FACTOR, $date, $subIndicadores->IDCOMPONENTE);
                         foreach ($getSumEjecutado as $sumEjecutado) {
                             //echo "Hola <br/>" ;
                             ?>
@@ -73,7 +73,7 @@ include __DIR__ . '\menu.phtml';
                             <td class="th_table"><?= $sumEjecutado->semestrebb ?></td>
 
                             <?php
-                            $getSumPresupuestado = $presupuestado->getSumPresupuestado($subIndicadores->ID_FACTOR, $date);
+                            $getSumPresupuestado = $presupuestado->getSumPresupuestado($subIndicadores->ID_FACTOR, $date, $subIndicadores->IDCOMPONENTE);
                             foreach ($getSumPresupuestado as $sumPresupuestado) {
                                 //var_dump($sumPresupuestado); exit();
                                 ?>

@@ -14,7 +14,11 @@
 
 $title = 'Factores';
 $this->headTitle($title);
+//var_dump(__DIR__); exit();
+include __DIR__ . '\..\..\..\..\menu.phtml';
 ?>
+
+<div class="container-view">
 <h1 class="title"><?php echo $this->escapeHtml($title); ?></h1>
 
 <p ><a class="btn btn-success" style="margin-left: 5%;" href="<?php
@@ -61,4 +65,8 @@ $this->headTitle($title);
         <?php endforeach; ?>
     </tbody>
 </table>
-
+<div class="btn-atras">
+    <a style="color: white; cursor: pointer;" href="<?php echo $this->url('componentes', array('action' => 'index'));
+        ?>">Atras</a>
+</div>
+</div>

@@ -97,9 +97,36 @@ class UsuariosTable extends AbstractTableGateway {
         return $results;
     }
 
-    public function sumEjecutadoCaracteristica($id, $date) {
+    public function sumEjecutadoCaracteristica($id, $date, $componente) {
+        if($componente == 5){
+            $sqlSmestre = 'SELECT
+(SELECT COUNT(ejecu.SEMESTRE) FROM ejecutado AS ejecu 
+INNER JOIN caracteristica AS caract ON ejecu.IDCARACTERISTICA = caract.ID 
+INNER JOIN factores AS fact ON caract.id_factor = fact.id 
+INNER JOIN componentes AS comp ON comp.id = fact.idParent
+WHERE comp.id = '.$componente.' AND ejecu.SEMESTRE = "A" AND ejecu.CALIFICACION >= "1" AND ejecu.ANIO = "' . $date . '") AS semestreaa,
 
-        $sqlSmestre = 'SELECT (SELECT COUNT(tipoa.SEMESTRE) FROM tipomovilidad AS tipoa INNER JOIN caracteristica as caracte on tipoa.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id=' . $id . ' WHERE tipoa.SEMESTRE = "A" and tipoa.ANIO = "' . $date . '") as semestreaa, (SELECT COUNT(tipo.SEMESTRE) FROM tipomovilidad AS tipo INNER JOIN caracteristica as caracte on tipo.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id=' . $id . ' WHERE tipo.SEMESTRE = "B" and tipo.ANIO = "' . $date . '") as semestrebb, fact.id FROM tipomovilidad as tipm INNER JOIN caracteristica as caracte on tipm.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id=' . $id . ' limit 1';
+(SELECT COUNT(ejecu.SEMESTRE) FROM ejecutado AS ejecu 
+INNER JOIN caracteristica AS caract ON ejecu.IDCARACTERISTICA = caract.ID 
+INNER JOIN factores AS fact ON caract.id_factor = fact.id 
+INNER JOIN componentes AS comp ON comp.id = fact.idParent
+WHERE comp.id = '.$componente.' AND ejecu.SEMESTRE = "B" AND ejecu.CALIFICACION >= "1" AND ejecu.ANIO = "' . $date . '") AS semestrebb
+
+FROM componentes AS com WHERE com.ID = '.$componente.'';
+        }else{
+            $sqlSmestre = 'SELECT (SELECT COUNT(tipoa.SEMESTRE) FROM tipomovilidad AS tipoa INNER JOIN caracteristica as caracte on tipoa.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id=' . $id . ' WHERE tipoa.SEMESTRE = "A" and tipoa.ANIO = "' . $date . '") as semestreaa, (SELECT COUNT(tipo.SEMESTRE) FROM tipomovilidad AS tipo INNER JOIN caracteristica as caracte on tipo.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id=' . $id . ' WHERE tipo.SEMESTRE = "B" and tipo.ANIO = "' . $date . '") as semestrebb, fact.id FROM tipomovilidad as tipm INNER JOIN caracteristica as caracte on tipm.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id=' . $id . ' limit 1';
+        }
+        
+        
+        
+        //if($id != 15){
+            
+           // var_dump($sqlSmestre); 
+//        }else{
+//            
+//        }
+
+        
 
         //var_dump($sqlSmestre); exit();
 //        $sqlSemestre = 'SELECT 

@@ -17,8 +17,8 @@ class PresupuestadoTable extends AbstractTableGateway {
         $this->initialize();
     }
     
-    public function fetchAll(){
-        $resultSet = $this->select();
+    public function fetchAll($id){
+        $resultSet = $this->select(array('idCaracteristica' => $id));
         return $resultSet;
     }
     
@@ -31,7 +31,19 @@ class PresupuestadoTable extends AbstractTableGateway {
             'idCaracteristica' => $presupuestado->idCaracteristica,
         );
         
-        $this->insert($data);
+        $id = (int) $presupuestado->id;
+        if($id == 0){
+            $this->insert($data);
+        }else{
+            if($this->getPresupuestado($id)){
+                $this->update($data, array('id' => $id));
+            }else{
+                throw new \Exception('Form id does not exist');
+            }
+        }
+        
+        
+        //$this->insert($data);
     }
     
     public function addPresupuesto(){
@@ -55,10 +67,33 @@ class PresupuestadoTable extends AbstractTableGateway {
         return $results;
     }
     
-    public function getSumPresupuestado($id, $date){
-        $sumPresupuestado = 'SELECT (SELECT sum(presa.semestreA) as summaa FROM presupuestado AS presa INNER JOIN caracteristica as caracte on presa.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id='.$id.' WHERE LEFT(presa.date, 4) = "'.$date.'") as semestreaa, (SELECT sum(presb.semestreB) as summbb FROM presupuestado AS presb INNER JOIN caracteristica as caracte on presb.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id='.$id.' WHERE LEFT(presb.date, 4) = "'.$date.'") as semestrebb FROM presupuestado as tipm INNER JOIN caracteristica as caracte on tipm.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id='.$id.' LIMIT 1';
+    public function getSumPresupuestado($id, $date, $componente){
+        //var_dump($componente); 
+        if($componente == 5){
+            //var_dump("aca"); exit();
+          $sumPresupuestado =  'SELECT (SELECT SUM(presu.semestreA) as summaa FROM componentes AS compo INNER JOIN factores AS fact ON compo.ID = fact.idParent INNER JOIN caracteristica AS caract ON caract.id_factor = fact.ID INNER JOIN presupuestado AS presu ON presu.idCaracteristica = caract.ID WHERE compo.ID = '.$componente.' AND LEFT(presu.date, 4) = "2015") AS semestreaa, (SELECT SUM(presu.semestreb) as summbb FROM componentes AS compo INNER JOIN factores AS fact ON compo.ID = fact.idParent INNER JOIN caracteristica AS caract ON caract.id_factor = fact.ID INNER JOIN presupuestado AS presu ON presu.idCaracteristica = caract.ID WHERE compo.ID = '.$componente.' AND LEFT(presu.date, 4) = "2015") AS semestrebb FROM componentes AS com WHERE com.ID = '.$componente.'';
+        }else{
+            $sumPresupuestado = 'SELECT (SELECT sum(presa.semestreA) as summaa FROM presupuestado AS presa INNER JOIN caracteristica as caracte on presa.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id='.$id.' WHERE LEFT(presa.date, 4) = "'.$date.'") as semestreaa, (SELECT sum(presb.semestreB) as summbb FROM presupuestado AS presb INNER JOIN caracteristica as caracte on presb.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id='.$id.' WHERE LEFT(presb.date, 4) = "'.$date.'") as semestrebb FROM presupuestado as tipm INNER JOIN caracteristica as caracte on tipm.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id='.$id.' LIMIT 1';
+        }
         $results = $this->adapter->query($sumPresupuestado, Adapter::QUERY_MODE_EXECUTE);
         return $results;
+    }
+    
+    public function getPresupuestadoId($id){
+        $sql = 'SELECT * FROM presupuestado WHERE id = "' . $id . '"';
+        $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $results;
+    }
+    
+    public function getPresupuestado($id){
+        //var_dump($id); exit();
+        $id  = (int) $id;
+        $rowset = $this->select(array('id' => $id));
+        $row = $rowset->current();
+        if (!$row) {
+            throw new \Exception("Could not find row $id");
+        }
+        return $row;
     }
     
 

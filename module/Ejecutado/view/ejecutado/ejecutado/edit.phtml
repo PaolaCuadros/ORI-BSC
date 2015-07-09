@@ -1,8 +1,113 @@
 <?php
+$title = "Agragar Ejecutado";
+$this->headTitle($title);
+$form = $this->form;
+?>
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+<h1><?= $this->escapeHtml($title); ?></h1>
 
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jQuery-Validation-Engine/2.6.4/jquery.validationEngine.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jQuery-Validation-Engine/2.6.4/languages/jquery.validationEngine-es.js"></script>
+
+<div id="container" style="  width: 80%; margin-left: 10%;">
+    <div class="row-fluid top-buffer">
+        <div class=" text-center">
+            <form action="<?php echo $this->basePath() ?>/ejecutado/edit" method="POST" enctype="multipart/form-data">
+                <table id="tblprod" class="table table-hover table-bordered">
+                    <tr>
+                        <td class="td_table">Año</td>
+                    <input type="text" value="<?= $id ?>" name="id" id="id" />
+                    <input type="text" value="<?= $idCaracteristica ?>" name="idCaracteristica" id="idCaracteristica" />
+
+                    <td>
+                        <?php
+                        $ejecutado = $getEjecutado->getEjecutadoCaracteristica($id);
+                        foreach ($ejecutado as $ejecutadoInfo) {
+                            ?>
+                            <select name="anio" id="anio" class="form-control validate[required]">
+                                <option value="<?= $ejecutadoInfo->anio ?>"><?= $ejecutadoInfo->anio ?></option>
+                                <?php
+                                $date = date("Y");
+                                if (date("Y") == 2016) {
+                                    $anio = $date - 12;
+                                } else {
+                                    $anio = $date - 1;
+                                }
+
+                                $dto = $date + 3;
+
+                                for ($i = $anio; $i <= $dto; $i++) {
+                                    ?>
+                                    <option value="<?= $anio ?>"><?= $anio ?></option>
+                                    <?php
+                                    $anio++;
+                                }
+                                ?>
+
+                            </select>
+                        <?php } ?>
+                    </td>
+
+                    </tr>
+                    <!--<input type="hidden" value="<?= $ejecutadoInfo->id ?>" id="id" name="id"/>-->
+                    <tr>
+                        <td class="td_table">Semestre</td>
+                        <td>
+                            <?php
+                            $ejecutado = $getEjecutado->getEjecutadoCaracteristica($id);
+                            foreach ($ejecutado as $ejecutadoInfo) {
+                                ?>
+                                <select name="semestre" id="semestre" class="form-control validate[required]">
+                                    <option value="<?= $ejecutadoInfo->semestre ?>"><?= $ejecutadoInfo->semestre ?></option>
+                                    <?php
+                                    if ($ejecutadoInfo->semestre != "A") {
+                                        echo "<option value='A'>A</option>";
+                                    } else {
+                                        echo "<option value='B'>B</option>";
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Archivo</td>
+                        <td>
+                            <?php
+                            $ejecutado = $getEjecutado->getEjecutadoCaracteristica($id);
+                            foreach ($ejecutado as $ejecutadoInfo) {
+                                $url = substr($ejecutadoInfo->url, 19);
+                                if(!empty($ejecutadoInfo->url)){//C:\wamp\www\ORI-BSC\module\Ejecutado\src\Ejecutado\Controller/../img/reportPostRun.pdf
+                                ?>
+                                <a target='_blank' href="http://172.17.70.52/ORI-BSC  <?= $url ?>" >Ver archivo adjunto</a>
+                                <?php
+                                }
+                                ?>
+                                
+                                <input type="file" name="archivo" id="archivo" />
+                            <?php }  ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Calificación</td>
+                        <td>
+                            <?php
+                            $ejecutado = $getEjecutado->getEjecutadoCaracteristica($id);
+                            foreach ($ejecutado as $ejecutadoInfo) {
+                                  ?>
+                                <select name="calificacion" id="calificacion" class="form-control validate[required]">
+                                    <option value="<?= $ejecutadoInfo->calificacion ?>"><?= $ejecutadoInfo->calificacion ?></option>
+                                    <option value='0'>0</option>
+                                    <option value='1.0'>1.0</option>
+                                    <option value='1'>1</option>
+                                </select>
+                            <?php } ?>
+                        </td>
+                    </tr>
+
+                </table>
+                <button id="addEjecutado" class="btn btn-success" type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>

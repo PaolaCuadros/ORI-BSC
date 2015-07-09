@@ -24,15 +24,24 @@ use Zend\Uri\Http as HttpUri;
 class CaracteristicaController extends AbstractActionController {
 
     protected $caracteristicaTable;
-    
-    
-    
+    protected $factoresTable;
+
+
+
+
+
+
 
     public function indexAction() {
         $id = (int) $this->params()->fromRoute('id', 0);
-        return new ViewModel(array(
+        return array(
             'caracteristica' => $this->getCaracteristicaTable($id)->getCaracteristicaFactor($id),
-        ));
+            'Idcomponente' => $this->getFactorTable()->getFactorComponente($id)
+        );
+        
+//        return new ViewModel(array(
+//            'caracteristica' => $this->getCaracteristicaTable($id)->getCaracteristicaFactor($id),
+//        ));
     }
 
     public function addAction() {
@@ -48,22 +57,13 @@ class CaracteristicaController extends AbstractActionController {
             $caracteristica = new Caracteristica();
             $form->setInputFilter($caracteristica->getInputFilter());
             $form->setData($request->getPost());
-            //VAR_DUMP($id_factor); EXIT();
             $data = array(
                 'ID_FACTOR' => $_POST['id_factor'],
                 'CARACTERISTICA' => $_POST['caracteristica'],
                 'DATE_CREATION' => date("Y/m/d"),
-//                'DATE_BUDGETED' => $_POST['fecha'],
-//                'SEMESTER_A' => $_POST['semestreA'],
-//                'SEMESTER_B' => $_POST['semestreB']
             );
             $caracteristica->exchangeArray($data);
             $this->getCaracteristicaTable()->saveCaracteristica($caracteristica);
-            //return $res;
-//            return $this->redirect()->toRoute('caracteristica', array(
-//                'action' => 'index',
-//                'id' => $_POST['id_factor']
-//            ));
         }else{
             return array('id' => $id_factor, 'form' => $form);
         }
@@ -129,21 +129,7 @@ class CaracteristicaController extends AbstractActionController {
                 'id_factor' => $id_factor);
         }
 
-        //var_dump($_POST['id']); exit();
-        //$form->get('submit')->setAttribute('value', 'Edit');
-//        $id = (int) $this->params()->fromRoute('id', 0);
-//        
-//        if(!$id){
-//            return $this->redirect()->toRoute('caracteristica', array(
-//                'action' => 'add'
-//            ));
-//        }
-//        
-//        
-//        return array(
-//            'id' => $id,
-//            'form' => $form,
-//        );
+
     }
 
     public function deleteAction() {
@@ -194,6 +180,14 @@ class CaracteristicaController extends AbstractActionController {
     
     public function presupuestadoOriAction(){
 
+    }
+    
+    public function getFactorTable(){
+        if (!$this->factoresTable) {
+            $sm = $this->getServiceLocator();
+            $this->factoresTable = $sm->get('Factores\Model\FactoresTable');
+        }
+        return $this->factoresTable;
     }
 
 }

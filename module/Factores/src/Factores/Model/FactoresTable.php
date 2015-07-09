@@ -82,5 +82,11 @@ class FactoresTable extends AbstractTableGateway {
         $resultSet = $this->select(array('id' => $id));
         return $resultSet;
     }
+    
+    public function getFactorComponente($id) {
+        $sql = 'SELECT idParent FROM factores WHERE id = "' . $id . '"';
+        $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $results;
+    }
 }
 

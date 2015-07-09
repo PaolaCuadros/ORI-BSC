@@ -1,0 +1,60 @@
+<?php
+   $title = "Editar caracteristica";
+    $this->headTitle($title);
+    $form = $this->form;
+    
+?>
+
+<h1> <?= $this->escapeHtml($title); ?> </h1>
+
+<div id="container">
+    <div class="row-fluid top-buffer">
+        <div class=" text-center">
+            <form action="<?php echo $this->basePath() ?>/presupuestado/edit" id="formadd" method="post" name="formadd">
+                <table id="tblprod" class="table table-hover table-bordered">
+                    <tr>
+                        <td>
+                            Año
+                        </td>
+                        <td>
+                            <select name="anio" id="anio" class="form-control validate[required]">
+                                <option value="<?= $datePresupues ?>"><?= $datePresupues ?></option>
+                                <?php
+                                $date = date("Y");
+                                if (date("Y") == 2016) {
+                                    $anio = $date - 12;
+                                } else {
+                                    $anio = $date - 1;
+                                }
+
+                                $dto = $date + 3;
+
+                                for ($i = $anio; $i <= $dto; $i++) {
+                                    ?>
+                                    <option value="<?= $anio ?>"><?= $anio ?></option>
+                                    <?php
+                                    $anio++;
+                                }
+                                ?>
+
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Semestre A</td>
+                        <td><input class="form-control validate[required]" type="text" id="semestrea" name="semestrea" value="<?= $semAPresupues ?>" /></td>
+                    </tr>
+                    <tr>
+                        <td>Semestre B</td>
+                        <td><input class="form-control validate[required]" type="text" id="semestreb" name="semestreb" value="<?= $semBPresupues ?>" />
+                            <input type="text" id="id" name="id" value="<?= $idPresupuesta ?>" />
+                            <input type="text" id="idCaracterist" name="idCaracterist" value="<?= $idCaracterist ?>" />
+                        </td>
+                    </tr>
+                </table>
+                <button id="addPresupuestado" class="btn btn-success" type="submit" >Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>
+

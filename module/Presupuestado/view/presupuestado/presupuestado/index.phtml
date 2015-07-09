@@ -1,0 +1,55 @@
+<script>
+    $(function () {
+        $('table').tablesorter({
+            widgets: ['zebra', 'columns'],
+            usNumberFormat: false,
+            sortReset: true,
+            sortRestart: true
+        });
+    });
+</script>
+
+<?php
+$title = 'Presupuestado';
+$this->headTitle($title);
+include __DIR__ . '\..\..\..\..\menu.phtml';
+?>
+<div class="container-view">
+<h1 class="title"><?php echo $this->escapeHtml($title) ?></h1>
+<h1 style="  font-size: 25px; font-weight: bold;">Caracteristica <?= $nameCaracteristica ?></h1>
+
+<table class="table tablesorter ">
+    <thead style="border: 2px #e0e0e0 solid;">
+        <tr class="color-table">
+            <th class="th_table">Id</th>
+            <th class="th_table">Año</th>
+            <th class="th_table">Semestre A</th>
+            <th class="th_table">Smestre B</th>
+            <th class="th_table">Editar</th>
+            <th class="th_table">Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($presupuestado as $getPresupuestado) { ?>
+            <tr>
+                <td class="th_table"><?= $getPresupuestado->id ?></td>
+                <td class="th_table"><?= substr($getPresupuestado->date, 0, 4) ?></td>
+                <td class="th_table"><?= $getPresupuestado->semestreA ?></td>
+                <td class="th_table"><?= $getPresupuestado->semestreB ?></td>
+                <td class="th_table">
+                    <a href="<?php echo $this->url('presupuestado', array('action' => 'edit', 'id' => $getPresupuestado->id));
+            ?>"><img src='<?php echo $this->basePath('img/editar.png') ?>' ></a>
+                </td>
+                <td class="th_table">
+                    <a href="<?php echo $this->url('presupuestado', array('action' => 'delete', 'id' => $getPresupuestado->id));
+            ?>"><img src='<?php echo $this->basePath('img/eliminar.png') ?>' ></a>
+                </td>
+            </tr>
+        <?php } ?>
+    </tbody>
+</table>
+<div class="btn-atras">
+    <a style="color: white; cursor: pointer;" href="<?php echo $this->url('caracteristica', array('action' => 'index', 'id' => $idFactor));
+        ?>">Atras</a>
+</div>
+</div>

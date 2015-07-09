@@ -74,7 +74,7 @@ class ComponentesTable extends AbstractTableGateway {
     }
     
     public function getSubIndicadores($id){
-        $sql = 'SELECT ID, NAME, ID_FACTOR FROM indicadores WHERE ID_PARENT='.$id.'';
+        $sql = 'SELECT ID, NAME, ID_FACTOR, IDCOMPONENTE FROM indicadores WHERE ID_PARENT='.$id.'';
         //VAR_DUMP($sql); 
         $resultSet = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $resultSet;

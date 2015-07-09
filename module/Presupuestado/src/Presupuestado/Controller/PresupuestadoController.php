@@ -16,11 +16,22 @@ class PresupuestadoController extends AbstractActionController {
     protected $preCaracteristicasTable;
 
     public function indexAction() {
-        parent::indexAction();
+        $id = (int) $this->params()->fromRoute('id', 0);
+
+        $presupuestado = $this->getPresupuestadoTable()->fetchAll($id);
+        $caracteristica = $this->getPreCaracteristicasTable()->getCaracteristicaId($id);
+        foreach ($caracteristica as $getnameCaracteristica) {
+            $nameCaracteristica = $getnameCaracteristica->CARACTERISTICA;
+            $idFactor = $getnameCaracteristica->id_factor;
+        }
+        return array(
+            'presupuestado' => $presupuestado,
+            'nameCaracteristica' => $nameCaracteristica,
+            'idFactor' => $idFactor
+        );
     }
 
     public function addAction() {
-        //var_dump($_POST); exit();
         $form = new PresupuestadoForm();
         $idCaracteristica = $this->caracteristicaPresupuestado();
         $request = $this->getRequest();
@@ -36,8 +47,55 @@ class PresupuestadoController extends AbstractActionController {
 
         $presupuestado->exchangeArray($data);
         $this->getPresupuestadoTable()->savePresupuestado($presupuestado);
+    }
 
-        //var_dump($_POST['fecha']); exit();
+    public function editAction() {
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (isset($_POST['anio'])) {//
+            $presupuestado = $this->getPresupuestadoTable()->getPresupuestado($_POST['id']);
+            $form = new PresupuestadoForm();
+            $form->bind($presupuestado);
+            $request = $this->getRequest();
+            
+            if ($request->isPost()) {
+                $presupuestado1 = new Presupuestado();
+                $form->setInputFilter($presupuestado->getInputFilter());
+                $form->setData($request->getPost());
+                $data = array(
+                    'date' => $_POST['anio'] . "-01-01 00:00:00" ,
+                    'semestreA' => $_POST['semestrea'],
+                    'semestreB' => $_POST['semestreb'],
+                    'id' => $_POST['id'],
+                    'idCaracteristica' => $_POST['idCaracterist']
+                );
+                
+                $presupuestado1->exchangeArray($data);
+                $this->getPresupuestadoTable()->savePresupuestado($presupuestado1);
+            }
+            
+            return $this->redirect()->toRoute('presupuestado', array(
+                    'action' => 'index',
+                    'id' => $_POST['idCaracterist']
+                ));
+            
+        } else {
+            $getPresupuestado = $this->getPresupuestadoTable()->getPresupuestadoId($id);
+            foreach ($getPresupuestado as $presupuestado) {
+                $idPresupuesta = $presupuestado->id;
+                $datePresupues = $presupuestado->date;
+                $semAPresupues = $presupuestado->semestreA;
+                $semBPresupues = $presupuestado->semestreB;
+                $idCaracterist = $presupuestado->idCaracteristica;
+            }
+
+            return array(
+                'idPresupuesta' => $idPresupuesta,
+                'datePresupues' => substr($datePresupues, 0, 4),
+                'semAPresupues' => $semAPresupues,
+                'semBPresupues' => $semBPresupues,
+                'idCaracterist' => $idCaracterist
+            );
+        }
     }
 
     public function getPresupuestadoTable() {
@@ -85,11 +143,12 @@ class PresupuestadoController extends AbstractActionController {
         $factores = $this->getPreFactoresTable();
         $caracteristicas = $this->getPreCaracteristicasTable();
         $presupuestado = $this->getPresupuestadoTable();
-        return array (
+        return array(
             'componentes' => $componentes,
             'factores' => $factores,
             'caracteristicas' => $caracteristicas,
             'presupuestado' => $presupuestado
         );
     }
+
 }

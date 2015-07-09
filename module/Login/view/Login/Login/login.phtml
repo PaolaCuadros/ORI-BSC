@@ -1,0 +1,29 @@
+<?php
+$title = "Bienvenido";
+$this->headTitle($title);
+$form = $this->form;
+?>
+
+<h1><?= $this->escapeHtml($title); ?></h1>
+
+<div id="container" style="  width: 80%; margin-left: 10%;">
+    <div class="row-fluid top-buffer">
+        <div class=" text-center">
+            <form action="<?php echo $this->basePath() ?>/login/login" method="POST" enctype="multipart/form-data">
+                <table id="tblprod" class="table table-hover table-bordered">
+                    <tr>
+                        <td class="td_table">Usario</td>
+                        <td><input class="form-control validate[required]" type="text" name="nombre" id="nombre" placeholder="Usuario" /></td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Contraseña</td>
+                        <td><input class="form-control validate[required]" type="password" name="password" id="password" placeholder="Contraseña" /></td>
+                    </tr>
+                </table>
+                <button id="addEjecutado" class="btn btn-success" type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+

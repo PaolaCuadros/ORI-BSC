@@ -70,7 +70,7 @@ class CaracteristicaTable extends AbstractTableGateway {
     }
     
     public function getCaracteristicaId($id){
-        $sql = 'SELECT id_factor FROM caracteristica WHERE id = "'.$id.'"';
+        $sql = 'SELECT id_factor, CARACTERISTICA FROM caracteristica WHERE id = "'.$id.'"';
         $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $results;
     }

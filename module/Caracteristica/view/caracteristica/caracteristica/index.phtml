@@ -13,8 +13,9 @@
 //var_dump($_GET); exit();
     $title = "Caracteristicas";
     $this->headTitle($title);
+    include __DIR__ . '\..\..\..\..\menu.phtml';
 ?>
-
+<div class="container-view">
 <h1 class="title"> <?= $this->escapeHtml($title); ?> </h1>
 
 <p><a class="btn btn-success" style="margin-left: 5%;" href="<?php echo $this->url('caracteristica', array('action' => 'add', 'id' => $_GET['subpage']));?>">Agregar nueva caracteristica al factor</a></p>
@@ -26,6 +27,7 @@
             <th class="th_table">Nombre</th>
             <th class="th_table">Editar</th>
             <th class="th_table">Eliminar</th>
+            <th class="th_table">Ver</th>
         </tr>
     </thead>
     <tbody>
@@ -40,12 +42,26 @@
             <td class="th_table">
                     <a href="<?php echo $this->url('caracteristica', array('action' => 'delete', 'id' => $caracte->ID));
         ?>"><img src='<?php echo $this->basePath('img/eliminar.png') ?>' ></a>
+            </td>
+            <td class="th_table" style="text-align: center; width: 110px;">
+                    <a href="<?php echo $this->url('presupuestado', array('action' => 'index', 'id' => $caracte->ID));
+        ?>"><img src='<?php echo $this->basePath('img/ver.png') ?>' ></a>
                 </td>
         </tr>
         <?php endforeach;?>
     </tbody>
 </table>
+<?php 
+    foreach ($Idcomponente as $id){
+        $idComp = $id->idParent;
+    } 
+?>
 
+<div class="btn-atras">
+    <a style="color: white; cursor: pointer;" href="<?php echo $this->url('factores', array('action' => 'index', 'id' => $idComp));
+        ?>">Atras</a>
+</div>
+</div>
 
 
 

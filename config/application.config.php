@@ -11,6 +11,7 @@ return array(
         'Presupuestado',
         'Usuarios',
         'Ejecutado',
+        'Login',
         //'SanAuth'
 //        'Ajax',
     ),

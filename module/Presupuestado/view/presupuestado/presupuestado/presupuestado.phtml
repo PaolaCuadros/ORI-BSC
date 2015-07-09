@@ -8,7 +8,7 @@
 <?php
 $title = 'Componentes';
 $this->headTitle($title);
-include __DIR__ . '\menu.phtml';
+include __DIR__ . '\..\..\..\..\menu.phtml';
 ?>
 
 
@@ -20,30 +20,29 @@ include __DIR__ . '\menu.phtml';
                 <th rowspan="2" class="th_table">Componentes</th>
                 <th rowspan="2" class="th_table">Factor</th>
                 <th rowspan="2" class="th_table">Caracteristica</th>
-                <?php 
-                $datePresupuestado = $presupuestado->getDatePresupuestado();
-                foreach ($datePresupuestado as $date){
-                    $fehca = substr($date->fecha, 0, -15);
-                ?>
-                <th colspan="2" class="th_table"><?php echo $fehca ?></th>
-                
                 <?php
+                $datePresupuestado = $presupuestado->getDatePresupuestado();
+                foreach ($datePresupuestado as $date) {
+                    $fehca = substr($date->fecha, 0, -15);
+                    ?>
+                    <th colspan="2" class="th_table"><?php echo $fehca ?></th>
+
+                    <?php
                 }
-               
                 ?>
             </tr>
             <tr> 
-            <?php 
-            $datePresupuestado2 = $presupuestado->getDatePresupuestado();
-            foreach ($datePresupuestado2 as $date2){
-            ?>
-            
-                <th>Sem A</th>
-                <th>Sem B</th>
-              
-            <?php
-            }
-            ?>
+                <?php
+                $datePresupuestado2 = $presupuestado->getDatePresupuestado();
+                foreach ($datePresupuestado2 as $date2) {
+                    ?>
+
+                    <th>Sem A</th>
+                    <th>Sem B</th>
+
+                    <?php
+                }
+                ?>
             </tr>
 
         </thead>
@@ -66,16 +65,27 @@ include __DIR__ . '\menu.phtml';
                     $f++;
                     $c = 0;
                     foreach ($currentCaracteristicas as $caracteristica) {
-                        if ($c === 0) {
-                            $row .= "<td>" . $caracteristica->CARACTERISTICA . "</td>";
-                        } else {
-                            $row .= "<tr><td>" . $caracteristica->CARACTERISTICA . "</td>";
+                        if ($componente->id != 1) {
+                            $url = $this->url('presupuestado', array('action' => 'index', 'id' => $caracteristica->ID));
+                            if ($c === 0) {
+                                $row .= "<td><a style='color: black;' href='".$url."'>" . $caracteristica->CARACTERISTICA . "</a></td>";
+                            } else {
+                                $row .= "<tr><td><a style='color: black;' href='".$url."'>" . $caracteristica->CARACTERISTICA . "</a></td>";
+                            }
+                        }else{
+                            if ($c === 0) {
+                                $row .= "<td>" . $caracteristica->CARACTERISTICA . "</td>";
+                            } else {
+                                $row .= "<tr><td>" . $caracteristica->CARACTERISTICA . "</td>";
+                            }
                         }
+
+
                         $c++;
                         $currentPresupuestado = $presupuestado->getPresupuestadoCaracteristica($caracteristica->ID);
                         foreach ($currentPresupuestado as $datePresupuestado) {
                             $row .= "<td>" . $datePresupuestado->semestreA . "</td>"
-                                  . "<td>" . $datePresupuestado->semestreB . "</td>";
+                                    . "<td>" . $datePresupuestado->semestreB . "</td>";
                         }
                         $row .= "</tr>";
                     }
