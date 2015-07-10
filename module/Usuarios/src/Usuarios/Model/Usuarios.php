@@ -26,6 +26,7 @@ class Usuarios implements InputFilterAwareInterface{
     public $email;
     public $estado;
     public $otro_prog_interes;
+    public $fechaCompromiso;
 
 
     protected $inputFilter;
@@ -50,6 +51,7 @@ class Usuarios implements InputFilterAwareInterface{
         $this->email = (isset($data['EMAIL'])) ? $data['EMAIL'] : null;
         $this->estado = (isset($data['ESTADO'])) ? $data['ESTADO'] : null;
         $this->otro_prog_interes = (isset($data['OTROPROGINTERES'])) ? $data['OTROPROGINTERES'] : null;
+        $this->fechaCompromiso = (isset($data['FECHACOMPROMISO'])) ? $data['FECHACOMPROMISO'] : null;
 
     }
     

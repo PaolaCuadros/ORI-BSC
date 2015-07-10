@@ -11,18 +11,22 @@ use Usuarios\Form\UsuariosForm;
 class UsuariosController extends AbstractActionController {
 
     protected $usuariosTable;
-    
     protected $preComponentesTable;
     protected $preFactoresTable;
     protected $preCaracteristicasTable;
 
     public function indexAction() {
-        return new ViewModel(array(
-            'usuarios' => $this->getUsuariosTable()->fetchAll(),
-        ));
+        if (isset($_SESSION['user'])) {
+            return new ViewModel(array(
+                'usuarios' => $this->getUsuariosTable()->fetchAll(),
+            ));
+        } else {
+            $this->redirect()->toRoute('login', array('action' => 'login'));
+        }
     }
 
     public function addAction() {
+
         $progAcademico = $this->getUsuariosTable();
         $progInteres = $this->getUsuariosTable();
 
@@ -58,21 +62,21 @@ class UsuariosController extends AbstractActionController {
         $usuarios = $this->getUsuariosTable()->getUsuario($id);
 
         $form = new UsuariosForm();
-        
+
         $form->bind($usuarios);
-        
+
         $request = $this->getRequest();
         if ($request->isPost()) {
-            
+
             $usuarios = new Usuarios();
             $form->setInputFilter($usuarios->getInputFilter());
             $form->setData($request->getPost());
-            
-            if(isset($_POST['idobservaM'])){
+
+            if (isset($_POST['idobservaM'])) {
                 $this->getUsuariosTable()->updateObservaciones($_POST['observaM'], $_POST['idobservaM']);
             }
 
-            if(isset($_POST['observa'])){
+            if (isset($_POST['observa'])) {
                 $this->getUsuariosTable()->saveObservaciones($_POST['observa'], $_POST['id']);
             }
 
@@ -115,7 +119,7 @@ class UsuariosController extends AbstractActionController {
                 $estado = $usuario->estado;
                 $otro_prog_interes = $usuario->otro_prog_interes;
             }
-            
+
             return array(
                 'id' => $id,
                 'cod_estud' => $cod_estud,
@@ -127,13 +131,70 @@ class UsuariosController extends AbstractActionController {
                 'observaciones' => $observaciones,
                 'prog_interes' => $prog_interes,
                 'semestre' => $semestre,
-                'email' => $email, 'progAcademico' => $progAcademico, 'progInteres' => $progInteres, 'estado' => $estado,  'observacionesUsuario' => $observacionesUsuario, 'otro_prog_interes' => $otro_prog_interes
+                'email' => $email, 'progAcademico' => $progAcademico, 'progInteres' => $progInteres, 'estado' => $estado, 'observacionesUsuario' => $observacionesUsuario, 'otro_prog_interes' => $otro_prog_interes
             );
         }
     }
 
     public function deleteAction() {
         
+    }
+
+    public function sendEmailAction() {
+        $dateActual = date("Y/m/d");
+        $dayActual = date("d");
+        $dayActual1 = $dayActual + 5;
+        $dateNext = date("Y/m");
+        $day = $dateNext . "/" . $dayActual1;
+        $getUsuariosCompromisos = $this->getUsuariosTable()->getDateCommitmentUser($dateActual, $day);
+        $html = "<html>
+                    <head>
+                        <title>Compromisos ORI</title>
+                    </head>
+                    <body>
+                    <table border='1'>
+                        <tr>
+                            <td bgcolor='A9E2F3' align='center' color='F2F2F2'>Estudiante</td>
+                            <td bgcolor='A9E2F3' align='center' color='F2F2F2'>Codigo Estudiantil</td>
+                            <td bgcolor='A9E2F3' align='center' color='F2F2F2'>Fecha de Compromiso</td>
+                        </tr>";
+        foreach ($getUsuariosCompromisos as $usuario) {
+            $html .= "
+                        <tr>
+                            <td>" . $usuario->NOMBRE . "  "  . $usuario->APELLIDO . "</td>
+                            <td>" . $usuario->CODIGO_ESTUDIANTIL . "</td>
+                            <td>" . $usuario->FECHACOMPROMISO . "</td>
+                        </tr>";
+        }
+        $html .= "  </table>
+                    </body>
+                </html>";
+
+
+
+//        $mensaje = '
+//<html>
+//<head>
+//  <title>Recordatorio de cumpleaños para Agosto</title>
+//</head>
+//<body>
+//  <p>¡Estos son los cumpleaños para Agosto!</p>
+//  <table>
+//    <tr>
+//      <th>Quien</th><th>Día</th><th>Mes</th><th>Año</th>
+//    </tr>
+//    <tr>
+//      <td>Joe</td><td>3</td><td>Agosto</td><td>1970</td>
+//    </tr>
+//    <tr>
+//      <td>Sally</td><td>17</td><td>Agosto</td><td>1973</td>
+//    </tr>
+//  </table>
+//</body>
+//</html>
+//';
+
+        $sendEmailUser = $this->getUsuariosTable()->sendEmail($html);
     }
 
     public function getUsuariosTable() {
@@ -143,42 +204,5 @@ class UsuariosController extends AbstractActionController {
         }
         return $this->usuariosTable;
     }
-    
-//    public function getPreComponentesTable() {
-//        if (!$this->preComponentesTable) {
-//            $sm = $this->getServiceLocator();
-//            $this->preComponentesTable = $sm->get('Componentes\Model\ComponentesTable');
-//        }
-//        return $this->preComponentesTable;
-//    }
-//    
-//    public function getPreFactoresTable() {
-//        if (!$this->preFactoresTable) {
-//            $sm = $this->getServiceLocator();
-//            $this->preFactoresTable = $sm->get('Factores\Model\FactoresTable');
-//        }
-//        return $this->preFactoresTable;
-//    }
-//    
-//    public function getPreCaracteristicasTable() {
-//        if (!$this->preCaracteristicasTable) {
-//            $sm = $this->getServiceLocator();
-//            $this->preCaracteristicasTable = $sm->get('Caracteristica\Model\CaracteristicaTable');
-//        }
-//        return $this->preCaracteristicasTable;
-//    }
-//    
-//    public function ejecutadoAction() {
-//        $componentes = $this->getPreComponentesTable()->fetchAll();
-//        $factores = $this->getPreFactoresTable();
-//        $caracteristicas = $this->getPreCaracteristicasTable();
-//        $ejecutado = $this->getUsuariosTable();
-//        return array (
-//            'componentes' => $componentes,
-//            'factores' => $factores,
-//            'caracteristicas' => $caracteristicas,
-//            'ejecutado' => $ejecutado
-//        );
-//    }
 
 }

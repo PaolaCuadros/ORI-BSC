@@ -5,6 +5,11 @@ namespace Usuarios\Model;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\AbstractTableGateway;
+use Zend\Mail\Message;
+use Zend\Mail\Transport\File as FileTransport;
+use Zend\Mail\Transport\FileOptions;
+use Zend\Mail\Transport\InMemory as InMemoryTransport;
+use Zend\Mail\Transport\Sendmail as SendmailTransport;
 
 class UsuariosTable extends AbstractTableGateway {
 
@@ -38,6 +43,7 @@ class UsuariosTable extends AbstractTableGateway {
             'OBSERVACIONES' => $_POST['observaciones'],
             'ESTADO' => $_POST['estado'],
             'OTROPROGINTERES' => $_POST['otro_prog_interes'],
+            'FECHACOMPROMISO' => $_POST['fechaCompromiso'],
         );
         if (isset($_POST['id']))
             $id = (int) $_POST['id'];
@@ -84,10 +90,6 @@ class UsuariosTable extends AbstractTableGateway {
         //var_dump($sqlSemestreA); echo "<br/>";
 
         $resultA = $this->adapter->query($sqlSemestreA, Adapter::QUERY_MODE_EXECUTE);
-        //        $sqlSemestreB = 'SELECT COUNT(SEMESTREB) as semestreb FROM tipomovilidad WHERE SEMESTREB <> "" and idCaracteristica = "' . $id . '"';
-//        
-//        $resultB = $this->adapter->query($sqlSemestreB, Adapter::QUERY_MODE_EXECUTE);
-//        //var_dump("aca ->"); var_dump($resultB); echo "<br/>"; exit();
         return $resultA;
     }
 
@@ -98,44 +100,24 @@ class UsuariosTable extends AbstractTableGateway {
     }
 
     public function sumEjecutadoCaracteristica($id, $date, $componente) {
-        if($componente == 5){
+        if ($componente == 5) {
             $sqlSmestre = 'SELECT
 (SELECT COUNT(ejecu.SEMESTRE) FROM ejecutado AS ejecu 
 INNER JOIN caracteristica AS caract ON ejecu.IDCARACTERISTICA = caract.ID 
 INNER JOIN factores AS fact ON caract.id_factor = fact.id 
 INNER JOIN componentes AS comp ON comp.id = fact.idParent
-WHERE comp.id = '.$componente.' AND ejecu.SEMESTRE = "A" AND ejecu.CALIFICACION >= "1" AND ejecu.ANIO = "' . $date . '") AS semestreaa,
+WHERE comp.id = ' . $componente . ' AND ejecu.SEMESTRE = "A" AND ejecu.CALIFICACION >= "1" AND ejecu.ANIO = "' . $date . '") AS semestreaa,
 
 (SELECT COUNT(ejecu.SEMESTRE) FROM ejecutado AS ejecu 
 INNER JOIN caracteristica AS caract ON ejecu.IDCARACTERISTICA = caract.ID 
 INNER JOIN factores AS fact ON caract.id_factor = fact.id 
 INNER JOIN componentes AS comp ON comp.id = fact.idParent
-WHERE comp.id = '.$componente.' AND ejecu.SEMESTRE = "B" AND ejecu.CALIFICACION >= "1" AND ejecu.ANIO = "' . $date . '") AS semestrebb
+WHERE comp.id = ' . $componente . ' AND ejecu.SEMESTRE = "B" AND ejecu.CALIFICACION >= "1" AND ejecu.ANIO = "' . $date . '") AS semestrebb
 
-FROM componentes AS com WHERE com.ID = '.$componente.'';
-        }else{
+FROM componentes AS com WHERE com.ID = ' . $componente . '';
+        } else {
             $sqlSmestre = 'SELECT (SELECT COUNT(tipoa.SEMESTRE) FROM tipomovilidad AS tipoa INNER JOIN caracteristica as caracte on tipoa.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id=' . $id . ' WHERE tipoa.SEMESTRE = "A" and tipoa.ANIO = "' . $date . '") as semestreaa, (SELECT COUNT(tipo.SEMESTRE) FROM tipomovilidad AS tipo INNER JOIN caracteristica as caracte on tipo.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id=' . $id . ' WHERE tipo.SEMESTRE = "B" and tipo.ANIO = "' . $date . '") as semestrebb, fact.id FROM tipomovilidad as tipm INNER JOIN caracteristica as caracte on tipm.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id=' . $id . ' limit 1';
         }
-        
-        
-        
-        //if($id != 15){
-            
-           // var_dump($sqlSmestre); 
-//        }else{
-//            
-//        }
-
-        
-
-        //var_dump($sqlSmestre); exit();
-//        $sqlSemestre = 'SELECT 
-//(SELECT COUNT(tipoa.SEMESTRE) FROM tipomovilidad AS tipoa WHERE tipoa.SEMESTRE = "A" and tipoa.ANIO = "'.$date.'") as semestreaa, 
-//(SELECT COUNT(tipo.SEMESTRE) FROM tipomovilidad AS tipo WHERE tipo.SEMESTRE = "B" and tipo.ANIO = "'.$date.'") as semestrebb 
-//FROM tipomovilidad as tipm INNER JOIN caracteristica as caracte on tipm.idCaracteristica = caracte.ID
-//INNER JOIN factores as fact ON fact.id = caracte.id_factor
-//LIMIT 1';
-        //var_dump($sqlSemestre); exit();
         $resultA = $this->adapter->query($sqlSmestre, Adapter::QUERY_MODE_EXECUTE);
 
         return $resultA;
@@ -148,23 +130,82 @@ FROM componentes AS com WHERE com.ID = '.$componente.'';
             $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         }
     }
-    
+
     public function updateObservaciones($observaciones, $id) {
         $date = date("Y/m/d");
-        $i=0;
+        $i = 0;
         foreach ($observaciones as $observacion) {
 
-            $sql = "UPDATE observaciones SET observacion = '".$observacion."', dateModicication = '".$date."' WHERE id = ".$id[$i]." ";
+            $sql = "UPDATE observaciones SET observacion = '" . $observacion . "', dateModicication = '" . $date . "' WHERE id = " . $id[$i] . " ";
             $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
             $i++;
         }
-
     }
-    
-    public function getObservacionesUsers($id){
-        $sql = "SELECT id, observacion FROM observaciones WHERE idUser = '".$id."'";
+
+    public function getObservacionesUsers($id) {
+        $sql = "SELECT id, observacion FROM observaciones WHERE idUser = '" . $id . "'";
         $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $results;
+    }
+
+    public function sendEmail($html) {
+
+
+        $para = 'alizeth.cuadros@unibague.edu.co' . ', '; // atención a la coma
+        $para .= 'lizeth.cuadros@unibague.edu.co';
+
+// título
+        $título = 'Compromisos ORI';
+
+
+// Para enviar un correo HTML, debe establecerse la cabecera Content-type
+        $cabeceras = 'MIME-Version: 1.0' . "\r\n";
+        $cabeceras .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+// Cabeceras adicionales
+        $cabeceras .= 'To: Mary <lizeth.cuadros@unibague.edu.co>, Kelly <lizeth.cuadros@unibague.edu.co>' . "\r\n";
+        $cabeceras .= 'From: Compromisos ORI <lizeth.cuadros@unibague.edu.co>' . "\r\n";
+        $cabeceras .= 'Cc: lizeth.cuadros@unibague.edu.co' . "\r\n";
+        $cabeceras .= 'Bcc: lizeth.cuadros@unibague.edu.co' . "\r\n";
+
+// Enviarlo
+        mail($para, $título, $html, $cabeceras);
+
+
+
+
+
+
+
+
+
+//        $message = new Message();
+//        $message->addTo('lizeth.cuadros@unibague.edu.co')
+//                ->addFrom('cuadros1605@gmail.com')
+//                ->setSubject('evio')
+//                ->setBody($html);
+//        
+//        $transport = new SendmailTransport();
+//        
+//        $transport->send($message);
+//        $sql = 'INSERT INTO login (EMAIL, CONTRASENA) VALUES ("cuadros1605@gmail.com", "123456789")';
+//        $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+    }
+
+    public function getDateCommitmentUser($dateActual, $day) {
+        $sql = 'SELECT NOMBRE, APELLIDO, CODIGO_ESTUDIANTIL, FECHACOMPROMISO FROM usuario WHERE FECHACOMPROMISO BETWEEN "' . $dateActual . '" AND "' . $day . '"';
+        $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $results;
+    }
+
+    public function CreateEmail($usuarios) {
+
+        foreach ($usuarios as $users) {
+            var_dump($users);
+        }
+        var_dump("vvvv");
+        exit();
+        exit();
     }
 
 }
