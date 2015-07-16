@@ -55,7 +55,7 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                 $row = "<tr>"
                         . "<td rowspan='%d'>" . $componente->name . "</td>";
                 foreach ($currentFactores as $factor) {
-                    $currentCaracteristicas = $caracteristicas->getCaracteristicaFactor($factor->id);
+                    $currentCaracteristicas = $caracteristicas->getCaracteristicaFactor($factor->id, 0);
                     $nCarRows += $currentCaracteristicas->count();
                     if ($f === 0) {
                         $row .= "<td rowspan='" . $currentCaracteristicas->count() . "'>" . $factor->name . "</td>";

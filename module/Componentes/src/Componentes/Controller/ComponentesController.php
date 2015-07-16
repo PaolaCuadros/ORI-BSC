@@ -184,7 +184,7 @@ class ComponentesController extends AbstractActionController{
         
         
         
-        $componente = $this->getComponentesTable()->getOneComponente($limit);
+        $componente = $this->getComponentesTable()->getOneComponente($limit, 0);
         foreach ($componente as $getComponente){
             $idComponente = $getComponente->id;
             $nameComponente = $getComponente->name;

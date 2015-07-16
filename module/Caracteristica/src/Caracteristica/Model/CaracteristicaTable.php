@@ -22,10 +22,34 @@ class CaracteristicaTable extends AbstractTableGateway {
         return $resultSet;
     }
     
-    public function getCaracteristicaFactor($id) {
-        $sql = 'SELECT * FROM caracteristica WHERE id_factor = "' . $id . '"';
+    public function getCaracteristicaFactor($id, $idComponente) {
+//        $sql = 'SELECT * FROM caracteristica WHERE id_factor = "' . $id . '"';
+        if($idComponente == 0){
+            $sql = 'select * FROM caracteristica as caracte 
+INNER JOIN factores AS fact ON caracte.id_factor = fact.id 
+INNER JOIN componentes AS comp ON comp.id = fact.idParent
+WHERE caracte.id_factor =  "' . $id . '"';
+        }else{
+            $sql = 'select * FROM caracteristica as caracte 
+INNER JOIN factores AS fact ON caracte.id_factor = fact.id 
+INNER JOIN componentes AS comp ON comp.id = fact.idParent
+WHERE caracte.id_factor =  "' . $id . '" AND comp.id = "' . $idComponente . '" ';
+        }
         $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $results;
+        
+        
+        /*if($idComponente == 0){
+            $sql = 'select * FROM caracteristica as caracte 
+INNER JOIN factores AS fact ON caracte.id_factor = fact.id 
+INNER JOIN componentes AS comp ON comp.id = fact.idParent
+WHERE caracte.id_factor =  "' . $id . '"';
+        }else{
+            $sql = 'select * FROM caracteristica as caracte 
+INNER JOIN factores AS fact ON caracte.id_factor = fact.id 
+INNER JOIN componentes AS comp ON comp.id = fact.idParent
+WHERE caracte.id_factor =  "' . $id . '" AND comp.id = "' . $idComponente . '" ';
+        }*/
     }
 
     public function getCaracteristica($id){

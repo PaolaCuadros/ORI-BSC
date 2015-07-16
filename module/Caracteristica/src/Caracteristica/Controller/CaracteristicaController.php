@@ -35,7 +35,7 @@ class CaracteristicaController extends AbstractActionController {
     public function indexAction() {
         $id = (int) $this->params()->fromRoute('id', 0);
         return array(
-            'caracteristica' => $this->getCaracteristicaTable($id)->getCaracteristicaFactor($id),
+            'caracteristica' => $this->getCaracteristicaTable($id)->getCaracteristicaFactor($id, 0),
             'Idcomponente' => $this->getFactorTable()->getFactorComponente($id)
         );
         

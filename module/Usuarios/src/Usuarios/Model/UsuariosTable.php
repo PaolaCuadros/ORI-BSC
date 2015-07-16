@@ -151,61 +151,27 @@ FROM componentes AS com WHERE com.ID = ' . $componente . '';
     public function sendEmail($html) {
 
 
-        $para = 'alizeth.cuadros@unibague.edu.co' . ', '; // atención a la coma
+        $para = 'lizeth.cuadros@unibague.edu.co' . ', '; 
         $para .= 'lizeth.cuadros@unibague.edu.co';
-
-// título
         $título = 'Compromisos ORI';
 
-
-// Para enviar un correo HTML, debe establecerse la cabecera Content-type
         $cabeceras = 'MIME-Version: 1.0' . "\r\n";
         $cabeceras .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 
 // Cabeceras adicionales
-        $cabeceras .= 'To: Mary <lizeth.cuadros@unibague.edu.co>, Kelly <lizeth.cuadros@unibague.edu.co>' . "\r\n";
+        $cabeceras .= 'To: ORI <lizeth.cuadros@unibague.edu.co>' . "\r\n";
         $cabeceras .= 'From: Compromisos ORI <lizeth.cuadros@unibague.edu.co>' . "\r\n";
-        $cabeceras .= 'Cc: lizeth.cuadros@unibague.edu.co' . "\r\n";
-        $cabeceras .= 'Bcc: lizeth.cuadros@unibague.edu.co' . "\r\n";
+//        $cabeceras .= 'Cc: lizeth.cuadros@unibague.edu.co' . "\r\n";
+//        $cabeceras .= 'Bcc: lizeth.cuadros@unibague.edu.co' . "\r\n";
 
 // Enviarlo
-        mail($para, $título, $html, $cabeceras);
-
-
-
-
-
-
-
-
-
-//        $message = new Message();
-//        $message->addTo('lizeth.cuadros@unibague.edu.co')
-//                ->addFrom('cuadros1605@gmail.com')
-//                ->setSubject('evio')
-//                ->setBody($html);
-//        
-//        $transport = new SendmailTransport();
-//        
-//        $transport->send($message);
-//        $sql = 'INSERT INTO login (EMAIL, CONTRASENA) VALUES ("cuadros1605@gmail.com", "123456789")';
-//        $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        $sendEmail = mail($para, $título, $html, $cabeceras);
+        return $sendEmail;
     }
 
     public function getDateCommitmentUser($dateActual, $day) {
-        $sql = 'SELECT NOMBRE, APELLIDO, CODIGO_ESTUDIANTIL, FECHACOMPROMISO FROM usuario WHERE FECHACOMPROMISO BETWEEN "' . $dateActual . '" AND "' . $day . '"';
+        $sql = 'SELECT NOMBRE, APELLIDO, CODIGO_ESTUDIANTIL, FECHACOMPROMISO, COMPROMISOS FROM usuario WHERE FECHACOMPROMISO BETWEEN "' . $dateActual . '" AND "' . $day . '"';
         $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $results;
     }
-
-    public function CreateEmail($usuarios) {
-
-        foreach ($usuarios as $users) {
-            var_dump($users);
-        }
-        var_dump("vvvv");
-        exit();
-        exit();
-    }
-
 }

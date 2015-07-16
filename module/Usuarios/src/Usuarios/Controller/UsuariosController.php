@@ -147,54 +147,44 @@ class UsuariosController extends AbstractActionController {
         $dateNext = date("Y/m");
         $day = $dateNext . "/" . $dayActual1;
         $getUsuariosCompromisos = $this->getUsuariosTable()->getDateCommitmentUser($dateActual, $day);
-        $html = "<html>
+        $html = "
+            <p FACE='arial'>Buenos días Administrador <br/><br/>
+            La siguiente es la información de los compormisos con los estudiantes interesados en relizar una movilidad:<p>
+
+            <html>
                     <head>
                         <title>Compromisos ORI</title>
                     </head>
                     <body>
-                    <table border='1'>
+                    <table border='1' WIDTH='900'>
                         <tr>
-                            <td bgcolor='A9E2F3' align='center' color='F2F2F2'>Estudiante</td>
-                            <td bgcolor='A9E2F3' align='center' color='F2F2F2'>Codigo Estudiantil</td>
-                            <td bgcolor='A9E2F3' align='center' color='F2F2F2'>Fecha de Compromiso</td>
+                            <td bgcolor='A9E2F3' align='center' color='F2F2F2' SIZE=8><b>Estudiante</b></td>
+                            <td bgcolor='A9E2F3' align='center' color='F2F2F2' SIZE=3><b>Codigo Estudiantil</b></td>
+                            <td bgcolor='A9E2F3' align='center' color='F2F2F2' SIZE=3><b>Compromiso</b></td>
+                            <td bgcolor='A9E2F3' align='center' color='F2F2F2'><b>Fecha de Compromiso</b></td>
                         </tr>";
         foreach ($getUsuariosCompromisos as $usuario) {
             $html .= "
                         <tr>
-                            <td>" . $usuario->NOMBRE . "  "  . $usuario->APELLIDO . "</td>
+                            <td>" . $usuario->NOMBRE . "  " . $usuario->APELLIDO . "</td>
                             <td>" . $usuario->CODIGO_ESTUDIANTIL . "</td>
                             <td>" . $usuario->FECHACOMPROMISO . "</td>
+                                <td>" . $usuario->COMPROMISOS . "</td>
                         </tr>";
         }
         $html .= "  </table>
                     </body>
-                </html>";
+            </html> <br/> Feliz día <br/><br/><br/>
+            
+            <b> Oficina de Relaciones Internacionales. </b> <br/>
+            <b> Universidad de Ibagué </b> <br/><br/>
+            <img src='https://ci3.googleusercontent.com/proxy/5Age9PF7_IRDkg8IFsp_gzSPiXGbJwBiNDaZsMQM_ynwhaEmrgV1IX7482lM905C-_oKsPCZLja_3Ugb0ONiCmLDn2FCe67zWEBr3SqDWdqGejbvHPGGfXUFM8vNoXelxB2cAPFGF6W965QegB-JA7F3kCYtDBkxXV8TUM0AnXXZ5pO4DB8q9KDU2jNF4Y4ZgJ3NHFXIge_TDe4=s0-d-e1-ft#https://docs.google.com/uc?export=download&id=0B4akwvlP8hRSNF80eW9JWUJmSDQ&revid=0B4akwvlP8hRSQTRXNzEzKzZtWFlCQzN1Ukd5bDRoWjI0Z3ZVPQ' width='250'  height='120'/>
 
-
-
-//        $mensaje = '
-//<html>
-//<head>
-//  <title>Recordatorio de cumpleaños para Agosto</title>
-//</head>
-//<body>
-//  <p>¡Estos son los cumpleaños para Agosto!</p>
-//  <table>
-//    <tr>
-//      <th>Quien</th><th>Día</th><th>Mes</th><th>Año</th>
-//    </tr>
-//    <tr>
-//      <td>Joe</td><td>3</td><td>Agosto</td><td>1970</td>
-//    </tr>
-//    <tr>
-//      <td>Sally</td><td>17</td><td>Agosto</td><td>1973</td>
-//    </tr>
-//  </table>
-//</body>
-//</html>
-//';
-
+            ";
         $sendEmailUser = $this->getUsuariosTable()->sendEmail($html);
+        if($sendEmailUser){
+            Echo "Envio exitoso";
+        }
     }
 
     public function getUsuariosTable() {

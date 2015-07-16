@@ -1,11 +1,11 @@
-<script type="text/javascript">
+<!--<script type="text/javascript">
     $(document).ready(function () {
         $('#example').dataTable();
     });
-</script>
+</script>-->
 
 <?php
-$title = 'PDI Ejecutado';
+$title = 'PDI Ejecutado....';
 $this->headTitle($title);
 include __DIR__ . '\..\..\..\..\menu.phtml';
 ?>
@@ -17,6 +17,55 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
     <p>
         <a class="btn btn-success" href="<?php echo $this->url('ejecutado', array('action' => 'add')); ?>">Agregar Ejecutado</a>
     </p>
+
+ 
+    <form action="<?php echo $this->basePath() ?>/ejecutado/index" method="POST" enctype="multipart/form-data">
+        <table >
+            <tr>
+                <td><b>Filtrar por:</b></td>
+                <td></td>
+                <td><b>&nbsp;&nbsp;&nbsp;&nbsp; Año</b></td>
+                <td>
+                    <select name="anio" id="anio">
+                        <option value="0">--------</option>
+                        <?php
+                        $date = date("Y");
+                        if (date("Y") == 2016) {
+                            $anio = $date - 12;
+                        } else {
+                            $anio = $date - 1;
+                        }
+
+                        $dto = $date + 3;
+
+                        for ($i = $anio; $i <= $dto; $i++) {
+                            ?>
+                            <option value="<?= $anio ?>"><?= $anio ?></option>
+                            <?php
+                            $anio++;
+                        }
+                        ?>
+                    </select> 
+                </td>
+                <td><b>&nbsp;&nbsp;&nbsp;&nbsp; Componente</b></td>
+                <td>
+                    <select name="selectCompi" id="selectCompi">
+                        <option value="0">----</option>
+                        <?php 
+                        $componentesSelect = $selectComponente->getOneComponente(0, 0);
+                        
+                        foreach ($componentesSelect as $componente) { ?>
+                            <option value="<?= $componente->id ?>"><?= $componente->name ?></option>
+                        <?php } ?>
+                    </select>
+                </td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp; <button id="btnFiltar" class="btn btn-success" type="submit">Filtrar</button></td>
+            </tr>
+        </table>
+        
+    </form>
+
+
     <table id="example" class="table table-striped table-bordered">
         <thead style="border: 2px #e0e0e0 solid;">
             <tr>
@@ -25,14 +74,25 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                 <th rowspan="2" class="th_table">Caracteristica</th>
                 <?php
                 $datePresupuestado = $ejecutado->getDateEjecutado();
+                if (isset($anioFiltra) && $anioFiltra <> 0) {
+                    ?>
+                    <th colspan="2" class="th_table"><?php echo $anioFiltra ?></th>
+                </tr>
+                <tr>
+                    <th>Sem A</th>
+                    <th>Sem B</th>
+                </tr>
+                <?php
+            } else {
                 foreach ($datePresupuestado as $date) {
                     $fehca = $date->fecha;
                     ?>
-                    <th colspan="2" class="th_table"><?php echo $fehca ?></th>
+                <th colspan="2" class="th_table"> <?php echo $fehca ?></th>
 
-                    <?php
-                }
-                ?>
+                <?php
+            }
+            ?>
+
             </tr>
             <tr> 
                 <?php
@@ -47,17 +107,29 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                 }
                 ?>
             </tr>
+
+            <?php
+        }
+        ?>
+
         </thead>
         <tbody>
             <?php
+            if($componentes != null){
+                
             foreach ($componentes as $componente) {
+                
                 $currentFactores = $factores->getAllFactorComponente($componente->id);
                 $nCarRows = 0;
                 $f = 0;
                 $row = "<tr>"
                         . "<td rowspan='%d'>" . $componente->name . "</td>";
                 foreach ($currentFactores as $factor) {
-                    $currentCaracteristicas = $caracteristicas->getCaracteristicaFactor($factor->id);
+                    if($selectCompi == 0){
+                        $currentCaracteristicas = $caracteristicas->getCaracteristicaFactor($factor->id, 0);
+                    }else{
+                        $currentCaracteristicas = $caracteristicas->getCaracteristicaFactor($factor->id, $selectCompi);
+                    }
                     $nCarRows += $currentCaracteristicas->count();
                     if ($f === 0) {
                         $row .= "<td rowspan='" . $currentCaracteristicas->count() . "'>" . $factor->name . "</td>";
@@ -67,7 +139,11 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                     $f++;
                     $c = 0;
                     $date = 2014;
-
+                    /*if($selectCompi == 0){
+                        $currentCaracteristicas = $caracteristicas->getCaracteristicaFactor($factor->id, 0);
+                    }else{
+                        $currentCaracteristicas = $caracteristicas->getCaracteristicaFactor($factor->id, $selectCompi);
+                    }*/
                     foreach ($currentCaracteristicas as $caracteristica) {
                         if ($c === 0) {
                             $row .= "<td>" . $caracteristica->CARACTERISTICA . "</td>";
@@ -76,7 +152,10 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                         }
                         $c++;
                         $algo = "si";
-                        for ($i = $date; $i <= date("Y"); $i++) {
+                        //var_dump("aaaa"); var_dump($anioFiltra); exit();
+                        if (isset($anioFiltra) && $anioFiltra <> 0) {
+                            $i = $anioFiltra;
+
                             $currentEjecutado = $ejecutado->getEjecutadoCaracteristica($caracteristica->ID, $i);
                             foreach ($currentEjecutado as $dateEjecutado) {
                                 $algo = "no";
@@ -87,25 +166,45 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                                 $row .= "<td>0</td>";
                                 $row .= "<td>0</td>";
                             }
+                        } else {
+                            for ($i = $date; $i <= date("Y"); $i++) {
+
+                                $currentEjecutado = $ejecutado->getEjecutadoCaracteristica($caracteristica->ID, $i);
+                                foreach ($currentEjecutado as $dateEjecutado) {
+                                    $algo = "no";
+                                    $row .= "<td>" . $dateEjecutado->semestreaa . "</td>"
+                                            . "<td>" . $dateEjecutado->semestrebb . "</td>";
+                                }
+                                if ($algo == "si") {
+                                    $row .= "<td>0</td>";
+                                    $row .= "<td>0</td>";
+                                }
+                            }
                         }
+
+
                         //$date++;
                         $row .= "</tr>";
                     }
                 }
                 echo sprintf($row, $nCarRows);
             }
-            
-            
-            
-            
+            }
+
+
+
             foreach ($componentesEjecutado as $componente) {
                 $currentFactores = $factores->getAllFactorComponente($componente->id);
                 $nCarRows = 0;
                 $f = 0;
                 $row = "<tr>"
-                        . "<td rowspan='%d'>" . $componente->name . "</td>";
+                        . "<td rowspan='%d'>" .  $componente->name . "</td>";
                 foreach ($currentFactores as $factor) {
-                    $currentCaracteristicas = $caracteristicas->getCaracteristicaFactor($factor->id);
+                    if($selectCompi == 0){
+                        $currentCaracteristicas = $caracteristicas->getCaracteristicaFactor($factor->id, 0);
+                    }else{
+                        $currentCaracteristicas = $caracteristicas->getCaracteristicaFactor($factor->id, $selectCompi);
+                    }
                     $nCarRows += $currentCaracteristicas->count();
                     if ($f === 0) {
                         $row .= "<td rowspan='" . $currentCaracteristicas->count() . "'>" . $factor->name . "</td>";
@@ -119,26 +218,44 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                     foreach ($currentCaracteristicas as $caracteristica) {
                         $url = $this->url('ejecutado', array('action' => 'add', 'id' => $caracteristica->ID));
                         if ($c === 0) {
-                            $row .= "<td><a style='color: black;' href='". $url ."'>" . $caracteristica->CARACTERISTICA . "</a></td>";
+                            $row .= "<td><a style='color: black;' href='" . $url . "'>" . $caracteristica->CARACTERISTICA . "</a></td>";
                         } else {
-                            $row .= "<td><a style='color: black;' href='". $url ."'>" . $caracteristica->CARACTERISTICA . "</a></td>";
+                            $row .= "<td><a style='color: black;' href='" . $url . "'>" . $caracteristica->CARACTERISTICA . "</a></td>";
                         }
                         $c++;
                         $algo = "si";
-                        for ($i = $date; $i <= date("Y"); $i++) {
+                        if (isset($anioFiltra) && $anioFiltra <> 0) {
+                            $i = $anioFiltra;
                             $currentEjecutado = $getejecutado->getEjecutadoM($caracteristica->ID, $i);
                             foreach ($currentEjecutado as $dateEjecutado) { //id
                                 $urla = $this->url('ejecutado', array('action' => 'edit', 'id' => $dateEjecutado->semestreaaid));
                                 $urlb = $this->url('ejecutado', array('action' => 'edit', 'id' => $dateEjecutado->semestrebbid));
                                 $algo = "no";
-                                $row .= "<td> <a style='color: black;' href='". $urla ."'>" . $dateEjecutado->semestreaa . "</a></td>"
-                                     .  "<td><a style='color: black;' href='". $urlb ."'>" . $dateEjecutado->semestrebb . "</a></td>";
-                            } 
+                                $row .= "<td> <a style='color: black;' href='" . $urla . "'>" . $dateEjecutado->semestreaa . "</a></td>"
+                                        . "<td><a style='color: black;' href='" . $urlb . "'>" . $dateEjecutado->semestrebb . "</a></td>";
+                            }
                             if ($algo == "si") {
                                 $row .= "<td>0</td>";
                                 $row .= "<td>0</td>";
                             }
+                        } else {
+                            for ($i = $date; $i <= date("Y"); $i++) {
+
+                                $currentEjecutado = $getejecutado->getEjecutadoM($caracteristica->ID, $i);
+                                foreach ($currentEjecutado as $dateEjecutado) { //id
+                                    $urla = $this->url('ejecutado', array('action' => 'edit', 'id' => $dateEjecutado->semestreaaid));
+                                    $urlb = $this->url('ejecutado', array('action' => 'edit', 'id' => $dateEjecutado->semestrebbid));
+                                    $algo = "no";
+                                    $row .= "<td> <a style='color: black;' href='" . $urla . "'>" . $dateEjecutado->semestreaa . "</a></td>"
+                                            . "<td><a style='color: black;' href='" . $urlb . "'>" . $dateEjecutado->semestrebb . "</a></td>";
+                                }
+                                if ($algo == "si") {
+                                    $row .= "<td>0</td>";
+                                    $row .= "<td>0</td>";
+                                }
+                            }
                         }
+
                         //$date++;
                         $row .= "</tr>";
                     }

@@ -4,10 +4,21 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/wamp/www/ORI-BSC/module/Usuarios/view/usuarios/usuarios/add.phtml</file>
-            <file>file:/C:/wamp/www/ORI-BSC/module/Usuarios/src/Usuarios/Form/UsuariosForm.php</file>
             <file>file:/C:/wamp/www/ORI-BSC/module/Usuarios/src/Usuarios/Controller/UsuariosController.php</file>
             <file>file:/C:/wamp/www/ORI-BSC/module/Usuarios/src/Usuarios/Model/UsuariosTable.php</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Usuarios/src/Usuarios/Form/UsuariosForm.php</file>
             <file>file:/C:/wamp/www/ORI-BSC/module/Usuarios/src/Usuarios/Model/Usuarios.php</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Ejecutado/src/Ejecutado/Controller/EjecutadoController.php</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Ejecutado/view/ejecutado/ejecutado/index.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Componentes/src/Componentes/Model/ComponentesTable.php</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Caracteristica/src/Caracteristica/Model/CaracteristicaTable.php</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Factores/src/Factores/Model/FactoresTable.php</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Componentes/src/Componentes/Controller/ComponentesController.php</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Componentes/view/componentes/componentes/bscori.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Ejecutado/view/ejecutado/ejecutado/add.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Caracteristica/src/Caracteristica/Controller/CaracteristicaController.php</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Presupuestado/view/presupuestado/presupuestado/presupuestado.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Login/view/Login/Login/login.phtml</file>
         </group>
     </open-files>
 </project-private>

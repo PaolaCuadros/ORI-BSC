@@ -61,28 +61,49 @@ class ComponentesTable extends AbstractTableGateway {
         return $results;
     }
 
-    public function getOneComponente($limit) {
-        $sql = 'SELECT id, name FROM componentes limit ' . $limit . '';
-        $resultSet = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
-        return $resultSet;
+    public function getOneComponente($limit, $selectCompi) {
+        if ($limit == 0) {
+            //var_dump("aca"); 
+            $sql = 'SELECT id, name FROM componentes ';
+        } else {
+            if ($selectCompi == 0) {
+                $sql = 'SELECT id, name FROM componentes limit ' . $limit . '';
+            } else if ($selectCompi == 1) {
+                //var_dump("aca");
+                $sql = 'SELECT id, name FROM componentes WHERE id = "1" limit ' . $limit . '';
+            } else {
+                //var_dump("mmmmm");
+            }
+        }
+        // exit();
+        if (isset($sql)) {
+            $resultSet = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+            return $resultSet;
+        }
     }
-    
-    public function getIndicadores(){
+
+    public function getIndicadores() {
         $sql = 'SELECT ID, NAME FROM indicadores WHERE ID_PARENT=0  ';
         $resultSet = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $resultSet;
     }
-    
-    public function getSubIndicadores($id){
-        $sql = 'SELECT ID, NAME, ID_FACTOR, IDCOMPONENTE FROM indicadores WHERE ID_PARENT='.$id.'';
+
+    public function getSubIndicadores($id) {
+        $sql = 'SELECT ID, NAME, ID_FACTOR, IDCOMPONENTE FROM indicadores WHERE ID_PARENT=' . $id . '';
         //VAR_DUMP($sql); 
         $resultSet = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $resultSet;
     }
-    
-    public function getFactorDiuff(){
-        $sql = 'SELECT id, name FROM componentes WHERE id <> 1';
-        //VAR_DUMP($sql); 
+
+    public function getFactorDiuff($selectCompi) {
+        //var_dump($selectCompi); exit();
+        if ($selectCompi == 0) {
+            $sql = 'SELECT id, name FROM componentes WHERE id <> 1';
+        } else {
+            $sql = 'SELECT id, name FROM componentes WHERE id = "' . $selectCompi . '" AND id <> 1 ';
+        }
+
+        //VAR_DUMP($sql); EXIT(); 
         $resultSet = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $resultSet;
     }

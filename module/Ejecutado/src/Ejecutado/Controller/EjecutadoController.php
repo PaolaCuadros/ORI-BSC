@@ -22,23 +22,40 @@ class EjecutadoController extends AbstractActionController {
     protected $preCaracteristicasTable;
 
     public function indexAction() {
-        $componentesEjecutado = $this->getPreComponentesTable()->getFactorDiuff();
-        $componentes = $this->getPreComponentesTable()->getOneComponente(1);
+        $anioFiltra = 0;
+        $selectCompi = 0;
+        if(isset($_POST['anio'])){
+            $anioFiltra = $_POST['anio'];
+            //var_dump($anio); exit();
+        }
+        
+        if(isset($_POST['selectCompi'])){
+            $selectCompi = $_POST['selectCompi'];
+        }
+        //var_dump($anioFiltra); exit();
+        $componentesEjecutado = $this->getPreComponentesTable()->getFactorDiuff($selectCompi);
+        $componentes = $this->getPreComponentesTable()->getOneComponente(1, $selectCompi);
         $factores = $this->getPreFactoresTable();
         $caracteristicas = $this->getPreCaracteristicasTable();
         $ejecutado = $this->getUsuariosTable();
         $getejecutado = $this->getEjecutadoTable();
+        $selectComponente = $this->getPreComponentesTable();
+        
         return array(
             'componentes' => $componentes,
             'componentesEjecutado' => $componentesEjecutado,
             'factores' => $factores,
             'caracteristicas' => $caracteristicas,
             'ejecutado' => $ejecutado,
-            'getejecutado' => $getejecutado
+            'getejecutado' => $getejecutado,
+            'anioFiltra' => $anioFiltra,
+            'selectComponente' => $selectComponente,
+            'selectCompi' => $selectCompi
         );
     }
 
     public function addAction() {
+        //var_dump("aca"); exit();
 //        //envio de correo
 //        $message = new Message();
 //        $message->addTo('lizeth.cuadros@unibague.edu.co')

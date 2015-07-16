@@ -42,7 +42,7 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
             </thead>
             <tbody>
                 <?php
-                $componente = $getIndicadores->getOneComponente(1);
+                $componente = $getIndicadores->getOneComponente(1, 0);
                 foreach ($componente as $getComponente) {
                     $idComponente = $getComponente->id;
                 }
