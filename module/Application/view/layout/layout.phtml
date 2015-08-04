@@ -26,6 +26,8 @@
                 ->prependFile($this->basePath('js/bootstrap.min.js'))
                 ->prependFile($this->basePath('js/jquery-1.11.1.min.js'))
                 ->prependFile($this->basePath('js/jquery.tablesorter.js'))
+                ->prependFile($this->basePath('js/jquery-1.3.2.min.js'))
+//                ->prependFile($this->basePath('js/jquery.table2excel.js'))
                 //->prependFile($this->basePath('js/dataTables.bootstrap.js'))
                 ->prependFile($this->basePath('js/jquery.min.js'))
                 //->prependFile($this->basePath('js/jquery.dataTables.min.js'))
@@ -71,6 +73,8 @@
 <!--                            <li class="active"><a href="<?php // echo $this->url('login') ?>"><?php echo $this->translate('Login') ?></a></li>-->
                             <li class="active"><a href="<?php echo $this->url('login', array('action' => 'index'));
             ?>"><?php echo $this->translate('Logout') ?></a></li>
+                            <li class="active"><a href="<?php echo $this->url('admin', array('action' => 'index'));
+            ?>"><?php echo $this->translate('Usuario') ?></a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
                 <?php } ?>

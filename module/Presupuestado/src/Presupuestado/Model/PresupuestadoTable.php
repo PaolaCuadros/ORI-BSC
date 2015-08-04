@@ -67,9 +67,15 @@ class PresupuestadoTable extends AbstractTableGateway {
         return $results;
     }
     
-    public function getSumPresupuestado($id, $date, $componente){
-        //var_dump($componente); 
-        if($componente == 5){
+    public function getSumPresupuestado($id, $date, $componente, $Idcaracte = null){
+        //var_dump($Idcaracte);  exit();
+        if($Idcaracte != null){
+            //var_dump("aca"); exit();
+            $sumPresupuestado = 'SELECT 
+(SELECT SUM(presu.semestreA) FROM presupuestado AS presu INNER JOIN caracteristica AS carac ON presu.idCaracteristica = carac.ID INNER JOIN factores AS fact ON fact.id = carac.id_factor AND LEFT(presu.date, 4) = "'.$date.'" AND fact.id = '.$id.' AND carac.ID = '.$Idcaracte.') AS semestreaa,
+(SELECT SUM(presu.semestreB) FROM presupuestado AS presu INNER JOIN caracteristica AS carac ON presu.idCaracteristica = carac.ID INNER JOIN factores AS fact ON fact.id = carac.id_factor AND LEFT(presu.date, 4) = "'.$date.'" AND fact.id = '.$id.' AND carac.ID = '.$Idcaracte.' ) AS semestrebb
+FROM factores AS facto WHERE facto.id = '.$id.'';
+        }else if($componente == 5){
             //var_dump("aca"); exit();
           $sumPresupuestado =  'SELECT (SELECT SUM(presu.semestreA) as summaa FROM componentes AS compo INNER JOIN factores AS fact ON compo.ID = fact.idParent INNER JOIN caracteristica AS caract ON caract.id_factor = fact.ID INNER JOIN presupuestado AS presu ON presu.idCaracteristica = caract.ID WHERE compo.ID = '.$componente.' AND LEFT(presu.date, 4) = "2015") AS semestreaa, (SELECT SUM(presu.semestreb) as summbb FROM componentes AS compo INNER JOIN factores AS fact ON compo.ID = fact.idParent INNER JOIN caracteristica AS caract ON caract.id_factor = fact.ID INNER JOIN presupuestado AS presu ON presu.idCaracteristica = caract.ID WHERE compo.ID = '.$componente.' AND LEFT(presu.date, 4) = "2015") AS semestrebb FROM componentes AS com WHERE com.ID = '.$componente.'';
         }else{
@@ -94,6 +100,23 @@ class PresupuestadoTable extends AbstractTableGateway {
             throw new \Exception("Could not find row $id");
         }
         return $row;
+    }
+    
+    public function getSumpresupuestadoCaracteristica($idCaracteristica, $date){
+        $sumEjecutadoCaracteristica = 'SELECT 
+            (SELECT SUM(tipoa.semestreA) 
+             FROM presupuestado AS tipoa  
+             INNER JOIN caracteristica as caracte on tipoa.idCaracteristica = caracte.ID  AND caracte.ID= '.$idCaracteristica.'
+             WHERE LEFT(tipoa.date, 4) = "'.$date.'") as semestreaa, 
+                (SELECT SUM(tipob.semestreB) 
+             FROM presupuestado AS tipob  
+             INNER JOIN caracteristica as caracte on tipob.idCaracteristica = caracte.ID  AND caracte.ID= '.$idCaracteristica.'
+             WHERE LEFT(tipob.date, 4) = "'.$date.'")as semestrebb
+        FROM presupuestado as tipm 
+        INNER JOIN caracteristica as caracte on tipm.idCaracteristica = caracte.ID  AND caracte.ID = '.$idCaracteristica.'
+        LIMIT 1';
+        $result = $this->adapter->query($sumEjecutadoCaracteristica, Adapter::QUERY_MODE_EXECUTE);
+        return $result;
     }
     
 

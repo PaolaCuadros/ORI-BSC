@@ -13,7 +13,7 @@ $this->headTitle($title);
                     <tr>
                         <td class="td_table">Nombres</td>
                         <td><input class="form-control validate[required]" type="text" name="name" id="name" value="<?php echo $this->nombre ?>" />
-                            <input class="form-control validate[required]" type="text" name="id" id="id" value="<?php echo $this->id ?>" />
+                            <input class="form-control validate[required]" type="hidden" name="id" id="id" value="<?php echo $this->id ?>" />
                         </td>
                     </tr>
                     <tr>
@@ -24,10 +24,23 @@ $this->headTitle($title);
                         <td class="td_table">Correo Electronico</td>
                         <td><input type="email" class="form-control validate[required]" name="email" id="email" value="<?php echo $this->email ?>" /> </td>
                     </tr>
+                    
+                    <tr>
+                        <td class="td_table">Otro Correo Electrónico</td>
+                        <td><input type="email" class="form-control validate[required]" name="otro_email" id="otro_email" value="<?php echo $this->otro_email ?>" /> </td>
+                    </tr>
+                    
+                    
                     <tr>
                         <td class="td_table">Telefono</td>
                         <td><input type="text" class="form-control validate[required]" name="telefono" id="telefono" value="<?php echo $this->telefono ?>" /></td>
                     </tr>
+                    
+                    <tr>
+                        <td class="td_table">Celular</td>
+                        <td><input type="text" class="form-control validate[required]" name="celular" id="celular" value="<?php echo $this->celular ?>" /></td>
+                    </tr>
+                    
                     <tr>
                         <td class="td_table">Código</td>
                         <td><input type="text" class="form-control validate[required]" name="cod_estud" id="cod_estud" value="<?php echo $this->cod_estud ?>" /> </td>
@@ -67,14 +80,7 @@ $this->headTitle($title);
                                 ?>
 
                             </select>
-                            <?php
-                            if ($otro_prog_interes != '') {
-                                ?>
-                                <input type="text" class="form-control validate[required]" id="otro_prog_interes" name="otro_prog_interes" value="<?php echo $otro_prog_interes ?>" />
-
-                                <?php
-                            }
-                            ?>
+                            <input type="text" class="form-control validate[required]" id="otro_prog_interes" name="otro_prog_interes" value="" style="display:none;" />
 
                         </td>
                     </tr>
@@ -94,20 +100,48 @@ $this->headTitle($title);
                             <div id="contenedor">
                                 <div class="added">
                                     <div class="observaciones">
+                                        <table style="width: 100%; border: 1px solid; border-color: #BDBDBD;" background-color="#FFFFFF"  >
+                                            <tr>
+                                                <td class="td_table" style="text-align: center; border: 1px solid; border-color: #BDBDBD;">Observación</td>
+                                                <td class="td_table" style="text-align: center; border: 1px solid; border-color: #BDBDBD;">Fecha</td>
+                                                <td class="td_table" style="text-align: center; border: 1px solid; border-color: #BDBDBD;">Administrador</td>
+                                                <td class="td_table" style="text-align: center; border: 1px solid; border-color: #BDBDBD;">Eliminar</td>
+                                            </tr>
                                         <?php
                                         $getObservaciones = $observacionesUsuario->getObservacionesUsers($this->id);
                                         foreach ($getObservaciones as $observacionesss) {
+                                            //var_dump($observacionesss); exit();
                                             ?>
-                                        <style type="text/css"> .observaciones { overflow: scroll; height:200px; } </style>
-                                            <textarea class="form-control validate[required]" name="observaM[]" rows="3"><?= $observacionesss->observacion ?></textarea>
+                                        <style type="text/css"> .observaciones { overflow: scroll; height:315px; } </style>
+                                        
+                                            <tr>
+                                                <td style="border: 1px solid; width: 50%; border-color: #BDBDBD;">
+                                                   <textarea class="form-control validate[required]" name="observaM[]" rows="3" readonly> <?= $observacionesss->observacion ?></textarea>
+                                                </td>
+                                                <td style="border: 1px solid; border-color: #BDBDBD;">
+                                                    <?= $observacionesss->dateCreation ?>
+                                                </td>
+                                                <td style="border: 1px solid; border-color: #BDBDBD;">
+                                                    <?= $observacionesss->NOMBRE . " " . $observacionesss->APELLIDO ?>
+                                                </td>
+                                                <td class="th_table"><a href="<?php echo $this->url('observaciones', array('action' => 'delete', 'id' => $observacionesss->id)); ?>"><img src='<?php echo $this->basePath('img/eliminar.png') ?>' ></a></td>
+                                            </tr>
+                                        
+                                            
+                                            
                                             <input type="hidden" name="idobservaM[]" value="<?= $observacionesss->id ?>"/>
                                             <?php }
                                         ?>
+                                            </table>
                                     </div>
 <!--                                    <input type="text" name="mitexto[]" id="campo_1" placeholder="Texto 1"/><a href="#" class="eliminar">&times;</a>-->
                                 </div>
                             </div>
                         </td>
+                        <?php if(isset($observacionesss->idUser)){ ?>
+                        <td style="width: 1px;"><a class="btn btn-info" href="<?php echo $this->url('observaciones', array('action' => 'index', 'id' => $observacionesss->idUser)); ?>">Ver <br/> Observaciones</a>
+                        </td>
+                        <?php } ?>
                     </tr>
                     <?php
                     $estado = "";
@@ -136,6 +170,10 @@ $this->headTitle($title);
                             </select>
                         </td>
                     </tr>
+                    <tr>
+                       <td class="td_table">Fecha de Compromiso</td> 
+                       <td><input class="form-control validate[required]" type="date" id="fechaCompromiso" name="fechaCompromiso" value="<?php echo $fechaCompromiso ?>" /> </td>
+                    </tr>
                 </table>
                 <button id="addUsuario" class="btn btn-success" type="submit" >Guardar</button>
             </form>
@@ -154,11 +192,12 @@ $this->headTitle($title);
 
         function ocultarInput()
         {
-            console.info("aca");
+            //console.info("aca");
             var seleccion = document.getElementById('prog_interes');
             var idPrograma = seleccion.options[seleccion.selectedIndex].value;
-
+            
             if (idPrograma == 9) {
+                console.info(idPrograma);
                 $('#otro_prog_interes').show();
             }
 

@@ -1,0 +1,149 @@
+<?php
+$title = "Agregar Evidencia";
+$this->headTitle($title);
+$form = $this->form;
+?>
+
+<h1> <?= $this->escapeHtml($title); ?> </h1>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jQuery-Validation-Engine/2.6.4/jquery.validationEngine.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jQuery-Validation-Engine/2.6.4/languages/jquery.validationEngine-es.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+<div id="container">
+    <div class="row-fluid top-buffer">
+        <div class=" text-center">
+
+            <form action="<?php echo $this->basePath() ?>/evidencia/add" id="formaddval" method="post" name="formaddval">
+                <table id="tblprod2" class="table table-hover table-bordered">
+
+                    <tr>
+                        <td class="td_table">Año</td>
+                        <td>
+                            <select name="anio" id="anio" class="form-control validate[required]">
+                                <?php
+                                if(isset($anio)){ ?>
+                                    <option value="<?= $anio ?>"><?= $anio ?></option>
+                                <?php }
+                                
+                                $anio = 2014;
+                                $dto = 2015;
+                                for ($i = $anio; $i <= $dto; $i++) {
+                                    ?>
+                                    <option value="<?= $anio ?>"><?= $anio ?></option>
+                                    <?php
+                                    $anio++;
+                                }
+                                ?>
+                            </select> 
+                        </td>
+                    <input type="hidden" id="idCaracteristica" name="idCaracteristica" value="<?= $id ?>" />
+                        <td><button id="addAdmin" class="btn btn-success" type="submit" >Buscar</button></td>
+                    </tr>
+                </table>
+                
+            </form>
+
+
+            <form action="<?php echo $this->basePath() ?>/evidencia/add" id="formaddval" method="post" name="formaddval" enctype="multipart/form-data">
+
+
+                <table id="tblprod2" class="table table-hover table-bordered">
+                    <tr>
+                        <td class="td_table">Nombre Estudiante</td>
+                        <td><select name="estudiante" id="estudiante" class="form-control validate[required]">
+                                <option value="">---- </option>
+                                <?php foreach ($nameUsuario as $estudiante) { ?>
+                                    <option value="<?= $estudiante->ID ?>"><?= $estudiante->NOMBRE . " " . $estudiante->APELLIDO ?> </option>
+
+                                <?php } ?>
+
+                            </select></td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_table">Link Facebook</td>
+                        <td><input class="form-control validate[required]" type="text" name="linkface" id="linkface" /></td>
+                        <input type="hidden" id="idCaracteristica" name="idCaracteristica" value="<?= $id ?>" />
+                    </tr>
+                    <tr>
+                        <td class="td_table">Link Youtube</td>
+                        <td><input class="form-control validate[required]" type="text" name="linkyoutube" id="linkyoutube" /></td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Link Página ORI</td>
+                        <td><input class="form-control validate[required]" type="text" name="linkpagina" id="linkpagina" /></td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Link Archivo o url archivo</td>
+                        <td>
+                            <input type="file" name="archivo" id="archivo" /> <br/>
+<!--                            <input style="width: 100%; padding: 6px 12px; border: 1px solid #ccc; border-radius: 4px; " type="text" name="urlArchivo" id="urlArchivo" />-->
+                        </td>
+                        
+                    </tr>
+                    <input type="hidden" value="<?= $this->basePath() . "/img" ?>" id="url" name="url"/>
+                </table>
+                <button id="addAdmin" class="btn btn-success" type="submit" >Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {    
+    //Al escribr dentro del input con id="service"
+    $('#anio').click(function(){
+        var anio = $("#anio").val();
+        var algo = $("#formaddval").attr('action');
+        console.info(algo);
+        $.ajax({
+             url: $("#formaddval").attr('action'),
+             type: $("#formaddval").attr('method'),
+            data: {anio:anio},
+            success: function(data) {
+                
+                //Escribimos las sugerencias que nos manda la consulta
+                $('#suggestions').fadeIn(1000).html(data);
+                //Al hacer click en algua de las sugerencias
+                $('.suggest-element').click('click', function(){
+                    //Obtenemos la id unica de la sugerencia pulsada
+                    var id = $(this).attr('id');
+                    //Editamos el valor del input con data de la sugerencia pulsada
+                    $('#service').val($('#'+id).attr('data'));
+                    //Hacemos desaparecer el resto de sugerencias
+                    $('#suggestions').fadeOut(1000);
+                });              
+            }
+        });
+    });              
+});    
+</script>
+
+
+
+
+
+<!--<form action="<?php echo $this->basePath() ?>/evidencia/add" id="complete" method="post" name="complete">
+                <input type="text" size="50" id="service" name="service" />
+                <input type="hidden" size="50" id="idCaracteristica" name="idCaracteristica" value="<?= $id ?>" />
+                <div id="suggestions"></div>
+            </form>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+
+
+
+
+
+
+-->

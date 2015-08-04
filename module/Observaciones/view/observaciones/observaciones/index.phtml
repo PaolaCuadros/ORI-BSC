@@ -1,0 +1,56 @@
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<link href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.css" media="screen" rel="stylesheet" type="text/css">
+<script type="text/javascript" >
+    $(document).ready(function () {
+        $('#example').dataTable({
+            "pagingType": "full_numbers"
+        });
+    });
+</script>
+
+<?php
+$title = "Observaciones de estudiante " . $nombreUsuario;
+$this->headTitle($title);
+?>
+
+<h1 class="title" style="float: left; font-size: 33px; color: #f8c400;     padding-bottom: 36px;"><?= $this->escapeHtml($title); ?></h1>
+
+<table id="example" class="display"  class="table tablesorter">
+    <thead style="border: 2px #e0e0e0 solid;" >
+        <tr>
+            <th class="th_table table-estudiantes">Id</th>
+            <th class="th_table table-estudiantes">Observación</th>
+            <th class="th_table table-estudiantes">Fecha</th>
+            <th class="th_table table-estudiantes">Administrador</th>
+            <th class="th_table table-estudiantes">Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $allObservaciones = $getAllObservacionesUser->getAllObservacionesUser($id);
+        foreach ($allObservaciones as $getAllObservaciones) {
+            if ($getAllObservaciones->estado == 0) {
+                $color = "#F5A9A9";
+            } else {
+                $color = "#FFFFFF";
+            }
+            ?>
+            <tr >
+                <td class="th_table" style="background-color: <?= $color ?>;"><?php echo $this->escapeHtml($getAllObservaciones->id) ?></td>
+                <td class="th_table" style="background-color: <?= $color ?>;"><?php echo $this->escapeHtml($getAllObservaciones->observacion) ?></td>
+                <td class="th_table" style="background-color: <?= $color ?>;"><?php echo $this->escapeHtml($getAllObservaciones->dateCreation) ?></td>
+                <td class="th_table" style="background-color: <?= $color ?>;"><?php echo $this->escapeHtml($getAllObservaciones->NOMBRE . "  " . $getAllObservaciones->APELLIDO) ?></td>
+                <td class="th_table" style="background-color: <?= $color ?>;"><?php echo ($getAllObservaciones->estado) ? "Activo" : (($getAllObservaciones->estado) ? 2 : "Inactivo"); ?></td>
+            </tr>
+        <?php } ?>
+    </tbody>
+</table>
+
+<div class="btn-atras">
+    <a style="color: white; cursor: pointer;" href="<?php echo $this->url('usuarios', array('action' => 'edit', 'id' => $id));
+        ?>">Atras</a>
+</div>
+
+
+

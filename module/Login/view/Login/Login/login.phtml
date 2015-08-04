@@ -6,7 +6,7 @@ $form = $this->form;
 
 <h1><?= $this->escapeHtml($title); ?></h1>
 
-<div id="container" style="  width: 80%; margin-left: 10%; background-image: url(http://172.17.70.52/ORI-BSC/public/img/Banderas.png);">
+<div id="container" style="  width: 80%; margin-left: 10%; ">
     <div class="row-fluid top-buffer">
         <div class=" text-center">
             <form action="<?php echo $this->basePath() ?>/login/login" method="POST" enctype="multipart/form-data">
@@ -20,6 +20,11 @@ $form = $this->form;
                         <td><input class="form-control validate[required]" type="password" name="password" id="password" placeholder="Contraseña" /></td>
                     </tr>
                 </table>
+                <?php if((isset($msj)) && ($msj == 1)){
+                    echo "<h1 style = 'font-size: 14px; color: red;'>El usuario no tiene permisos de acceso, por favor comuníquese con su administrador</h1>";
+                }else if((isset($msj)) && ($msj == 2)){
+                    echo "<h1 style = 'font-size: 14px; color: red;'>Usuario o contraseña incorrecta</h1>";
+                } ?>
                 <button id="addEjecutado" class="btn btn-success" type="submit">Login</button>
             </form>
         </div>

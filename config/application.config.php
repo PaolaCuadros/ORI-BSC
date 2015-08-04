@@ -4,7 +4,7 @@ return array(
     // This should be an array of module namespaces used in the application.
     'modules' => array(
         'Application',
-        'Album',
+        //'Album',
         'Factores',
         'Caracteristica',
         'Componentes',
@@ -12,6 +12,9 @@ return array(
         'Usuarios',
         'Ejecutado',
         'Login',
+        'Admin',
+        'Observaciones',
+        'Evidencia',
         //'SanAuth'
 //        'Ajax',
     ),

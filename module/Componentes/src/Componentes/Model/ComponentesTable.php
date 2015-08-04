@@ -82,15 +82,32 @@ class ComponentesTable extends AbstractTableGateway {
         }
     }
 
-    public function getIndicadores() {
-        $sql = 'SELECT ID, NAME FROM indicadores WHERE ID_PARENT=0  ';
+    public function getIndicadores($id = null) {
+        //var_dump($id); exit();
+        if ($id >= 1){
+           $sql = 'SELECT ID, NAME FROM indicadores WHERE ID = "'.$id.'"';
+           //var_dump($sql); 
+        }else{
+            $sql = 'SELECT ID, NAME FROM indicadores WHERE ID_PARENT=0  LIMIT 1';
+        }
+        
+        
+        $resultSet = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $resultSet;
+    }
+    
+    
+    public function getIndicadoresParent($id = null) {
+           $sql = 'SELECT ID, NAME FROM indicadores WHERE ID = "'.$id.'"';
+           //var_dump($sql); exit();
+        
         $resultSet = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $resultSet;
     }
 
     public function getSubIndicadores($id) {
         $sql = 'SELECT ID, NAME, ID_FACTOR, IDCOMPONENTE FROM indicadores WHERE ID_PARENT=' . $id . '';
-        //VAR_DUMP($sql); 
+        //VAR_DUMP($sql);  exit();
         $resultSet = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $resultSet;
     }

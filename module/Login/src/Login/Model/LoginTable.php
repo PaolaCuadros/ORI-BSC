@@ -15,15 +15,29 @@ class LoginTable extends AbstractTableGateway {
         $this->initialize();
     }
     
-    public function fetchAll(){
-        
-    }
-    
-    public function loginUser($email, $pass){
-        //var_dump("aca"); exit();//SELECT * FROM `login` WHERE CONTRASENA = MD5("123456")
-        $sql = 'SELECT * FROM login WHERE EMAIL="'.$email.'" AND CONTRASENA= MD5("'.$pass.'") ';
+    public function fetchAll($id){
+        $sql = "SELECT EMAIL FROM login WHERE ID_USUARIO = '".$id."'";
         $resultSet = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $resultSet;
     }
+    
+    public function loginUser($email, $pass){
+        $sql = 'SELECT * FROM login WHERE EMAIL="'.$email.'" AND CONTRASENA= MD5("'.$pass.'")';
+        $resultSet = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $resultSet;
+    }
+    
+    public function saveLogin($email, $pass){
+        $sql = "INSERT INTO login (EMAIL, CONTRASENA) VALUES ('".$email."', MD5(".$pass."))";
+        $resultSet = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $resultSet;
+    }
+    
+    public function getIdLogin($email){
+        $sql = "SELECT ID_USUARIO FROM login WHERE EMAIL = '".$email."'";
+        $resultSet = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $resultSet;
+    }
+    
 }
 

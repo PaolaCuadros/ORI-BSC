@@ -24,6 +24,11 @@ class EjecutadoTable extends AbstractTableGateway {
 
     public function saveEjecutado(Ejecutado $ejecutado, $url) {
         $id = 0;
+        $existCaracteristi = $this->getCaracteristicaExis($_POST['anio'], $_POST['semestre'], $_POST['idCaracteristica']);
+        foreach ($existCaracteristi as $algo) {
+            $idCaracteristica = $algo->IDCARACTERISTICA;
+            $id = $algo->ID;
+        }
 
         if ($url == "") {
             $data = array(
@@ -44,7 +49,7 @@ class EjecutadoTable extends AbstractTableGateway {
 
         if (isset($_POST['id']))
             $id = (int) $_POST['id'];
-        if ($id == 0) {
+        if ($id == 0 && !isset($idCaracteristica) && !isset($idEjecitado)) {
             $this->insert($data);
         } else {
             if ($this->getEjecutado($id)) {
@@ -68,7 +73,7 @@ class EjecutadoTable extends AbstractTableGateway {
         }
         return $row;
     }
-    
+
     public function getEjecutadoM($id, $date) {
         $sqlSemestreA = 'SELECT 
 (SELECT tipoa.CALIFICACION FROM ejecutado AS tipoa WHERE tipoa.SEMESTRE = "A" and tipoa.IDCARACTERISTICA = "' . $id . '" and tipoa.ANIO = "' . $date . '") as semestreaa, 
@@ -80,10 +85,34 @@ FROM ejecutado as tipm WHERE tipm.IDCARACTERISTICA = "' . $id . '" LIMIT 1';
         $resultA = $this->adapter->query($sqlSemestreA, Adapter::QUERY_MODE_EXECUTE);
         return $resultA;
     }
-    
+
     public function getCaracteristicaEjecutado($id) {
-        $resultSet = 'SELECT IDCARACTERISTICA FROM ejecutado WHERE ID = '.$id.'';
+        $resultSet = 'SELECT IDCARACTERISTICA FROM ejecutado WHERE ID = ' . $id . '';
         $result = $this->adapter->query($resultSet, Adapter::QUERY_MODE_EXECUTE);
+        return $result;
+    }
+
+    public function getCaracteristicaExis($anio, $semestre, $idCaracteristica) {
+        $resultSet = 'SELECT IDCARACTERISTICA, ID FROM ejecutado WHERE IDCARACTERISTICA = ' . $idCaracteristica . ' AND ANIO = "' . $anio . '" AND SEMESTRE = "' . $semestre . '"';
+        $result = $this->adapter->query($resultSet, Adapter::QUERY_MODE_EXECUTE);
+        return $result;
+    }
+
+    public function sumEjecutadoCaracteristica($idCaracteristica, $date) {
+        $sumEjecutadoCaracteristica = 'SELECT tipm.ID as idEjecutado, URL,
+            (SELECT COUNT(tipoa.SEMESTRE) 
+             FROM ejecutado AS tipoa  
+             INNER JOIN caracteristica as caracte on tipoa.IDCARACTERISTICA = caracte.ID  AND caracte.ID= '.$idCaracteristica.'
+             WHERE tipoa.SEMESTRE = "A" and tipoa.ANIO = "'.$date.'") as semestreaa, 
+                (SELECT COUNT(tipoa.SEMESTRE) 
+             FROM ejecutado AS tipoa  
+             INNER JOIN caracteristica as caracte on tipoa.IDCARACTERISTICA = caracte.ID  AND caracte.ID= '.$idCaracteristica.'
+             WHERE tipoa.SEMESTRE = "B" and tipoa.ANIO = "'.$date.'")as semestrebb
+        FROM ejecutado as tipm 
+        INNER JOIN caracteristica as caracte on tipm.IDCARACTERISTICA = caracte.ID  AND caracte.ID = '.$idCaracteristica.' 
+        LIMIT 1';
+        //var_dump($sumEjecutadoCaracteristica); 
+        $result = $this->adapter->query($sumEjecutadoCaracteristica, Adapter::QUERY_MODE_EXECUTE);
         return $result;
     }
 

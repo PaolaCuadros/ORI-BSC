@@ -8,8 +8,22 @@
         });
     });
 </script>
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 
 <?php
+
+//header("Content-Type: application/vnd.ms-excel");
+
+//header("Expires: 0");
+
+//header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+
+//header("content-disposition: attachment;filename=INFORME_CONTENCIÓN.xls");
+?>
+
+<?php
+
+
 $title = 'Tabla de Indicadores';
 $this->headTitle($title);
 include __DIR__ . '\..\..\..\..\menu.phtml';
@@ -20,11 +34,45 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
     $getNameIndicadores = $getIndicadores->getIndicadores();
     foreach ($getNameIndicadores as $indicadores) {
         ?>
+    <form action="<?php echo $this->basePath() ?>/componentes/bscori" method="POST" enctype="multipart/form-data">
+        <table >
+            <tr>
+                <td><b>Filtrar por:</b></td>
+                <td></td>
+                <td><b>&nbsp;&nbsp;&nbsp;&nbsp; Año</b></td>
+                <td>
+                    <select name="anio" id="anio">
+                        <option value="0">--------</option>
+                        <?php
+                        $date = date("Y");
+                        if (date("Y") == 2016) {
+                            $anio = $date - 12;
+                        } else {
+                            $anio = $date - 1;
+                        }
+
+                        $dto = $date ;
+
+                        for ($i = $anio; $i <= $dto; $i++) {
+                            ?>
+                            <option value="<?= $anio ?>"><?= $anio ?></option>
+                            <?php
+                            $anio++;
+                        }
+                        ?>
+                    </select> 
+                </td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp; <button id="btnFiltar" class="btn btn-success" type="submit">Filtrar</button></td>
+            </tr>
+        </table>
+        
+    </form>
+        <div id="dvData">
         <table class="table tablesorter">
             <thead style="border: 2px #e0e0e0 solid; ">
                 <tr>
                     <th rowspan="3" style="padding-bottom: 43px;" class="th_table componente-nombre"><?= $indicadores->NAME ?></th>
-                    <th colspan="6" class="th_table color-table">Cumplimiento <?php echo date("Y"); ?></th>
+                    <th colspan="6" class="th_table color-table">Cumplimiento  <?php echo $dateFil; ?></th>
                 </tr>
                 <tr>
                     <th colspan="2" class="th_table color-table">Ejecutado</th>
@@ -54,17 +102,16 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                 $porcenta2= 0;
                 $getSubIndicadores = $getIndicadores->getSubIndicadores($indicadores->ID);
                 
-                foreach ($getSubIndicadores as $subIndicadores) {
-                    
-                    //if ($i != $getFactor->id) {
-                    ?>
-                    <tr>
-                        <td class="th_table"> <?=   $subIndicadores->NAME ?></td>
-
-                        <?php
-                        $date = 2015;
+                foreach ($getSubIndicadores as $subIndicadores) { /*VAR_DUMP($subIndicadores);*/  ?>
+                <tr>
+                    <?php if($subIndicadores->ID >= 11){ ?>
+                        <td class="th_table"><a style="  color: black;" href="<?php echo $this->url('componentes', array('action' => 'bscfactor', 'id' => $subIndicadores->ID_FACTOR, 'anio' => $dateFil, 'idIndicador' => $subIndicadores->ID))?>">  <?=   $subIndicadores->NAME ?> </a></td>
+                    <?php }else{ ?> 
+                        <td class="th_table"><a style="  color: black;" href="<?php echo $this->url('componentes', array('action' => 'bscfactor', 'id' => $subIndicadores->ID, 'anio' => $dateFil, 'idIndicador' => $subIndicadores->ID))?>">  <?=   $subIndicadores->NAME ?> </a></td>
+                    <?php }
+                        //$date = 2015;
                         //echo $subIndicadores->ID_FACTOR . " este <br/>";
-                        $getSumEjecutado = $ejecutado->sumEjecutadoCaracteristica($subIndicadores->ID_FACTOR, $date, $subIndicadores->IDCOMPONENTE);
+                        $getSumEjecutado = $ejecutado->sumEjecutadoCaracteristica($subIndicadores->ID_FACTOR, $dateFil, $subIndicadores->IDCOMPONENTE);
                         foreach ($getSumEjecutado as $sumEjecutado) {
                             //echo "Hola <br/>" ;
                             ?>
@@ -73,7 +120,7 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                             <td class="th_table"><?= $sumEjecutado->semestrebb ?></td>
 
                             <?php
-                            $getSumPresupuestado = $presupuestado->getSumPresupuestado($subIndicadores->ID_FACTOR, $date, $subIndicadores->IDCOMPONENTE);
+                            $getSumPresupuestado = $presupuestado->getSumPresupuestado($subIndicadores->ID_FACTOR, $dateFil, $subIndicadores->IDCOMPONENTE);
                             foreach ($getSumPresupuestado as $sumPresupuestado) {
                                 //var_dump($sumPresupuestado); exit();
                                 ?>
@@ -161,4 +208,21 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
             </tbody>
         </table>
 <?php } ?>
+    </div>
 </div>
+<input type="button" id="btnExport" value=" Export Table data into Excel " />
+
+
+<?php
+//header('Content-type: application/vnd.ms-excel');
+//header("Content-Disposition: attachment; filename=nombre_del_archivo.xls");
+?>
+<!--Content-Disposition: filename=ficheroExcel.xls-->
+<!--Content-Disposition: attachment; filename=nombre_del_archivo.xls-->
+<script>
+    $("#btnExport").click(function(e) {
+        window.open('data:application/vnd.ms-excel; charset=ISO-8859-1, ' + encodeURIComponent($('#dvData').html()));
+//        window.open('Content-type: application/vnd.ms-excel, name="excel" ' + encodeURIComponent($('#dvData').html()));
+        e.preventDefault();
+    });
+    </script>

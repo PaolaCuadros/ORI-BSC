@@ -1,0 +1,52 @@
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<link href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.css" media="screen" rel="stylesheet" type="text/css">
+<script type="text/javascript" >
+    $(document).ready(function () {
+        $('#example').dataTable({
+            "pagingType": "full_numbers"
+        });
+    });
+</script>
+
+<?php
+//var_dump($_SESSION); exit();
+$title = "Administrador";
+$this->headTitle($title);
+?>
+
+<h1 class="title"><?= $this->escapeHtml($title); ?></h1>
+
+<p>
+    <a class="btn btn-success" href="<?php echo $this->url('admin', array('action' => 'add')); ?>">Agregar Administrador</a>
+</p>
+
+<table id="example" class="display"  class="table tablesorter">
+    <thead style="border: 2px #e0e0e0 solid;" >
+        <tr>
+            <th class="th_table table-estudiantes">Id</th>
+            <th class="th_table table-estudiantes">Nombre</th>
+            <th class="th_table table-estudiantes">Dirección</th>
+            <th class="th_table table-estudiantes">Telefono</th>
+            <th class="th_table table-estudiantes">Celular</th>
+            <th class="th_table table-estudiantes">Email</th>
+            <th class="th_table table-estudiantes">Editar</th>
+            <th class="th_table table-estudiantes">Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($admin as $getAdmin) { ?>
+            <tr>
+                <td class="th_table"><?php echo $this->escapeHtml($getAdmin->id) ?></td>
+                <td class="th_table"><?php echo $this->escapeHtml($getAdmin->nombre) . " " . $this->escapeHtml($getAdmin->apellido) ?></td>
+                <td class="th_table"><?php echo $this->escapeHtml($getAdmin->direccion) ?></td>
+                <td class="th_table"><?php echo $this->escapeHtml($getAdmin->telefono) ?></td>
+                <td class="th_table"><?php echo $this->escapeHtml($getAdmin->celular) ?></td>
+                <td class="th_table"><?php echo $this->escapeHtml($getAdmin->email) ?></td>
+                <td class="th_table"><a href="<?php echo $this->url('admin', array('action' => 'edit', 'id' => $getAdmin->id)); ?>"><img src='<?php echo $this->basePath('img/editar.png') ?>' ></a></td>
+                <td class="th_table"><a href="<?php echo $this->url('admin', array('action' => 'delete', 'id' => $getAdmin->id)); ?>"><img src='<?php echo $this->basePath('img/eliminar.png') ?>' ></a></td>
+            </tr>
+        <?php } ?>
+    </tbody>
+</table>
+

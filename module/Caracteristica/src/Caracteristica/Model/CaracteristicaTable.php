@@ -37,19 +37,6 @@ WHERE caracte.id_factor =  "' . $id . '" AND comp.id = "' . $idComponente . '" '
         }
         $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $results;
-        
-        
-        /*if($idComponente == 0){
-            $sql = 'select * FROM caracteristica as caracte 
-INNER JOIN factores AS fact ON caracte.id_factor = fact.id 
-INNER JOIN componentes AS comp ON comp.id = fact.idParent
-WHERE caracte.id_factor =  "' . $id . '"';
-        }else{
-            $sql = 'select * FROM caracteristica as caracte 
-INNER JOIN factores AS fact ON caracte.id_factor = fact.id 
-INNER JOIN componentes AS comp ON comp.id = fact.idParent
-WHERE caracte.id_factor =  "' . $id . '" AND comp.id = "' . $idComponente . '" ';
-        }*/
     }
 
     public function getCaracteristica($id){
@@ -99,6 +86,12 @@ WHERE caracte.id_factor =  "' . $id . '" AND comp.id = "' . $idComponente . '" '
         return $results;
     }
     
-    
+    public function getAllCaracteristicasFactor($id){
+       // var_dump($id); exit();
+        $sql = 'SELECT ID, CARACTERISTICA FROM caracteristica WHERE id_factor = "'.$id.'"';
+        $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $results;
+    }
+   
 }
 

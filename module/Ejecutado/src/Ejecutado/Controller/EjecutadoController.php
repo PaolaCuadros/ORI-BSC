@@ -89,6 +89,7 @@ class EjecutadoController extends AbstractActionController {
                 $form->setData($request->getPost());
 
                 $data = array();
+                //var_dump($_FILES['archivo']); exit();
                 if (isset($_FILES['archivo'])) {
 
                     if (is_uploaded_file($_FILES['archivo']['tmp_name'])) {

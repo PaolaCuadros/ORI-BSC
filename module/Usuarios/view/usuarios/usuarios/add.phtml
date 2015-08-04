@@ -24,9 +24,28 @@ $form = $this->form;
                         <td><input type="text" class="form-control validate[required]" name="last_name" id="last_name" /></td>
                     </tr>
                     <tr>
-                        <td class="td_table">Correo Electrónico</td>
+                        <td class="td_table">Correo Electrónico Institucional </td>
                         <td><input type="email" class="form-control validate[required]" name="email" id="email" /> </td>
                     </tr>
+                    
+                    
+                    
+                    
+                    
+                    <tr>
+                        <td class="td_table">Correo Electrónico Personal</td>
+                        <td><input type="email" class="form-control validate[required]" name="otro_email" id="otro_email" /> </td>
+                    </tr>
+                    <tr>
+                        <td class="td_table">Celular</td>
+                        <td><input type="text" class="form-control validate[required]" name="celular" id="celular" /></td>
+                    </tr>
+                    
+                    
+                    
+                    
+                    
+                    
                     <tr>
                         <td class="td_table">Teléfono</td>
                         <td><input type="text" class="form-control validate[required]" name="telefono" id="telefono" /></td>
@@ -144,6 +163,9 @@ $form = $this->form;
             var prog_academic = $("prog_academic").val();
             var prog_interes = $("prog_interes").val();
             var estado = $("estado").val();
+            var fechaCompromiso = $("fechaCompromiso").val();
+            var otro_email = $("otro_email").val();
+            var celular = $("celular").val();
 
 
             if (num1 !== "") {

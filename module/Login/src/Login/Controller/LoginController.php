@@ -8,6 +8,7 @@ use Login\Model\Login;          // <-- Add this import
 use Login\Form\LoginForm;       // <-- Add this import
 use Zend\View\Model\JsonModel;
 use Zend\Session\Container;
+
 //use Zend\Authentication\Storage\Session;
 
 class LoginController extends AbstractActionController {
@@ -21,31 +22,38 @@ class LoginController extends AbstractActionController {
     }
 
     public function loginAction() {
-        
-    if(isset($_SESSION['user'])){
-        $this->redirect()->toRoute('usuarios', array('action' => 'index'));
-        
-    }else{
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $login = $this->getLoginTable()->loginUser($_POST['nombre'], $_POST['password']);
-            foreach ($login as $getLogin) {
-                $email = $getLogin->EMAIL;
-                $passw = $getLogin->CONTRASENA;
-            }
-            if (isset($email)) {
-                
-                $_SESSION['user'] = $email;
-                
-                $this->redirect()->toRoute('usuarios', array('action' => 'index'));
-            } else {
-                return $this->redirect()->toRoute('login', array('action' => 'login'));
+
+        if (isset($_SESSION['user'])) {
+            $this->redirect()->toRoute('usuarios', array('action' => 'index'));
+        } else {
+            $request = $this->getRequest();
+            if ($request->isPost()) {
+                $login = $this->getLoginTable()->loginUser($_POST['nombre'], $_POST['password']);
+                foreach ($login as $getLogin) {
+                    //var_dump($getLogin);
+                    $email = $getLogin->EMAIL;
+                    $passw = $getLogin->CONTRASENA;
+                    $permi = $getLogin->ESTADO;
+                    $idUsu = $getLogin->ID_USUARIO;
+                } //exit();
+                if ((isset($email) && ($permi == "A"))) {
+
+                    $_SESSION['user'] = $idUsu;
+
+                    $this->redirect()->toRoute('usuarios', array('action' => 'index'));
+                } else {
+                    if ((isset($permi)) && ($permi == "I")) {
+                        $msj = 1;
+                    } else {
+                        $msj = 2;
+                    }
+
+                    return array(
+                        'msj' => $msj
+                    );
+                }
             }
         }
-        
-    }
-        
-        
     }
 
     public function getLoginTable() {

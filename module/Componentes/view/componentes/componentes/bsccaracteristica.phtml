@@ -1,0 +1,303 @@
+<!--<script>
+    $(function () {
+        $('table').tablesorter({
+            widgets: ['zebra', 'columns'],
+            usNumberFormat: false,
+            sortReset: true,
+            sortRestart: true
+        });
+    });
+</script>-->
+
+<?php
+$title = 'Tabla de Indicadores';
+$this->headTitle($title);
+include __DIR__ . '\..\..\..\..\menu.phtml';
+?>
+
+<div class="container-view">
+    <h1 class="title"><?php echo $this->escapeHtml($title); ?></h1>
+
+    <?php
+    if (isset($usuarios)) {
+
+        $nameCaracteristica = $getAllCaracteristicasFactor->getCaracteristicaId($carac);
+        foreach ($nameCaracteristica as $caracteristica) {
+            $getEvidenciasUsuarios = $getEvidencias->getEvidenciasUsuario($carac);
+            ?>
+
+
+
+            <?php
+            foreach ($getEvidenciasUsuarios as $getEvidenciasUsuario) {
+                //var_dump($getEvidenciasUsuario->idUsuario);
+            }
+            if (!isset($getEvidenciasUsuario->idUsuario)) {
+                ?>
+
+            <?php }
+            ?>
+            <table class="table tablesorter">
+                <thead style="border: 2px #e0e0e0 solid; ">
+                    <tr>
+                        <th  colspan="2"  style="padding-bottom: 43px;" class="th_table componente-nombre"><?= $caracteristica->CARACTERISTICA ?></th>
+                        <th colspan="4" class="th_table color-table">Evidencias</th>
+        <!--                            <th colspan="2" class="th_table color-table">Presupuestado</th>
+                        <th colspan="2" class="th_table color-table">% Cumplimiento</th>-->
+                    </tr>  
+                    <tr>
+                        <th class="th_table color-table componente-nombre">Nombre</th>
+                        <th class="th_table color-table componente-nombre">Carrera</th>
+                        <th class="th_table color-table">Facebook</th>
+                        <th class="th_table color-table">Youtube</th>
+                        <th class="th_table color-table">Pagina</th>
+                        <th class="th_table color-table">Archivo</th>
+        <!--                        <th class="th_table color-table">Sem A</th>
+                        <th class="th_table color-table">Sem B</th>-->
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $porcenta1 = 0;
+                    $porcenta2 = 0;
+                    $getUsuarios = $usuarios->getUsuarioBsc($id, $anioFilt, $carac);
+                    //var_dump($getUsuarios); exit();
+                    $i = 1;
+                    foreach ($getUsuarios as $usuario) {
+                        ?>
+                        <tr>
+                            <td class="th_table"> <?= $usuario->nombre . "  " . $usuario->apellido ?> </td>
+                            <td class="th_table"> <?= $usuario->carrera ?> </td>
+                            <?php
+                            $getEvidenciasUsuario = $getEvidencias->getEvidenciasUsuario($carac, $usuario->idUsuario);
+                            foreach ($getEvidenciasUsuario as $getEvidencias) { 
+                                if($getEvidencias->linkFace != '')
+                                    echo '<td class="th_table"> <a target="_blank" href="' . $getEvidencias->linkFace . '">Facebook</a> </td>';
+                                else
+                                    echo '<td class="th_table"> --- </td>';
+                                if($getEvidencias->linkYoutube != '')
+                                    echo '<td class="th_table"> <a target="_blank" href="' . $getEvidencias->linkYoutube . '">Youtube</a> </td>';
+                                else
+                                    echo '<td class="th_table"> --- </td>';
+                                if($getEvidencias->linkPagina != '')
+                                    echo '<td class="th_table"> <a target="_blank" href="' . $getEvidencias->linkPagina . '">Página</a> </td>';
+                                else
+                                    echo '<td class="th_table"> --- </td>';
+                                if($getEvidencias->linkArchivo != ''){
+                                    $url = substr($getEvidencias->linkArchivo, 19); ?>
+                                    <td class="th_table"><a target='_blank' href="http://172.17.70.52/ORI-BSC  <?= $url ?>" >Archivo</a></td>
+                                <?php }else
+                                    echo '<td class="th_table"> --- </td>';
+                            }
+                            if(!isset($getEvidencias->linkFace)){
+                                echo '<td class="th_table">---</td>';
+                            }
+                            if(!isset($getEvidencias->linkYoutube)){
+                                echo '<td class="th_table">---</td>';
+                            }
+                            if(!isset($getEvidencias->linkPagina)){
+                                echo '<td class="th_table">---</td>';
+                            }
+                            if(!isset($getEvidencias->linkArchivo)){
+                                echo '<td class="th_table">---</td>';
+                            }
+                        }
+                        ?>
+        <!--                    <td class="th_table">0 %</td>
+                    <td class="th_table">0 %</td>-->
+                    </tr>
+                    <?php
+                    // }
+                    $porcenta1 = 0;
+                    $porcenta2 = 0;
+                    ?>
+                </tbody>
+            </table>
+            <?php
+        }
+        //echo "aca";
+    } else {
+        //echo "aca";
+        $nameFactor = $getFactor->getAllFactorIndicador($id, 0);
+        foreach ($nameFactor as $factor) {
+            ?>
+            <form action="<?php echo $this->basePath() ?>/componentes/bsccaracteristica" method="POST" enctype="multipart/form-data">
+                <table >
+                    <tr>
+                        <td><b>Filtrar por:</b></td>
+                        <td></td>
+                        <td><b>&nbsp;&nbsp;&nbsp;&nbsp; Año</b></td>
+                    <input type="hidden" value="<?= $id ?>"  name="id" id="id" />
+                    <td>
+                        <select name="anio" id="anio" class="form-control validate[required]">
+                            <option class="form-control validate[required]" value="<?= $anioFilt ?>"><?= $anioFilt ?></option>
+                            <?php
+                            $date = date("Y");
+                            if (date("Y") == 2016) {
+                                $anio = $date - 12;
+                            } else {
+                                $anio = $date - 1;
+                            }
+
+                            $dto = $date;
+
+                            for ($i = $anio; $i <= $dto; $i++) {
+                                ?>
+                                <option value="<?= $anio ?>"><?= $anio ?></option>
+                                <?php
+                                $anio++;
+                            }
+                            ?>
+                        </select> 
+                    </td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp; <button id="btnFiltar" class="btn btn-success" type="submit">Filtrar</button></td>
+                    </tr>
+                </table>
+
+            </form>
+
+            <table class="table tablesorter">
+                <thead style="border: 2px #e0e0e0 solid; ">
+                    <tr>
+                        <th rowspan="3" style="padding-bottom: 43px;" class="th_table componente-nombre"><?= $factor->name ?></th>
+                        <th colspan="6" class="th_table color-table">Cumplimiento <?php echo $anioFilt; ?></th>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="th_table color-table">Ejecutado</th>
+                        <th colspan="2" class="th_table color-table">Presupuestado</th>
+                        <th colspan="2" class="th_table color-table">% Cumplimiento</th>
+                    </tr>  
+                    <tr>
+                        <th class="th_table color-table">Sem A</th>
+                        <th class="th_table color-table">Sem B</th>
+                        <th class="th_table color-table">Sem A</th>
+                        <th class="th_table color-table">Sem B</th>
+                        <th class="th_table color-table">Sem A</th>
+                        <th class="th_table color-table">Sem B</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $i = 0;
+                    $porcenta1 = 0;
+                    $porcenta2 = 0;
+                    $caracteristicasFactor = $getAllCaracteristicasFactor->getAllCaracteristicasFactor($factor->id);
+                    foreach ($caracteristicasFactor as $caracteristica) {
+                        ?>
+                        <tr>
+                            <td class="th_table"><?= $caracteristica->CARACTERISTICA ?> </td>
+                            <?php
+                            //$date = 2015;
+                            $getSumEjecutado = $ejecutado->sumEjecutadoCaracteristica($caracteristica->ID, $anioFilt);
+                            $i = 0;
+                            foreach ($getSumEjecutado as $sumEjecutado) {
+
+
+                                $i = 1;
+                                //var_dump($sumEjecutado);
+                                ?>
+                                <td class="th_table"><?= $sumEjecutado->semestreaa ?></td>
+                                <td class="th_table"><?= $sumEjecutado->semestrebb ?></td>
+                                <?php
+                                $getSumPresupuestado = $presupuestado->getSumpresupuestadoCaracteristica($caracteristica->ID, $anioFilt);
+                                foreach ($getSumPresupuestado as $sumPresupuestado) {
+                                    ?>
+                                    <td class="th_table"><?= $sumPresupuestado->semestreaa ?></td>
+                                    <td class="th_table"> <?= $sumPresupuestado->semestrebb ?></td>
+                                    <?php
+                                }
+                            }
+
+
+                            if (!isset($sumPresupuestado->semestreaa) || ($i == 0)) {
+                                //var_dump("aca"); exit();
+                                echo "<td class='th_table'>0</td>";
+                            }
+
+                            if (!isset($sumPresupuestado->semestrebb) || ($i == 0)) {
+                                //var_dump("aca"); exit();
+                                echo "<td class='th_table'>0</td>";
+                            }
+                            if (!isset($sumEjecutado->semestreaa) || ($i == 0)) {
+                                //var_dump("aca"); exit();
+                                echo "<td class='th_table'>0</td>";
+                            }
+                            if (!isset($sumEjecutado->semestrebb) || ($i == 0)) {
+                                //var_dump("aca"); exit();
+                                echo "<td class='th_table'>0</td>";
+                            }
+                            $getDat = 0;
+                            if (isset($sumEjecutado->semestreaa)) {
+
+                                if (($sumEjecutado->semestreaa == 0) || ($sumPresupuestado->semestreaa == 0)) {
+                                    //var_dump($caracteristica->CARACTERISTICA);
+                                    //var_dump("aca");
+                                    $porcenta1 = 0;
+                                    $getDat = 1;
+                                }
+                                if (($sumEjecutado->semestrebb == 0) || ($sumPresupuestado->semestrebb == 0)) {
+
+                                    $porcenta2 = 0;
+                                    $getDat = 1;
+                                }
+
+                                if (($sumEjecutado->semestreaa >= 1) && ($sumPresupuestado->semestreaa == 0)) {
+                                    $porcenta1 = 100;
+                                }
+
+                                if (($sumEjecutado->semestrebb >= 1) || ($sumPresupuestado->semestrebb == 0)) {
+                                    $porcenta2 = 100;
+                                }
+
+                                if ($getDat != 1) {
+
+                                    $porcenta1 = ceil(($sumEjecutado->semestreaa / $sumPresupuestado->semestreaa) * 100);
+                                    $porcenta2 = ceil(($sumEjecutado->semestrebb / $sumPresupuestado->semestrebb) * 100);
+                                }
+
+                                $sumEjecutado->semestreaa = 0;
+                                $sumEjecutado->semestrebb = 0;
+                                if ($porcenta1 >= 100) {
+                                    $color = "#3ADF00";
+                                } else if ($porcenta1 >= 80) {
+                                    $color = "#FFFF00";
+                                } else if ($porcenta1 < 80) {
+                                    $color = "#FF0000";
+                                }
+
+                                if (($porcenta1 == 0) && ($getDat == 0 )) {
+                                    echo "<td class='th_table'>0</td>";
+                                    echo "<td class='th_table'>0</td>";
+                                    echo "<td class='th_table'>0</td>";
+                                    echo "<td class='th_table'>0</td>";
+                                }
+                                ?>
+                                <td class="th_table" style="background-color: <?= $color ?>"><?= $porcenta1 ?> %</td>
+                                <td class="th_table"><?= $porcenta2 ?> %</td>
+                                <?php
+                                if ((isset($sumEjecutado->URL)) && ($sumEjecutado->URL != "")) {
+                                    $url = substr($sumEjecutado->URL, 19);
+                                    //var_dump($sumEjecutado->idEjecutado . $sumEjecutado->URL);
+                                    ?>
+
+                                    <td class="th_table"><a target='_blank' href="http://172.17.70.52/ORI-BSC  <?= $url ?>" >Ver archivo adjunto</a></td>
+                                    <?php
+                                }
+                                ?>
+
+                            </tr>
+            <?php } else {
+                ?>
+                        <td class="th_table">0 %</td>
+                        <td class="th_table">0 %</td>
+                        </tr>
+                        <?php
+                    }
+                    $porcenta1 = 0;
+                    $porcenta2 = 0;
+                }
+            }
+        }
+        ?>
+</div>
+

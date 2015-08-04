@@ -145,10 +145,11 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                         $currentCaracteristicas = $caracteristicas->getCaracteristicaFactor($factor->id, $selectCompi);
                     }*/
                     foreach ($currentCaracteristicas as $caracteristica) {
+                        $url = $this->url('evidencia', array('action' => 'add', 'id' => $caracteristica->ID));
                         if ($c === 0) {
-                            $row .= "<td>" . $caracteristica->CARACTERISTICA . "</td>";
+                            $row .= "<td> <a style='color: black;' href='" . $url . "'>" . $caracteristica->CARACTERISTICA . "</a></td>";
                         } else {
-                            $row .= "<tr><td>" . $caracteristica->CARACTERISTICA . "</td>";
+                            $row .= "<tr><td> <a style='color: black;' href='" . $url . "'>" . $caracteristica->CARACTERISTICA . "</a></td>";
                         }
                         $c++;
                         $algo = "si";

@@ -88,5 +88,18 @@ class FactoresTable extends AbstractTableGateway {
         $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $results;
     }
+    
+    public function getAllFactorIndicador($id, $idIndicador = null){
+        //var_dump($idIndicador); 
+        if(($idIndicador >= 11) && ($idIndicador <= 14)){
+            $sql = 'SELECT fact.id as id, caracte.CARACTERISTICA as name, caracte.ID as Idcaracte FROM factores as fact inner join caracteristica as caracte on caracte.id_factor = fact.id WHERE fact.id=' . $id . '';
+        }else{
+            $sql = 'SELECT fact.id, fact.name FROM factores AS fact INNER JOIN indicadores AS indica ON indica.ID = fact.idIndicador WHERE fact.idIndicador = ' . $id . '';
+        }
+        //VAR_DUMP($sql); 
+        $resultSet = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $resultSet;
+    }
+   
 }
 

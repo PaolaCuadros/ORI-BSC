@@ -12,10 +12,13 @@ return array(
             'componentes' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/componentes[/:action][/:id]',
+                    'route'    => '/componentes[/:action][/:idIndicador][/:id][/:anio][/:carac]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'idIndicador'     => '[0-9]+',
                         'id'     => '[0-9]+',
+                        'anio'     => '[0-9]+',
+                        'carac'     => '[0-9]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Componentes\Controller\Componentes',

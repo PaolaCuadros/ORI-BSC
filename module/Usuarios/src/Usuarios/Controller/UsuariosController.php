@@ -14,6 +14,7 @@ class UsuariosController extends AbstractActionController {
     protected $preComponentesTable;
     protected $preFactoresTable;
     protected $preCaracteristicasTable;
+    protected $observacionesTable;
 
     public function indexAction() {
         if (isset($_SESSION['user'])) {
@@ -72,12 +73,13 @@ class UsuariosController extends AbstractActionController {
             $form->setInputFilter($usuarios->getInputFilter());
             $form->setData($request->getPost());
 
-            if (isset($_POST['idobservaM'])) {
-                $this->getUsuariosTable()->updateObservaciones($_POST['observaM'], $_POST['idobservaM']);
-            }
+//            if (isset($_POST['idobservaM'])) {
+//                var_dump($_POST['idobservaM']); exit();
+//                $this->getObservacionesTable()->updateObservaciones($_POST['observaM'], $_POST['idobservaM']);
+//            }
 
             if (isset($_POST['observa'])) {
-                $this->getUsuariosTable()->saveObservaciones($_POST['observa'], $_POST['id']);
+                $this->getObservacionesTable()->updateObservaciones($_POST['observa'], $_POST['id']);
             }
 
             $data = array(
@@ -102,9 +104,11 @@ class UsuariosController extends AbstractActionController {
             $progAcademico = $this->getUsuariosTable();
             $progInteres = $this->getUsuariosTable();
             $usuarios = $this->getUsuariosTable($id)->getAllUsuarios($id);
-            $observacionesUsuario = $this->getUsuariosTable();
+            $observacionesUsuario = $this->getObservacionesTable();
 
             foreach ($usuarios as $usuario) {
+                
+            //var_dump($usuario); exit();
                 $id = $usuario->id;
                 $cod_estud = $usuario->cod_estud;
                 $nombre = $usuario->nombre;
@@ -118,6 +122,9 @@ class UsuariosController extends AbstractActionController {
                 $email = $usuario->email;
                 $estado = $usuario->estado;
                 $otro_prog_interes = $usuario->otro_prog_interes;
+                $fechaCompromiso = $usuario->fechaCompromiso;
+                $celular = $usuario->celular;
+                $otro_email = $usuario->otroemail;
             }
 
             return array(
@@ -131,7 +138,7 @@ class UsuariosController extends AbstractActionController {
                 'observaciones' => $observaciones,
                 'prog_interes' => $prog_interes,
                 'semestre' => $semestre,
-                'email' => $email, 'progAcademico' => $progAcademico, 'progInteres' => $progInteres, 'estado' => $estado, 'observacionesUsuario' => $observacionesUsuario, 'otro_prog_interes' => $otro_prog_interes
+                'email' => $email, 'progAcademico' => $progAcademico, 'progInteres' => $progInteres, 'estado' => $estado, 'observacionesUsuario' => $observacionesUsuario, 'otro_prog_interes' => $otro_prog_interes, 'fechaCompromiso' => $fechaCompromiso, 'otro_email' => $otro_email,  'celular' => $celular
             );
         }
     }
@@ -193,6 +200,15 @@ class UsuariosController extends AbstractActionController {
             $this->usuariosTable = $sm->get('Usuarios\Model\UsuariosTable');
         }
         return $this->usuariosTable;
+    }
+    
+    
+    public function getObservacionesTable() {
+        if (!$this->observacionesTable) {
+            $sm = $this->getServiceLocator();
+            $this->observacionesTable = $sm->get('Observaciones\Model\ObservacionesTable');
+        }
+        return $this->observacionesTable;
     }
 
 }

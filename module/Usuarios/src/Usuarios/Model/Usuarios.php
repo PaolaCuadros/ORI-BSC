@@ -27,6 +27,7 @@ class Usuarios implements InputFilterAwareInterface{
     public $estado;
     public $otro_prog_interes;
     public $fechaCompromiso;
+    public $otroemail;
 
 
     protected $inputFilter;
@@ -52,6 +53,7 @@ class Usuarios implements InputFilterAwareInterface{
         $this->estado = (isset($data['ESTADO'])) ? $data['ESTADO'] : null;
         $this->otro_prog_interes = (isset($data['OTROPROGINTERES'])) ? $data['OTROPROGINTERES'] : null;
         $this->fechaCompromiso = (isset($data['FECHACOMPROMISO'])) ? $data['FECHACOMPROMISO'] : null;
+        $this->otroemail = (isset($data['OTROEMAIL'])) ? $data['OTROEMAIL'] : null;
 
     }
     
@@ -174,8 +176,10 @@ class Usuarios implements InputFilterAwareInterface{
                             ),
                         ),
             )));
+            
+            
             $inputFilter->add($factory->createInput(array(
-                        'name' => 'CODIGO_POSTAL',
+                        'name' => 'OTROEMAIL',
                         'required' => true,
                         'filters' => array(
                             array('name' => 'StripTags'),
@@ -187,7 +191,53 @@ class Usuarios implements InputFilterAwareInterface{
                                 'options' => array(
                                     'encoding' => 'UTF-8',
                                     'min' => 1,
-                                    'max' => 10,
+                                    'max' => 50,
+                                ),
+                            ),
+                        ),
+            )));
+            
+            
+            
+            
+            
+            
+            $inputFilter->add($factory->createInput(array(
+                        'name' => 'OTROEMAIL',
+                        'required' => true,
+                        'filters' => array(
+                            array('name' => 'StripTags'),
+                            array('name' => 'StringTrim'),
+                        ),
+                        'validators' => array(
+                            array(
+                                'name' => 'StringLength',
+                                'options' => array(
+                                    'encoding' => 'UTF-8',
+                                    'min' => 1,
+                                    'max' => 50,
+                                ),
+                            ),
+                        ),
+            )));
+            
+            
+            
+            
+            $inputFilter->add($factory->createInput(array(
+                        'name' => 'CELULAR',
+                        'required' => true,
+                        'filters' => array(
+                            array('name' => 'StripTags'),
+                            array('name' => 'StringTrim'),
+                        ),
+                        'validators' => array(
+                            array(
+                                'name' => 'StringLength',
+                                'options' => array(
+                                    'encoding' => 'UTF-8',
+                                    'min' => 1,
+                                    'max' => 30,
                                 ),
                             ),
                         ),

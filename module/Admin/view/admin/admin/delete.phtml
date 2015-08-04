@@ -1,0 +1,25 @@
+<?php
+
+$title = "Eliminar Administrador";
+$this->headTitle($title);
+//var_dump("ssssssssss"); var_dump($admin->nombre); exit();
+?>
+
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<p>¿Seguro deseas eliminar este Administrador
+    '<?php echo $this->escapeHtml($admin->nombre); ?>' ?
+</p>
+<?php 
+$url = $this->url('admin', array(
+    'action' => 'delete',
+    'id'     => $admin->idUsuario,
+));
+?>
+<form action="<?php echo $url; ?>" method="post">
+    <div>
+        <input type="hidden" name='id' value="<?php echo (int) $admin->idUsuario;?>" />
+        <input type="submit" name='del' value="Yes" />
+        <input type="submit" name='del' value="No" />
+    </div>
+</form>
