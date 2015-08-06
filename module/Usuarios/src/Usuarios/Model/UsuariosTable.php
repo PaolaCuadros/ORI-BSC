@@ -30,16 +30,13 @@ FROM usuario as usu INNER JOIN carrera as car on car.ID_CARRERA = usu.ID_CARRERA
     }
 
     public function saveUsuario(Usuarios $usuarios) {
-        //var_dump($_SESSION['user']); exit();
         $id = 0;
-       // var_dump($_POST); exit();
         if(isset($_POST['otro_prog_interes'])){
-            //var_dump("aca"); exit();
+
             $otro_prog_interes = $_POST['otro_prog_interes'];
         }else{
             $otro_prog_interes = "";
         }
-        //var_dump($_POST); exit();
         $data = array(
             'NOMBRE' => $_POST['name'],
             'APELLIDO' => $_POST['last_name'],
@@ -88,7 +85,6 @@ FROM usuario as usu INNER JOIN carrera as car on car.ID_CARRERA = usu.ID_CARRERA
 
     public function getUsuario($id) {
         $id = (int) $id;
-        //var_dump($id); exit();
         $rowset = $this->select(array('id' => $id));
         $row = $rowset->current();
         if (!$row) {
@@ -98,9 +94,7 @@ FROM usuario as usu INNER JOIN carrera as car on car.ID_CARRERA = usu.ID_CARRERA
     }
 
     public function getEjecutadoCaracteristica($id, $date) {
-        //var_dump("aca"); exit();
         $sqlSemestreA = 'SELECT (SELECT COUNT(tipoa.SEMESTRE) FROM tipomovilidad AS tipoa WHERE tipoa.SEMESTRE = "A" and tipoa.idCaracteristica = "' . $id . '" and tipoa.ANIO = "' . $date . '") as semestreaa, (SELECT COUNT(tipo.SEMESTRE) FROM tipomovilidad AS tipo WHERE tipo.SEMESTRE = "B" and tipo.idCaracteristica = "' . $id . '" and tipo.ANIO = "' . $date . '") as semestrebb FROM tipomovilidad as tipm WHERE tipm.idCaracteristica = "' . $id . '" LIMIT 1';
-        //var_dump($sqlSemestreA); echo "<br/>";
 
         $resultA = $this->adapter->query($sqlSemestreA, Adapter::QUERY_MODE_EXECUTE);
         return $resultA;
@@ -112,9 +106,7 @@ FROM usuario as usu INNER JOIN carrera as car on car.ID_CARRERA = usu.ID_CARRERA
         return $results;
     }
 
-    public function sumEjecutadoCaracteristica($id, $date, $componente) {
-        //
-        //var_dump("aca");        exit();
+public function sumEjecutadoCaracteristica($id, $date, $componente, $indicador) {
         if ($componente == 5) {
             $sqlSmestre = 'SELECT
 (SELECT COUNT(ejecu.SEMESTRE) FROM ejecutado AS ejecu 
@@ -130,16 +122,38 @@ INNER JOIN componentes AS comp ON comp.id = fact.idParent
 WHERE comp.id = ' . $componente . ' AND ejecu.SEMESTRE = "B" AND ejecu.CALIFICACION >= "1" AND ejecu.ANIO = "' . $date . '") AS semestrebb
 
 FROM componentes AS com WHERE com.ID = ' . $componente . '';
-        } else {
+        } else if (($id >= 1) && ($id <= 4)) {
             $sqlSmestre = 'SELECT (SELECT COUNT(tipoa.SEMESTRE) FROM tipomovilidad AS tipoa INNER JOIN caracteristica as caracte on tipoa.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id=' . $id . ' WHERE tipoa.SEMESTRE = "A" and tipoa.ANIO = "' . $date . '") as semestreaa, (SELECT COUNT(tipo.SEMESTRE) FROM tipomovilidad AS tipo INNER JOIN caracteristica as caracte on tipo.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id=' . $id . ' WHERE tipo.SEMESTRE = "B" and tipo.ANIO = "' . $date . '") as semestrebb, fact.id FROM tipomovilidad as tipm INNER JOIN caracteristica as caracte on tipm.idCaracteristica = caracte.ID INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id=' . $id . ' limit 1';
+        }else{
+            $sqlSmestre = 'SELECT 
+            (SELECT COUNT(ejecuta.SEMESTRE) 
+             FROM indicadores AS indica 
+             INNER JOIN factores as fact ON fact.idIndicador = indica.ID AND indica.ID = ' . $indicador . '
+             INNER JOIN caracteristica as caracte ON caracte.id_factor = fact.id
+             INNER JOIN ejecutado AS ejecuta ON ejecuta.IDCARACTERISTICA = caracte.ID 
+             WHERE ejecuta.SEMESTRE = "A" AND ejecuta.ANIO = "' . $date . '") as semestreaa, 
+
+            (SELECT COUNT(ejecuta.SEMESTRE) 
+             FROM indicadores AS indica 
+             INNER JOIN factores as fact ON fact.idIndicador = indica.ID AND indica.ID = ' . $indicador . '
+             INNER JOIN caracteristica as caracte ON caracte.id_factor = fact.id
+             INNER JOIN ejecutado AS ejecuta ON ejecuta.IDCARACTERISTICA = caracte.ID 
+             WHERE ejecuta.SEMESTRE = "A" AND ejecuta.ANIO = "' . $date . '") as semestrebb
+
+            FROM indicadores as indicadores WHERE indicadores.ID = ' . $indicador . '';
         }
         $resultA = $this->adapter->query($sqlSmestre, Adapter::QUERY_MODE_EXECUTE);
 
         return $resultA;
     }
+
+    
+    
+    
+    
     
     public function sumEjecutadoFactor($id, $date, $idCaracte = null){
-        //var_dump("aca"); exit();
+        
         if(($id >= 1) && ($id <= 4)){
             $sumEjecutado = '
                 SELECT 
@@ -154,43 +168,12 @@ FROM factores WHERE id = '.$id.'
 INNER JOIN caracteristica as caracte on tipm.IDCARACTERISTICA = caracte.ID 
 INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id='.$id.' limit 1';
         }
-        
-        
-        
-        //var_dump($sumEjecutado); exit();
-        
+         
         $resultA = $this->adapter->query($sumEjecutado, Adapter::QUERY_MODE_EXECUTE);
 
         return $resultA;
     }
     
-    
-    
-
-//    public function saveObservaciones($observaciones, $id) {
-//        $date = date("Y/m/d");
-//        foreach ($observaciones as $observacion) {
-//            $sql = "INSERT INTO observaciones (idUser, observacion, dateCreation) VALUES (" . $id . ", '" . $observacion . "', '" . $date . "')";
-//            $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
-//        }
-//    }
-//
-//    public function updateObservaciones($observaciones, $id) {
-//        $date = date("Y/m/d");
-//        $i = 0;
-//        foreach ($observaciones as $observacion) {
-//
-//            $sql = "UPDATE observaciones SET observacion = '" . $observacion . "', dateModicication = '" . $date . "' WHERE id = " . $id[$i] . " ";
-//            $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
-//            $i++;
-//        }
-//    }
-
-//    public function getObservacionesUsers($id) {
-//        $sql = "SELECT id, observacion, dateCreation FROM observaciones WHERE idUser = '" . $id . "'";
-//        $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
-//        return $results;
-//    }
 
     public function sendEmail($html) {
 
@@ -201,14 +184,8 @@ INNER JOIN factores as fact ON fact.id = caracte.id_factor AND fact.id='.$id.' l
 
         $cabeceras = 'MIME-Version: 1.0' . "\r\n";
         $cabeceras .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-
-// Cabeceras adicionales
         $cabeceras .= 'To: ORI <lizeth.cuadros@unibague.edu.co>' . "\r\n";
         $cabeceras .= 'From: Compromisos ORI <lizeth.cuadros@unibague.edu.co>' . "\r\n";
-//        $cabeceras .= 'Cc: lizeth.cuadros@unibague.edu.co' . "\r\n";
-//        $cabeceras .= 'Bcc: lizeth.cuadros@unibague.edu.co' . "\r\n";
-
-// Enviarlo
         $sendEmail = mail($para, $título, $html, $cabeceras);
         return $sendEmail;
     }
@@ -247,18 +224,31 @@ WHERE caract.id_factor = '.$id.' AND tipmo.ANIO = "'.$anio.'" AND caract.ID = '.
                 INNER JOIN tipomovilidad AS tipo ON tipo.ID_USUARIO = usu.DOCUMENTO_IDENTIDAD
                 WHERE idCaracteristica = "'.$id.'" AND tipo.ANIO = "'.$anio.'"';
         }
-        //var_dump($sql); exit();
-        /*
-
-         * $sql = 'SELECT usu.ID, usu.NOMBRE, usu.APELLIDO FROM usuario AS usu 
-                INNER JOIN tipomovilidad AS tipo ON tipo.ID_USUARIO = usu.DOCUMENTO_IDENTIDAD
-                WHERE idCaracteristica = "'.$id.'" AND usu.NOMBRE LIKE "%'.$name.'%"';         */
-        
-        
-        
         $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $results;
     }
+    
+    public function existeUsuarioCaracteristica($id){
+        $sql = 'SELECT usu.ID FROM usuario AS usu 
+                INNER JOIN tipomovilidad AS tipo ON tipo.ID_USUARIO = usu.DOCUMENTO_IDENTIDAD
+                WHERE idCaracteristica = "'.$id.'"';
+        $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $results;
+        
+    }
+    
+    public function getUniversidad(){
+        $sql = 'SELECT ID_UNIVERSIDAD, NOMBRE FROM universidad';
+        $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $results;
+    }
+    
+    public function getCarrera(){
+        $sql = 'SELECT ID_CARRERA, NOMBRE FROM carrera';
+        $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        return $results;
+    }
+    
     
     
 }

@@ -111,8 +111,8 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                     <?php }
                         //$date = 2015;
                         //echo $subIndicadores->ID_FACTOR . " este <br/>";
-                        $getSumEjecutado = $ejecutado->sumEjecutadoCaracteristica($subIndicadores->ID_FACTOR, $dateFil, $subIndicadores->IDCOMPONENTE);
-                        foreach ($getSumEjecutado as $sumEjecutado) {
+                        $getSumEjecutado = $ejecutado->sumEjecutadoCaracteristica($subIndicadores->ID_FACTOR, $dateFil, $subIndicadores->IDCOMPONENTE, $subIndicadores->ID);
+                        foreach ($getSumEjecutado as $sumEjecutado) { 
                             //echo "Hola <br/>" ;
                             ?>
 
@@ -120,7 +120,7 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                             <td class="th_table"><?= $sumEjecutado->semestrebb ?></td>
 
                             <?php
-                            $getSumPresupuestado = $presupuestado->getSumPresupuestado($subIndicadores->ID_FACTOR, $dateFil, $subIndicadores->IDCOMPONENTE);
+                            $getSumPresupuestado = $presupuestado->getSumPresupuestado($subIndicadores->ID_FACTOR, $dateFil, $subIndicadores->IDCOMPONENTE, $subIndicadores->ID);
                             foreach ($getSumPresupuestado as $sumPresupuestado) {
                                 //var_dump($sumPresupuestado); exit();
                                 ?>
@@ -159,9 +159,21 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
 //                            echo "<td class='th_table'>4...0</td>";
 //                        }
                         if (isset($sumEjecutado->semestreaa)) { 
+                            if(($sumEjecutado->semestreaa == 0) && ($sumPresupuestado->semestreaa == 0) ){
+//                                 echo "<td class='th_table'>4...0</td>";
+//                                  echo "<td class='th_table'>4...0</td>";
+                            }else{
+                                $porcenta1 = ceil(($sumEjecutado->semestreaa / $sumPresupuestado->semestreaa) * 100);
+                            }
                             
-                            $porcenta1 = ceil(($sumEjecutado->semestreaa / $sumPresupuestado->semestreaa) * 100);
-                            $porcenta2 = ceil(($sumEjecutado->semestrebb / $sumPresupuestado->semestrebb) * 100);
+                            if(($sumEjecutado->semestrebb == 0) && ($sumPresupuestado->semestrebb == 0) ){
+//                                 echo "<td class='th_table'>4...0</td>";
+//                                  echo "<td class='th_table'>4...0</td>";
+                            }else{
+                                $porcenta2 = ceil(($sumEjecutado->semestrebb / $sumPresupuestado->semestrebb) * 100);
+                            }
+                            
+                            
                             $sumEjecutado->semestreaa = 0;
                             $sumEjecutado->semestrebb = 0;
                             if($porcenta1 >= 100){
@@ -172,12 +184,12 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                                 $color = "#FF0000";
                             }
                             
-                            if($porcenta1 == 0){
-                                echo "<td class='th_table'>0</td>";
-                                echo "<td class='th_table'>0</td>";
-                                echo "<td class='th_table'>0</td>";
-                                echo "<td class='th_table'>0</td>"; 
-                            }
+//                            if($porcenta1 == 0){
+//                                echo "<td class='th_table'>-- 0</td>";
+//                                echo "<td class='th_table'>++ 0</td>";
+//                                echo "<td class='th_table'>** 0</td>";
+//                                echo "<td class='th_table'>// 0</td>"; 
+//                            }
                             //$sumEjecutado->semestreaa = 0;
                             
                             ?>

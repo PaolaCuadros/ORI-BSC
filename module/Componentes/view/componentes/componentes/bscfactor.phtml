@@ -69,7 +69,7 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                     <th colspan="2" class="th_table color-table">Ejecutado</th>
                     <th colspan="2" class="th_table color-table">Presupuestado</th>
                     <th colspan="2" class="th_table color-table">% Cumplimiento</th>
-                    <th colspan="4" class="th_table color-table">Evidencias</th>
+                    <!--<th colspan="4" class="th_table color-table">Evidencias</th>-->
                 </tr>  
                 <tr>
                     <th class="th_table color-table">Sem A</th>
@@ -78,10 +78,10 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                     <th class="th_table color-table">Sem B</th>
                     <th class="th_table color-table">Sem A</th>
                     <th class="th_table color-table">Sem B</th>
-                    <th class="th_table color-table">Face</th>
+<!--                    <th class="th_table color-table">Face</th>
                     <th class="th_table color-table">Youtube</th>
                     <th class="th_table color-table">Pagina</th>
-                    <th class="th_table color-table">Archivo</th>
+                    <th class="th_table color-table">Archivo</th>-->
                 </tr>
             </thead>
             <tbody>
@@ -105,7 +105,7 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                     //var_dump($Idcaracte); 
                     ?>
                     <tr>
-                        <td class="th_table"><a style="  color: black;" href="<?php echo $this->url('componentes', array('action' => 'bsccaracteristica', 'id' => $subIndicadores->id, 'anio' => $anioFilt, 'idIndicador' => 0, 'carac' => $Idcaracte)) ?>">  <?= $subIndicadores->name ?> </a></td>
+                        <td class="th_table"><a style="  color: black;" href="<?php echo $this->url('componentes', array('action' => 'bsccaracteristica', 'id' => $subIndicadores->id, 'anio' => $anioFilt, 'idIndicador' => 0, 'carac' => $Idcaracte)) ?>">  <?=  $subIndicadores->name ?> </a></td>
 
                         <?php
                         // $date = 2015;
@@ -117,11 +117,17 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                             <td class="th_table"><?= $sumEjecutado->semestrebb ?></td>
 
                             <?php
-                            $getSumPresupuestado = $presupuestado->getSumPresupuestado($subIndicadores->id, $anioFilt, 0, $Idcaracte);
+                            if($Idcaracte != 0){
+                                $getSumPresupuestado = $presupuestado->getSumpresupuestadoCaracteristica($Idcaracte, $anioFilt);
+                            }else{
+                                $getSumPresupuestado = $presupuestado->getSumPresupuestado($subIndicadores->id, $anioFilt, 0, $Idcaracte);
+                            }
+                            
+                            
                             foreach ($getSumPresupuestado as $sumPresupuestado) {
                                 ?>
-                                <td class="th_table"><?= $sumPresupuestado->semestreaa ?></td>
-                                <td class="th_table"><?= $sumPresupuestado->semestrebb ?></td>
+                                <td class="th_table"> <?= $sumPresupuestado->semestreaa ?></td>
+                                <td class="th_table"> <?= $sumPresupuestado->semestrebb ?></td>
                                 <?php
                             }
                         }
@@ -156,8 +162,12 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                             }
 
                             if ($getDat1 != 1) {
-                                //var_dump("aca"); exit();
-                                $porcenta1 = ceil(($sumEjecutado->semestreaa / $sumPresupuestado->semestreaa) * 100);
+                                if(($sumEjecutado->semestreaa >= 1) && ($sumPresupuestado->semestreaa == 0)){
+                                    $porcenta1 = 100;
+                                }else{
+                                    $porcenta1 = ceil(($sumEjecutado->semestreaa / $sumPresupuestado->semestreaa) * 100);
+                                }
+                                
                                 //$porcenta2 = ceil(($sumEjecutado->semestrebb / $sumPresupuestado->semestrebb) * 100);
                             }
 
@@ -180,12 +190,12 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                                 $color = "#FF0000";
                             }
 
-                            if (($porcenta1 == 0) && ($getDat2 == 0 ) && ($getDat1 == 0 )) {
-                                echo "<td class='th_table'>0</td>";
-                                echo "<td class='th_table'>0</td>";
-                                echo "<td class='th_table'>0</td>";
-                                echo "<td class='th_table'>0</td>";
-                            }
+//                            if (($porcenta1 == 0) && ($getDat2 == 0 ) && ($getDat1 == 0 )) {
+//                                echo "<td class='th_table'>0</td>";
+//                                echo "<td class='th_table'>0</td>";
+//                                echo "<td class='th_table'>0</td>";
+//                                echo "<td class='th_table'>0</td>";
+//                            }
                             ?>
                             <td class="th_table" style="background-color: <?= $color ?>"> <?= $porcenta1 ?> %</td>
                             <td class="th_table"><?= $porcenta2 ?> %</td>
@@ -205,37 +215,37 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                         
                         if((isset($subIndicadores->Idcaracte))  ){
                             //var_dump("paola"); var_dump($subIndicadores->Idcaracte); exit();
-                        $evidencias = $getEvidencias->getEvidenciasIndicadores($subIndicadores->Idcaracte);
-                        
-                        foreach ($evidencias as $getEvidenciasIndicadores) {
-                            $linkArchivo = $getEvidenciasIndicadores->linkArchivo;
-                            $linkFace = $getEvidenciasIndicadores->linkFace;
-                            $linkPagina = $getEvidenciasIndicadores->linkPagina;
-                            $linkYoutube = $getEvidenciasIndicadores->linkYoutube;
-
-                            echo "<td class='th_table'><a  target='_blank' href='$linkFace'>Facebook</a></td>";
-                            echo "<td class='th_table'><a  target='_blank' href='$linkYoutube'>Video</a></td>";
-                            echo "<td class='th_table'><a  target='_blank' href='$linkPagina'>Pagina</a></td>";
-                            echo "<td class='th_table'><a  target='_blank' href='$linkArchivo'>Archivo</a></td>";
-                        }
+//                        $evidencias = $getEvidencias->getEvidenciasIndicadores($subIndicadores->Idcaracte);
+//                        
+//                        foreach ($evidencias as $getEvidenciasIndicadores) {
+//                            $linkArchivo = $getEvidenciasIndicadores->linkArchivo;
+//                            $linkFace = $getEvidenciasIndicadores->linkFace;
+//                            $linkPagina = $getEvidenciasIndicadores->linkPagina;
+//                            $linkYoutube = $getEvidenciasIndicadores->linkYoutube;
+//
+//                            echo "<td class='th_table'><a  target='_blank' href='$linkFace'>Facebook</a></td>";
+//                            echo "<td class='th_table'><a  target='_blank' href='$linkYoutube'>Video</a></td>";
+//                            echo "<td class='th_table'><a  target='_blank' href='$linkPagina'>Pagina</a></td>";
+//                            echo "<td class='th_table'><a  target='_blank' href='$linkArchivo'>Archivo</a></td>";
+//                        }
                         }
                         //var_dump($linkYoutube);
 
-                        if ($linkArchivo == '') {
-                            echo "<td class='th_table'>---</td>";
-                        }
-
-                        if ($linkFace == '') {
-                            echo "<td class='th_table'>---</td>";
-                        }
-
-                        if ($linkPagina == '') {
-                            echo "<td class='th_table'>---</td>";
-                        }
-
-                        if ($linkYoutube == '') {
-                            echo "<td class='th_table'>---</td>";
-                        }
+//                        if ($linkArchivo == '') {
+//                            echo "<td class='th_table'>---</td>";
+//                        }
+//
+//                        if ($linkFace == '') {
+//                            echo "<td class='th_table'>---</td>";
+//                        }
+//
+//                        if ($linkPagina == '') {
+//                            echo "<td class='th_table'>---</td>";
+//                        }
+//
+//                        if ($linkYoutube == '') {
+//                            echo "<td class='th_table'>---</td>";
+//                        }
                         ?>
 
         <!--                    <td class="th_table">Link Face</td>

@@ -15,6 +15,7 @@ class UsuariosController extends AbstractActionController {
     protected $preFactoresTable;
     protected $preCaracteristicasTable;
     protected $observacionesTable;
+    protected $caracteristicaTable;
 
     public function indexAction() {
         if (isset($_SESSION['user'])) {
@@ -73,11 +74,6 @@ class UsuariosController extends AbstractActionController {
             $form->setInputFilter($usuarios->getInputFilter());
             $form->setData($request->getPost());
 
-//            if (isset($_POST['idobservaM'])) {
-//                var_dump($_POST['idobservaM']); exit();
-//                $this->getObservacionesTable()->updateObservaciones($_POST['observaM'], $_POST['idobservaM']);
-//            }
-
             if (isset($_POST['observa'])) {
                 $this->getObservacionesTable()->updateObservaciones($_POST['observa'], $_POST['id']);
             }
@@ -107,8 +103,6 @@ class UsuariosController extends AbstractActionController {
             $observacionesUsuario = $this->getObservacionesTable();
 
             foreach ($usuarios as $usuario) {
-                
-            //var_dump($usuario); exit();
                 $id = $usuario->id;
                 $cod_estud = $usuario->cod_estud;
                 $nombre = $usuario->nombre;
@@ -156,27 +150,27 @@ class UsuariosController extends AbstractActionController {
         $getUsuariosCompromisos = $this->getUsuariosTable()->getDateCommitmentUser($dateActual, $day);
         $html = "
             <p FACE='arial'>Buenos días Administrador <br/><br/>
-            La siguiente es la información de los compormisos con los estudiantes interesados en relizar una movilidad:<p>
+            La siguiente es la información de los compromisos con los estudiantes interesados en realizar una movilidad:<p>
 
             <html>
                     <head>
                         <title>Compromisos ORI</title>
                     </head>
                     <body>
-                    <table border='1' WIDTH='900'>
+                    <table border='1' WIDTH='1025'>
                         <tr>
-                            <td bgcolor='A9E2F3' align='center' color='F2F2F2' SIZE=8><b>Estudiante</b></td>
-                            <td bgcolor='A9E2F3' align='center' color='F2F2F2' SIZE=3><b>Codigo Estudiantil</b></td>
-                            <td bgcolor='A9E2F3' align='center' color='F2F2F2' SIZE=3><b>Compromiso</b></td>
-                            <td bgcolor='A9E2F3' align='center' color='F2F2F2'><b>Fecha de Compromiso</b></td>
+                            <td bgcolor='#05376C' align='center' color='F2F2F2' SIZE=8><h1 style='color: white; font-size: 16px;'><b>Estudiante</b></h1></td>
+                            <td bgcolor='#05376C' align='center' color='F2F2F2' SIZE=3><h1 style='color: white; font-size: 16px;'><b>Código Estudiantil</b></h1></td>
+                            <td bgcolor='#05376C' align='center' color='F2F2F2' SIZE=3><h1 style='color: white; font-size: 16px;'><b>Compromiso</b></h1></td>
+                            <td bgcolor='#05376C' align='center' color='F2F2F2'><h1 style='color: white; font-size: 16px;'><b>Fecha de Compromiso</b></h1></td>
                         </tr>";
         foreach ($getUsuariosCompromisos as $usuario) {
             $html .= "
                         <tr>
                             <td>" . $usuario->NOMBRE . "  " . $usuario->APELLIDO . "</td>
                             <td>" . $usuario->CODIGO_ESTUDIANTIL . "</td>
-                            <td>" . $usuario->FECHACOMPROMISO . "</td>
-                                <td>" . $usuario->COMPROMISOS . "</td>
+                            <td>" . $usuario->COMPROMISOS . "</td>
+                                <td>" . $usuario->FECHACOMPROMISO . "</td>
                         </tr>";
         }
         $html .= "  </table>
@@ -185,7 +179,7 @@ class UsuariosController extends AbstractActionController {
             
             <b> Oficina de Relaciones Internacionales. </b> <br/>
             <b> Universidad de Ibagué </b> <br/><br/>
-            <img src='https://ci3.googleusercontent.com/proxy/5Age9PF7_IRDkg8IFsp_gzSPiXGbJwBiNDaZsMQM_ynwhaEmrgV1IX7482lM905C-_oKsPCZLja_3Ugb0ONiCmLDn2FCe67zWEBr3SqDWdqGejbvHPGGfXUFM8vNoXelxB2cAPFGF6W965QegB-JA7F3kCYtDBkxXV8TUM0AnXXZ5pO4DB8q9KDU2jNF4Y4ZgJ3NHFXIge_TDe4=s0-d-e1-ft#https://docs.google.com/uc?export=download&id=0B4akwvlP8hRSNF80eW9JWUJmSDQ&revid=0B4akwvlP8hRSQTRXNzEzKzZtWFlCQzN1Ukd5bDRoWjI0Z3ZVPQ' width='250'  height='120'/>
+            <img src='https://ci3.googleusercontent.com/proxy/5Age9PF7_IRDkg8IFsp_gzSPiXGbJwBiNDaZsMQM_ynwhaEmrgV1IX7482lM905C-_oKsPCZLja_3Ugb0ONiCmLDn2FCe67zWEBr3SqDWdqGejbvHPGGfXUFM8vNoXelxB2cAPFGF6W965QegB-JA7F3kCYtDBkxXV8TUM0AnXXZ5pO4DB8q9KDU2jNF4Y4ZgJ3NHFXIge_TDe4=s0-d-e1-ft#https://docs.google.com/uc?export=download&id=0B4akwvlP8hRSNF80eW9JWUJmSDQ&revid=0B4akwvlP8hRSQTRXNzEzKzZtWFlCQzN1Ukd5bDRoWjI0Z3ZVPQ' width='238'  height='73'/>
 
             ";
         $sendEmailUser = $this->getUsuariosTable()->sendEmail($html);
@@ -209,6 +203,28 @@ class UsuariosController extends AbstractActionController {
             $this->observacionesTable = $sm->get('Observaciones\Model\ObservacionesTable');
         }
         return $this->observacionesTable;
+    }
+    
+    public function getCaracteristicaTable() {
+        if (!$this->caracteristicaTable) {
+            $sm = $this->getServiceLocator();
+            $this->caracteristicaTable = $sm->get('Caracteristica\Model\CaracteristicaTable');
+        }
+        return $this->caracteristicaTable;
+    }
+    
+    public function addUsuariosEstadisticasAction(){
+        $id = $this->params()->fromRoute('id', 0);
+        $nombreCaracteristica = $this->getCaracteristicaTable()->getCaracteristicaId($id);
+        $universidad = $this->getUsuariosTable();
+                foreach ($nombreCaracteristica as $optenerNombre){
+                    $caracteristica = $optenerNombre->CARACTERISTICA;
+                }
+                
+                return array(
+                    'caracteristica' => $caracteristica,
+                    'universidad' => $universidad
+                );
     }
 
 }

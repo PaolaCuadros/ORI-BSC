@@ -50,7 +50,7 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                         <th class="th_table color-table componente-nombre">Carrera</th>
                         <th class="th_table color-table">Facebook</th>
                         <th class="th_table color-table">Youtube</th>
-                        <th class="th_table color-table">Pagina</th>
+                        <th class="th_table color-table">Página</th>
                         <th class="th_table color-table">Archivo</th>
         <!--                        <th class="th_table color-table">Sem A</th>
                         <th class="th_table color-table">Sem B</th>-->
@@ -66,39 +66,40 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
                     foreach ($getUsuarios as $usuario) {
                         ?>
                         <tr>
-                            <td class="th_table"> <?= $usuario->nombre . "  " . $usuario->apellido ?> </td>
+                            <td class="th_table"> <?=  $usuario->nombre . "  " . $usuario->apellido ?> </td>
                             <td class="th_table"> <?= $usuario->carrera ?> </td>
                             <?php
+                            
                             $getEvidenciasUsuario = $getEvidencias->getEvidenciasUsuario($carac, $usuario->idUsuario);
-                            foreach ($getEvidenciasUsuario as $getEvidencias) { 
-                                if($getEvidencias->linkFace != '')
-                                    echo '<td class="th_table"> <a target="_blank" href="' . $getEvidencias->linkFace . '">Facebook</a> </td>';
+                            foreach ($getEvidenciasUsuario as $algo) { 
+                                if($algo->linkFace != '')
+                                    echo '<td class="th_table"> <a target="_blank" href="' . $algo->linkFace . '">Facebook</a> </td>';
                                 else
                                     echo '<td class="th_table"> --- </td>';
-                                if($getEvidencias->linkYoutube != '')
-                                    echo '<td class="th_table"> <a target="_blank" href="' . $getEvidencias->linkYoutube . '">Youtube</a> </td>';
+                                if($algo->linkYoutube != '')
+                                    echo '<td class="th_table"> <a target="_blank" href="' . $algo->linkYoutube . '">Youtube</a> </td>';
                                 else
                                     echo '<td class="th_table"> --- </td>';
-                                if($getEvidencias->linkPagina != '')
-                                    echo '<td class="th_table"> <a target="_blank" href="' . $getEvidencias->linkPagina . '">Página</a> </td>';
+                                if($algo->linkPagina != '')
+                                    echo '<td class="th_table"> <a target="_blank" href="' . $algo->linkPagina . '">Página</a> </td>';
                                 else
                                     echo '<td class="th_table"> --- </td>';
-                                if($getEvidencias->linkArchivo != ''){
-                                    $url = substr($getEvidencias->linkArchivo, 19); ?>
+                                if($algo->linkArchivo != ''){
+                                    $url = substr($algo->linkArchivo, 19); ?>
                                     <td class="th_table"><a target='_blank' href="http://172.17.70.52/ORI-BSC  <?= $url ?>" >Archivo</a></td>
                                 <?php }else
                                     echo '<td class="th_table"> --- </td>';
                             }
-                            if(!isset($getEvidencias->linkFace)){
+                            if(!isset($algo->linkFace)){
                                 echo '<td class="th_table">---</td>';
                             }
-                            if(!isset($getEvidencias->linkYoutube)){
+                            if(!isset($algo->linkYoutube)){
                                 echo '<td class="th_table">---</td>';
                             }
-                            if(!isset($getEvidencias->linkPagina)){
+                            if(!isset($algo->linkPagina)){
                                 echo '<td class="th_table">---</td>';
                             }
-                            if(!isset($getEvidencias->linkArchivo)){
+                            if(!isset($algo->linkArchivo)){
                                 echo '<td class="th_table">---</td>';
                             }
                         }

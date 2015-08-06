@@ -12,6 +12,7 @@ class EvidenciaController extends AbstractActionController {
 
     protected $usuariosTable;
     protected $evidenciaTable;
+   
 
     public function indexAction() {
 
@@ -20,29 +21,6 @@ class EvidenciaController extends AbstractActionController {
     }
 
     public function addAction() {
-
-
-
-        /* }
-
-         * $id = (int) $this->params()->fromRoute('id', 0);
-          //var_dump($_POST); exit();
-          if (isset($_POST['service'])) {
-          //var_dump($_POST['idCaracteristica']); exit();
-          $nameUsuario = $this->getUsuariosTable()->getUsuarioCaracteristica( $_POST['idCaracteristica'], $_POST['service']);
-          foreach ($nameUsuario as $name){
-          echo '<div class="suggest-element">' . utf8_encode($name->NOMBRE) . '</div>';
-          }
-
-
-          }
-          $form = new EvidenciaForm();
-
-
-          return array(
-          'id' => $id
-          ); */
-
 
         if (isset($_POST['anio'])) {
             $id = (int) $this->params()->fromRoute('id', 0);
@@ -55,6 +33,21 @@ class EvidenciaController extends AbstractActionController {
         } else {
             $id = (int) $this->params()->fromRoute('id', 0);
             $form = new EvidenciaForm();
+            $optiExisteUsuario = $this->getUsuariosTable()->existeUsuarioCaracteristica($id);
+            
+            foreach ($optiExisteUsuario as $existeUsuario){
+                $idUserExiste = $existeUsuario->ID;
+            }
+            
+            if(!isset($idUserExiste)){
+                //var_dump("aca"); exit();
+                
+               
+                return $this->redirect()->toRoute('usuarios', array(
+                            'action' => 'addusuariosestadisticas', 'id' => $id
+                ));
+            }
+            
             $nameUsuario = $this->getUsuariosTable()->getUsuarioCaracteristica($id, 0);
 
             $request = $this->getRequest();
@@ -124,5 +117,7 @@ class EvidenciaController extends AbstractActionController {
         }
         return $this->evidenciaTable;
     }
+    
+    
 
 }

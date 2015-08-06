@@ -68,13 +68,42 @@ class PresupuestadoTable extends AbstractTableGateway {
     }
     
     public function getSumPresupuestado($id, $date, $componente, $Idcaracte = null){
-        //var_dump($Idcaracte);  exit();
-        if($Idcaracte != null){
+        //VAR_DUMP($Idcaracte);
+        /*
+         */
+        
+        
+        //var_dump($Idcaracte);  
+        
+//        if(($Idcaracte >= 3) && ($Idcaracte <= 8)){
+//            
+//        }
+        
+        if(($Idcaracte >= 3) && ($Idcaracte <= 8)){
             //var_dump("aca"); exit();
+//            $sumPresupuestado = 'SELECT 
+//(SELECT SUM(presu.semestreA) FROM presupuestado AS presu INNER JOIN caracteristica AS carac ON presu.idCaracteristica = carac.ID INNER JOIN factores AS fact ON fact.id = carac.id_factor AND LEFT(presu.date, 4) = "'.$date.'" AND fact.id = '.$id.' AND carac.ID = '.$Idcaracte.') AS semestreaa,
+//(SELECT SUM(presu.semestreB) FROM presupuestado AS presu INNER JOIN caracteristica AS carac ON presu.idCaracteristica = carac.ID INNER JOIN factores AS fact ON fact.id = carac.id_factor AND LEFT(presu.date, 4) = "'.$date.'" AND fact.id = '.$id.' AND carac.ID = '.$Idcaracte.' ) AS semestrebb
+//FROM factores AS facto WHERE facto.id = '.$id.'';
             $sumPresupuestado = 'SELECT 
-(SELECT SUM(presu.semestreA) FROM presupuestado AS presu INNER JOIN caracteristica AS carac ON presu.idCaracteristica = carac.ID INNER JOIN factores AS fact ON fact.id = carac.id_factor AND LEFT(presu.date, 4) = "'.$date.'" AND fact.id = '.$id.' AND carac.ID = '.$Idcaracte.') AS semestreaa,
-(SELECT SUM(presu.semestreB) FROM presupuestado AS presu INNER JOIN caracteristica AS carac ON presu.idCaracteristica = carac.ID INNER JOIN factores AS fact ON fact.id = carac.id_factor AND LEFT(presu.date, 4) = "'.$date.'" AND fact.id = '.$id.' AND carac.ID = '.$Idcaracte.' ) AS semestrebb
-FROM factores AS facto WHERE facto.id = '.$id.'';
+            (SELECT SUM(presupuest.semestreA) 
+             FROM indicadores AS indica 
+             INNER JOIN factores as fact ON fact.idIndicador = indica.ID AND indica.ID = '.$Idcaracte.'
+             INNER JOIN caracteristica as caracte ON caracte.id_factor = fact.id
+             INNER JOIN presupuestado AS presupuest ON presupuest.idCaracteristica = caracte.ID 
+             WHERE LEFT(presupuest.date, 4) = "'.$date.'") as semestreaa, 
+
+            (SELECT SUM(presupuest.semestreB) 
+             FROM indicadores AS indica 
+             INNER JOIN factores as fact ON fact.idIndicador = indica.ID AND indica.ID = '.$Idcaracte.'
+             INNER JOIN caracteristica as caracte ON caracte.id_factor = fact.id
+             INNER JOIN presupuestado AS presupuest ON presupuest.idCaracteristica = caracte.ID 
+             WHERE LEFT(presupuest.date, 4) = "'.$date.'") as semestrebb
+
+            FROM indicadores as indicadores WHERE indicadores.ID = '.$Idcaracte.' limit 1';
+            
+            
+            
         }else if($componente == 5){
             //var_dump("aca"); exit();
           $sumPresupuestado =  'SELECT (SELECT SUM(presu.semestreA) as summaa FROM componentes AS compo INNER JOIN factores AS fact ON compo.ID = fact.idParent INNER JOIN caracteristica AS caract ON caract.id_factor = fact.ID INNER JOIN presupuestado AS presu ON presu.idCaracteristica = caract.ID WHERE compo.ID = '.$componente.' AND LEFT(presu.date, 4) = "2015") AS semestreaa, (SELECT SUM(presu.semestreb) as summbb FROM componentes AS compo INNER JOIN factores AS fact ON compo.ID = fact.idParent INNER JOIN caracteristica AS caract ON caract.id_factor = fact.ID INNER JOIN presupuestado AS presu ON presu.idCaracteristica = caract.ID WHERE compo.ID = '.$componente.' AND LEFT(presu.date, 4) = "2015") AS semestrebb FROM componentes AS com WHERE com.ID = '.$componente.'';
@@ -118,6 +147,8 @@ FROM factores AS facto WHERE facto.id = '.$id.'';
         $result = $this->adapter->query($sumEjecutadoCaracteristica, Adapter::QUERY_MODE_EXECUTE);
         return $result;
     }
+    
+    
     
 
 }

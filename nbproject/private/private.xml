@@ -4,6 +4,17 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/wamp/www/ORI-BSC/module/Componentes/view/componentes/componentes/bsccaracteristica.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Usuarios/src/Usuarios/Controller/UsuariosController.php</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Componentes/view/componentes/componentes/bscori.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Evidencia/src/Evidencia/Model/EvidenciaTable.php</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Ejecutado/view/ejecutado/ejecutado/add.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Usuarios/src/Usuarios/Model/UsuariosTable.php</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Presupuestado/view/presupuestado/presupuestado/presupuestado.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Evidencia/view/evidencia/evidencia/add.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Usuarios/view/usuarios/usuarios/addusuariosestadisticas.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Componentes/view/componentes/componentes/bscfactor.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Ejecutado/view/ejecutado/ejecutado/index.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Evidencia/src/Evidencia/Controller/EvidenciaController.php</file>
         </group>
     </open-files>
 </project-private>
