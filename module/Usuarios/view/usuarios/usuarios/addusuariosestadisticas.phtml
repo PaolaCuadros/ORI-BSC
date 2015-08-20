@@ -16,6 +16,25 @@ $form = $this->form;
             <form action="<?php echo $this->basePath() ?>/usuarios/addusuariosestadisticas" id="formaddval" method="post" name="formaddval">
                 <table id="tblprod2" class="table table-hover table-bordered">
                     <tr>
+                        <td class="td_table">Seleccione Misiones </td>
+                        <td>
+                            <select name="selecMis" id="selecMis" class="form-control validate[required]">
+                                <option value="0" >-----</option>
+                                <option value="1" > Penn State University 2015</option>
+                                <option value="2" > Penn State University 2015</option>
+                         </select>
+                        </td>
+                        <td><div class="btn-crear"><a style="color: black" href="<?php echo $this->url('admin', array('action' => 'add')); ?>">Crear Misión</a></div></td>
+                    </tr>
+                </table>
+            </form>
+            
+            
+            
+            
+            <form action="<?php echo $this->basePath() ?>/usuarios/addusuariosestadisticas" style="display:none" id="misiones" name="misiones" method="post"  >
+                <table id="tblprod2" class="table table-hover table-bordered" >
+                    <tr>
                         <td class="td_table">Nombres </td>
                         <td><input type="text" name="nombres" id="nombres"  class="form-control validate[required]" /></td>
                     </tr>
@@ -55,6 +74,37 @@ $form = $this->form;
         </div>
     </div>
 </div>
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+        var selecMis = document.getElementById('selecMis');
+        
+        selecMis.addEventListener('click', ocultarInput);
+
+
+        function ocultarInput()
+        {
+           // console.info("aca");
+            var seleccion=document.getElementById('selecMis');
+            var idPrograma = seleccion.options[seleccion.selectedIndex].value;
+            //console.info(idPrograma)
+            if(idPrograma != 0){
+                $('#misiones').show(); 
+            }
+                
+
+        }
+    });
+</script>
+
+
+
+
+
+
 
 
 <!--<div id="container">
