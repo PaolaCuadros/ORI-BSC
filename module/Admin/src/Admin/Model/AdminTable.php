@@ -29,6 +29,7 @@ class AdminTable extends AbstractTableGateway {
     }
 
     public function saveAdmin(Admin $admin, $idUser) {
+        $id = 0;
         $data = array(
             'ID_USUARIO' => $idUser,
             'NOMBRE' => $_POST['name'],

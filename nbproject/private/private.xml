@@ -3,10 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp/www/ORI-BSC/module/Admin/src/Admin/Model/AdminTable.php</file>
-            <file>file:/C:/wamp/www/ORI-BSC/module/Login/src/Login/Model/LoginTable.php</file>
-            <file>file:/C:/wamp/www/ORI-BSC/module/Login/view/Login/Login/login.phtml</file>
-            <file>file:/C:/wamp/www/ORI-BSC/module/Login/src/Login/Controller/LoginController.php</file>
+            <file>file:/C:/wamp/www/ORI-BSC/nbproject/private/private.xml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Usuarios/view/usuarios/usuarios/edit.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Caracteristica/view/caracteristica/caracteristica/edit.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Presupuestado/view/presupuestado/presupuestado/edit.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Ejecutado/view/ejecutado/ejecutado/add.phtml</file>
+            <file>file:/C:/wamp/www/ORI-BSC/public/css/style.css</file>
+            <file>file:/C:/wamp/www/ORI-BSC/module/Ejecutado/view/ejecutado/ejecutado/index.phtml</file>
         </group>
     </open-files>
 </project-private>

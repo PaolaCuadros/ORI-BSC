@@ -14,9 +14,9 @@ include __DIR__ . '\..\..\..\..\menu.phtml';
 
 <div class="container-view">
     <h1 class="title"><?php echo $this->escapeHtml($title); ?></h1>
-    <p>
+<!--    <p>
         <a class="btn btn-success" href="<?php echo $this->url('ejecutado', array('action' => 'add')); ?>">Agregar Ejecutado</a>
-    </p>
+    </p>-->
 
  
     <form action="<?php echo $this->basePath() ?>/ejecutado/index" method="POST" enctype="multipart/form-data">
